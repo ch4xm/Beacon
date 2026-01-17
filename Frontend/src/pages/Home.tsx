@@ -141,6 +141,11 @@ function HomePage() {
                     headers,
                 });
 
+                if (res.status == 401) {
+                  handleLogout();
+                  return;
+                }
+
                 if (!res.ok) {
                     console.error("Failed to fetch pins:", res.status);
                     return;
@@ -166,7 +171,6 @@ function HomePage() {
                         },
                     })),
                 };
-                console.log(geojson);
                 setAllPins(geojson);
             } catch (error) {
                 console.error("Error fetching pins:", error);
