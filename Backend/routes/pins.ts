@@ -52,7 +52,7 @@ export function createPin(req: Request, res: Response) {
 export function updatePin(req: Request, res: Response) {
     const pinID = req.params.id;
     const userID = req.user.id;
-    const { title, message, image, color } = req.body;
+    const { title, message, image } = req.body;
 
     const pin = db.query("SELECT creatorID FROM pin WHERE id = ?", [pinID])[0];
     if (!pin) {
