@@ -30,12 +30,9 @@ function Landing() {
           <a href="#impact">Impact</a>
           <a href="#community">Community</a>
           <a href="#guide">Guides</a>
-          <NavLink to="/register" className="button button--ghost">
-            Sign Up
-          </NavLink>
-          <NavLink to="/login" className="button button--primary">
-            Log In
-          </NavLink>
+          <NavLink to="/home" className="button button--primary">
+              Open App
+            </NavLink>
         </nav>
       </header>
 
@@ -53,11 +50,8 @@ function Landing() {
               spots, attach a photo and story, and tag places that aren’t part of the corporate rat race.
             </p>
             <div className="hero__actions">
-              <NavLink to="/login" className="button button--ghost">
-                Sign Up
-              </NavLink>
-              <NavLink to="/login" className="button button--primary">
-                Log In
+              <NavLink to="/home" className="button button--primary">
+                Open App
               </NavLink>
             </div>
             <div className="hero__meta">
@@ -244,11 +238,8 @@ function Landing() {
             thriving.
           </p>
           <div className="cta__actions">
-            <NavLink to="/register" className="button button--ghost">
-              Sign Up
-            </NavLink>
-            <NavLink to="/login" className="button button--primary">
-              Log In
+            <NavLink to="/home" className="button button--primary">
+              Open App
             </NavLink>
           </div>
         </section>
