@@ -45,10 +45,10 @@ function HomePage() {
 
     useEffect(() => {
         if (pinData && !pinData.isLoading) {
-            console.log("TRANSLATION COMPLETE -> pindata = ", pinData);
+            console.log("forst useeffet -> pindata = ", pinData);
         }
     }, [pinData]);
-
+    
     const handleMapClick = async (e: mapboxgl.MapMouseEvent) => {
         const { lat, lng } = e.lngLat;
         setPinData({
@@ -57,21 +57,21 @@ function HomePage() {
             name: "Loading...",
             isLoading: true,
         });
-
+        
         try {
             console.log(lat);
             console.log(lng);
             console.log("TRANSLATING... 🔄🔄🔄");
             const result = await reverseGeocode(lat, lng);
-
+            
             setPinData({
                 lat,
                 lng,
                 name: result.name,
                 isLoading: false,
             });
-
-            console.log("TRANSLATION COMPLETE -> pindata = " + pinData);
+            
+            console.log("TRANSLATION COMPLETE -> pindata = ", pinData);
         } catch (error) {
             console.error("Reverse geocoding failed:", error);
             setPinData({
