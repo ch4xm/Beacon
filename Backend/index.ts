@@ -1,4 +1,5 @@
 import express from "express";
+import * as pinRoutes from './routes/pins.ts';
 
 const app = express();
 const PORT = 3000;
