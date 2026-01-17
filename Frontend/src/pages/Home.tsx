@@ -1,16 +1,17 @@
 import { useRef, useState } from "react";
-import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./Home.css";
 import AuthModal from "@/components/AuthModal";
 import SearchBar from "@/components/SearchBar";
 import Map from 'react-map-gl/mapbox';
+import Pin from "@/components/Pin";
 
 
 function HomePage() {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const searchMarkerRef = useRef<mapboxgl.Marker | null>(null);
+  const [clickedCoords, setClickedCoords] = useState({ lat: 0, lng: 0 });
+
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     return !!localStorage.getItem("accessToken");
@@ -44,9 +45,6 @@ function HomePage() {
       )}
 
       <Map
-        ref={(ref) => {
-          if (ref) mapRef.current = ref.getMap();
-        }}
         mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
         initialViewState={{
           longitude: -122.4,
@@ -54,7 +52,14 @@ function HomePage() {
           zoom: 9,
         }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
-      />
+        onClick={(e) => setClickedCoords(e.lngLat)}
+      >
+        <Pin
+          content={"GEM ALARM"}
+          latitude={clickedCoords.lat}
+          longitude={clickedCoords.lng}
+        />
+      </Map>
     </div>
   );
 }
