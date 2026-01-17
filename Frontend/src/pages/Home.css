@@ -384,12 +384,20 @@
     text-decoration: underline;
 }
 
+
+
 /* Search bar overlay */
-.search-bar {
+.search-container {
     position: absolute;
     top: 16px;
     left: 16px;
     z-index: 10;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.search-bar {
     width: 340px;
 }
 
@@ -512,4 +520,32 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* Discover Button */
+.discover-button {
+    background: #faf9f7;
+    border: 1px solid #e5e3df;
+    border-radius: 16px;
+    padding: 12px 24px;
+    color: #1a1a1a;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.discover-button:hover {
+    background: #f4f2ef;
+    border-color: #d1cfc9;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.discover-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }

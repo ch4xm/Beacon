@@ -1,0 +1,348 @@
+/* ---------- Page shell ---------- */
+.posts-page {
+    min-height: 100vh;
+    width: 100%;
+    background:
+        radial-gradient(
+            1200px 500px at 50% -10%,
+            rgba(45, 106, 79, 0.12),
+            transparent 60%
+        ),
+        linear-gradient(135deg, #faf9f7 0%, #f4f2ef 100%);
+    padding: 28px 40px 72px;
+    position: relative;
+    overflow-x: hidden;
+    min-height: 100svh; /* better on mobile than 100vh */
+    width: 100%; /* IMPORTANT: avoid 100vw */
+    padding: 28px 40px 72px;
+    position: relative;
+    overflow-x: clip; /* prevents tiny horizontal scroll */
+}
+
+.posts-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: radial-gradient(
+        rgba(27, 67, 50, 0.08) 1px,
+        transparent 1px
+    );
+    background-size: 22px 22px;
+    mask-image: radial-gradient(circle at 30% 20%, black, transparent 60%);
+}
+
+/* Optional wrapper if you want nicer max-width
+   (wrap your header + container in a <div className="posts-content">)
+*/
+.posts-content {
+    max-width: 980px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* ---------- Header layout ---------- */
+
+.posts-header {
+    width: 100%;
+    margin: 0 0 28px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 12px 0;
+    backdrop-filter: blur(10px);
+}
+
+.posts-header::after {
+    content: "";
+    position: absolute;
+    left: -40px;
+    right: -40px;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(209, 207, 201, 0.9),
+        transparent
+    );
+}
+
+/* Left side */
+.back-button {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(229, 227, 223, 0.9);
+    border-radius: 14px;
+    color: #111827;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease,
+        border-color 0.15s ease;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+    font-family: inherit;
+}
+
+.back-button:hover {
+    background: rgba(244, 242, 239, 0.9);
+    border-color: rgba(209, 207, 201, 1);
+    transform: translateX(-2px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.09);
+}
+
+.back-button:active {
+    transform: translateX(0);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.back-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.15s ease;
+}
+
+.back-button:hover .back-icon {
+    transform: translateX(-2px);
+}
+
+/* Center title */
+.posts-title {
+    text-align: center;
+    justify-self: center;
+}
+
+.posts-title h1 {
+    margin: 0;
+    font-size: clamp(1.4rem, 3vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.posts-subtitle {
+    margin: 6px 0 0;
+    font-size: 0.95rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Right-side actions area (Add Post, etc.) */
+.posts-actions {
+    justify-self: end;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* ---------- Buttons ---------- */
+
+.add-post-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(27, 67, 50, 0.18);
+    background: linear-gradient(
+        135deg,
+        rgba(45, 106, 79, 0.15),
+        rgba(27, 67, 50, 0.08)
+    );
+    color: #14532d;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        border-color 0.15s ease,
+        background 0.15s ease;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+    font-family: inherit;
+}
+
+.add-post-button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(27, 67, 50, 0.25);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.09);
+}
+
+.add-post-button:active {
+    transform: translateY(0);
+}
+
+/* Remove button (if you render it outside PostCard) */
+.post-row {
+    position: relative;
+}
+
+.remove-post-button {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(239, 68, 68, 0.18);
+    background: rgba(255, 255, 255, 0.78);
+    color: #b91c1c;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease,
+        border-color 0.15s ease;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.remove-post-button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(239, 68, 68, 0.28);
+    background: rgba(255, 255, 255, 0.92);
+}
+
+.remove-post-button:active {
+    transform: translateY(0);
+}
+
+/* ---------- Feed container ---------- */
+
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    animation: fadeInUp 0.45s ease-out;
+    position: relative;
+}
+
+/* Slight “lift” to make cards feel separate even if PostCard already has styling */
+.posts-container > * {
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.posts-container > *:hover {
+    transform: translateY(-2px);
+}
+
+/* ---------- Empty state ---------- */
+
+.posts-empty {
+    text-align: center;
+    padding: 72px 20px;
+    color: #64748b;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(229, 227, 223, 0.9);
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+}
+
+.posts-empty-icon {
+    font-size: 3.5rem;
+    margin-bottom: 14px;
+    opacity: 0.55;
+}
+
+.posts-empty-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.posts-empty-description {
+    font-size: 1rem;
+    color: #64748b;
+}
+
+/* ---------- Animations ---------- */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+    .posts-page {
+        padding: 18px 16px 56px;
+    }
+
+    .posts-header::after {
+        left: -16px;
+        right: -16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .posts-header {
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    .posts-subtitle {
+        font-size: 0.88rem;
+    }
+
+    .back-button {
+        padding: 9px 14px;
+        font-size: 0.9rem;
+        border-radius: 12px;
+    }
+
+    .add-post-button {
+        padding: 9px 12px;
+        border-radius: 12px;
+        font-size: 0.92rem;
+    }
+
+    .remove-post-button {
+        top: 12px;
+        right: 12px;
+        padding: 7px 10px;
+    }
+
+    .posts-container {
+        gap: 14px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .posts-container {
+        animation: none;
+    }
+    .back-button,
+    .add-post-button,
+    .remove-post-button,
+    .posts-container > * {
+        transition: none;
+    }
+}

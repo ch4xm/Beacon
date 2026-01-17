@@ -14,6 +14,7 @@ import Pin from "@/components/Pin";
 import { reverseGeocode } from "@/utils/geocoding";
 import LocationPin from "@/components/LocationPin";
 import DetailedPinModal from "@/components/DetailedPinModal";
+import { NavLink, useNavigate } from "react-router";
 
 const layerStyle: CircleLayerSpecification = {
     id: "point",
@@ -139,6 +140,8 @@ function HomePage() {
     const onMouseEnter = useCallback(() => setCursor("pointer"), []);
     const onMouseLeave = useCallback(() => setCursor("auto"), []);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         const fetchPins = async () => {
             try {
@@ -255,20 +258,32 @@ function HomePage() {
         }
     };
 
+    
+
+    const handleDiscoverClick = () => {
+        // console.log('Discover button clicked');
+        navigate("/explore");
+    };
+
     return (
         <div className="home-container">
-            <SearchBar
-                mapRef={mapRef}
-                searchMarkerRef={searchMarkerRef}
-                onSelectPlace={(place) =>
-                    setPinData({
-                        lat: place.lat,
-                        lng: place.lng,
-                        name: place.name ?? "Unknown Location",
-                        isLoading: false,
-                    })
-                }
-            />
+            <div className="search-container">
+                <SearchBar
+                    mapRef={mapRef}
+                    searchMarkerRef={searchMarkerRef}
+                    onSelectPlace={(place) =>
+                        setPinData({
+                            lat: place.lat,
+                            lng: place.lng,
+                            name: place.name ?? "Unknown Location",
+                            isLoading: false,
+                        })
+                    }
+                />
+                <button className="discover-button" onClick={handleDiscoverClick}>
+                    Discover
+                </button>
+            </div>
 
             <SavedPlacesPanel />
 
