@@ -1,18 +1,55 @@
+import { useEffect, useRef } from "react";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 import { NavLink } from "react-router";
+import "./Home.css";
 
 function HomePage() {
-  return (
-    <div>
-      <h1>Welcome to the Home Page</h1>
-      <p>This is the main landing page of the application.</p>
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<mapboxgl.Map | null>(null);
 
-      <button type="submit">
+  useEffect(() => {
+    // Check if token exists
+    const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+    if (!token) {
+      console.error("Mapbox access token is missing. Please set VITE_MAPBOX_ACCESS_TOKEN in your .env file.");
+      return;
+    }
+
+    mapboxgl.accessToken = token;
+
+    if (mapContainerRef.current && !mapRef.current) {
+      mapRef.current = new mapboxgl.Map({
+        container: mapContainerRef.current,
+        style: "mapbox://styles/mapbox/streets-v12", // standard style
+        center: [-74.5, 40], // starting position [lng, lat]
+        zoom: 9, // starting zoom
+      });
+
+      // Add navigation controls
+      mapRef.current.addControl(new mapboxgl.NavigationControl(), "top-right");
+    }
+
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, []);
+
+  return (
+    <div className="home-container">
+      <div className="sidebar">
+        <h1>Beacon</h1>
+        <p>Map View</p>
         <nav>
-          <NavLink to="/" end>
-            Logout
-          </NavLink>
+            <NavLink to="/" end className="logout-link">
+              Logout
+            </NavLink>
         </nav>
-      </button>
+      </div>
+      <div ref={mapContainerRef} className="map-container" />
     </div>
   );
 }
