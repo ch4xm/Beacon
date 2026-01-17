@@ -1,34 +1,77 @@
 import { useState } from "react";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+
+const API_BASE_URL = "http://localhost:3000";
 
 export function LoginPage() {
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    username: "",
+    email: "",
     password: "",
   });
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCredentials({ ...credentials, [name]: value });
+    // Clear error when user starts typing
+    if (error) setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Logging in with", credentials);
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      // Store the token in localStorage
+      localStorage.setItem("accessToken", data.accessToken);
+
+      // Navigate to home page on successful login
+      navigate("/home");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred during login");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
+        {error && (
+          <div style={{ color: "red", marginBottom: "1rem" }}>
+            {error}
+          </div>
+        )}
         <div>
-          <label>Username:</label>
+          <label>Email:</label>
           <input
-            type="text"
-            name="username"
-            value={credentials.username}
+            type="email"
+            name="email"
+            value={credentials.email}
             onChange={handleChange}
+            disabled={isLoading}
+            required
           />
         </div>
         <div>
@@ -38,11 +81,15 @@ export function LoginPage() {
             name="password"
             value={credentials.password}
             onChange={handleChange}
+            disabled={isLoading}
+            required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? "Logging in..." : "Login"}
+        </button>
 
-        <button type="submit">
+        <button type="button" disabled={isLoading}>
           <nav>
             <NavLink to="/home" end>
               Skip login and go to Homepage
