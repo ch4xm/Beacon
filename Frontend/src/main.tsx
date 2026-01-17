@@ -1,10 +1,17 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import ReactDOM from "react-dom/client";
 import './index.css'
-import App from './App.tsx'
+import App from './App'
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
+import { BrowserRouter } from "react-router";
+
+const root = document.getElementById("root");
+
+if (!root) {
+  throw new Error("Root container missing in index.html");
+}
+
+ReactDOM.createRoot(root).render(
+  <BrowserRouter>
     <App />
-  </StrictMode>,
-)
+  </BrowserRouter>,
+);
