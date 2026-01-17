@@ -17,7 +17,7 @@ const layerStyle: CircleLayerSpecification = {
     'circle-radius': 10,
     'circle-color': '#007cbf'
   },
-  maxzoom: 9,
+  maxzoom: 22,
   minzoom: 5,
 };
 
@@ -26,7 +26,7 @@ const heatmapLayerStyle = {
   type: 'heatmap',
   source: 'my-data',
   maxzoom: 9,
-  minzoom: 5,
+  minzoom: 0,
   paint: {
     'heatmap-weight': [
       'interpolate',
