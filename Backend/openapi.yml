@@ -87,12 +87,7 @@ paths:
                   maxLength: 2000
                   description: URL of the image
                   nullable: true
-                color:
-                  type: string
-                  maxLength: 10
-                  description: Color code for the pin
-                  example: "#FF6B6B"
-                  nullable: true
+
       responses:
         200:
           description: Pin created successfully
@@ -197,10 +192,6 @@ paths:
                 image:
                   type: string
                   maxLength: 2000
-                  nullable: true
-                color:
-                  type: string
-                  maxLength: 10
                   nullable: true
 
       responses:
@@ -636,12 +627,6 @@ components:
           maxLength: 2000
           description: URL of the image
           example: "https://images.unsplash.com/photo-1516192518150-0d8fee5425e3"
-          nullable: true
-        color:
-          type: string
-          maxLength: 10
-          description: Color code for the pin
-          example: "#FF6B6B"
           nullable: true
     
     Error:

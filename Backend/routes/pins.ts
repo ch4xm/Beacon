@@ -9,8 +9,7 @@ export function getAllPins(req: Request, res: Response) {
 			p.latitude,
 			p.longitude, 
 			p.message,
-			p.image,
-			p.color
+			p.image
 		FROM pin p
 		JOIN account a ON a.id = p.creatorID;
 	`);

@@ -15,7 +15,6 @@ CREATE TABLE pin (
 	title VARCHAR(200),
 	message VARCHAR(500),
 	image VARCHAR(2000),
-	color VARCHAR(10) DEFAULT "#0000FF",
-
+	
 	FOREIGN KEY (creatorID) REFERENCES account(id)
 );

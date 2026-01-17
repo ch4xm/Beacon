@@ -162,12 +162,11 @@ function HomePage() {
                         },
                         properties: {
                             id: p.id,
-                            creatorID: p.creatorID,
+                            email: p.email,
                             title: p.title,
                             message: p.message,
                             image: p.image,
-                            color: p.color,
-                            email: p.email,
+                            color: localStorage.getItem("userEmail") ==  p.email ? "#FFFF00" : "#007cbf",
                         },
                     })),
                 };
