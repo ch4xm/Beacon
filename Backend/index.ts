@@ -3,7 +3,7 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import cors from 'cors';
 import * as OpenApiValidator from 'express-openapi-validator';
-import * as pinRoutes from './routes/pins.ts';
+import * as pinRoutes from './routes/pins';
 
 const app = express();
 const PORT = 3000;
@@ -40,7 +40,7 @@ app.get("/api/pins/:id", pinRoutes.getPin);
 app.post("/api/pins", pinRoutes.createPin);
 app.put("/api/pins", pinRoutes.editPin);
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Backend listening on http://localhost:${PORT}`);
 });
 

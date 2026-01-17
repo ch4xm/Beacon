@@ -1,7 +1,23 @@
 import "./Landing.css";
 import { NavLink } from "react-router";
 
+import { useEffect } from "react";
+
 function Landing() {
+  useEffect(() => {
+      const heartbeat = async () => {
+        try {
+          const res = await fetch("/heartbeat");
+          const data = await res.json();
+          console.log("[Client-side] Server reachable:", data);
+        } catch (err) {
+          console.error("[Cleint-side] Server unreachable:", err);
+        }
+      };
+  
+      heartbeat();
+    }, []);
+
   return (
     <div className="landing">
       <header className="landing__header">
