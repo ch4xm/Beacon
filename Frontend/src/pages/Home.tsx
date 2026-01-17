@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
-import "./Home.css";
+import type { MapRef } from "react-map-gl/mapbox";import "./Home.css";
 import AuthModal from "@/components/AuthModal";
 import SearchBar from "@/components/SearchBar";
 import Map from 'react-map-gl/mapbox';
@@ -8,9 +7,9 @@ import Pin from "@/components/Pin";
 
 
 function HomePage() {
-  const mapRef = useRef<mapboxgl.Map | null>(null);
+  const mapRef = useRef<MapRef | null>(null);
   const searchMarkerRef = useRef<mapboxgl.Marker | null>(null);
-  const [clickedCoords, setClickedCoords] = useState({ lat: 0, lng: 0 });
+  const [clickedCoords, setClickedCoords] = useState<{lat: number, lng: number} | null>(null);
 
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
@@ -42,6 +41,7 @@ function HomePage() {
       )}
 
       <Map
+        ref={mapRef}
         mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
         initialViewState={{
           longitude: -122.4,
@@ -49,13 +49,16 @@ function HomePage() {
           zoom: 9,
         }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
-        onClick={(e) => setClickedCoords(e.lngLat)}
+        onClick={(e) => {console.log(e.lngLat); setClickedCoords(e.lngLat)}}
       >
-        <Pin
-          content={"GEM ALARM"}
+        {clickedCoords && <Pin
+          name={"STORE"}
           latitude={clickedCoords.lat}
           longitude={clickedCoords.lng}
-        />
+          onClose={() => setClickedCoords(null)}
+          onAdd={() => console.log('Add clicked')}
+          onDetails={() => console.log('Details clicked')}
+        />}
       </Map>
     </div>
   );
