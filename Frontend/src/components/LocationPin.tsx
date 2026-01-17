@@ -1,5 +1,6 @@
 import { Popup } from "react-map-gl/mapbox";
 import "./styles/LocationPin.css";
+import { PIN_COLOR } from "constants";
 
 interface LocationPinProps {
     selectedPoint: {
@@ -84,7 +85,7 @@ export default function LocationPin({
                     style={{
                         width: "100%",
                         padding: "8px 12px",
-                        backgroundColor: selectedPoint.color || "#007cbf",
+                        backgroundColor: selectedPoint.color || PIN_COLOR,
                         color: "white",
                         border: "none",
                         borderRadius: "8px",

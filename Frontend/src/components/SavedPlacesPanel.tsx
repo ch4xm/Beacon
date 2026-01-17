@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./styles/SavedPlacesPanel.css";
+import { PIN_COLOR } from "constants";
 
 interface SavedPlace {
     id: number;
@@ -102,7 +103,7 @@ function SavedPlacesPanel({ mapRef }: SavedPlacesPanelProps) {
                                             className="place-color-indicator"
                                             style={{
                                                 backgroundColor:
-                                                    place.color || "#007cbf",
+                                                    place.color || PIN_COLOR,
                                             }}
                                         />
                                         <span className="place-coords">

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { PostCard, Post } from "@/components/Post";
 import NewPostModal from "@/components/NewPostModal";
 import "./PostsPage.css";
-import { BASE_API_URL } from '../../constants.ts';
+import { BASE_API_URL } from '../../constants';
 
 export function PostsPage() {
     const navigate = useNavigate();

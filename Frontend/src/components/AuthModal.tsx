@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BASE_API_URL } from '../../constants.ts';
+import { BASE_API_URL } from '../../constants';
 
 type AuthMode = "login" | "register";
 interface AuthModalProps {

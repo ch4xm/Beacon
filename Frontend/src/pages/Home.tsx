@@ -15,7 +15,7 @@ import LocationPin from "@/components/LocationPin";
 import DetailedPinModal from "@/components/DetailedPinModal";
 import { NavLink, useNavigate } from "react-router";
 import AuthHook from "./AuthHook";
-import { BASE_API_URL } from '../../constants.ts';
+import { BASE_API_URL, PIN_COLOR, USER_PIN_COLOR } from '../../constants.ts';
 
 const layerStyle: CircleLayerSpecification = {
     id: "point",
@@ -178,8 +178,12 @@ function HomePage() {
                             location: p.location,
                             message: p.message,
                             image: p.image,
+<<<<<<< Updated upstream
                             color: localStorage.getItem("userEmail") == p.email ? "#FFD700" : "#007cbf",
                             address: p.address,
+=======
+                            color: localStorage.getItem("userEmail") == p.email ? USER_PIN_COLOR : PIN_COLOR,
+>>>>>>> Stashed changes
                         },
                     })),
                 };
@@ -224,7 +228,7 @@ function HomePage() {
                 location: feature.properties?.location || "",
                 message: feature.properties?.message || "No message",
                 image: feature.properties?.image || "",
-                color: feature.properties?.color || "#007cbf",
+                color: feature.properties?.color || PIN_COLOR,
                 email: feature.properties?.email || "",
                 address: result,
             });
@@ -389,7 +393,7 @@ function HomePage() {
                                             location: pinData.name,
                                             message: data.message,
                                             image: data.image || "",
-                                            color: data.color || "#007cbf",
+                                            color: data.color || PIN_COLOR,
                                             email: userEmail,
                                         },
                                     },
