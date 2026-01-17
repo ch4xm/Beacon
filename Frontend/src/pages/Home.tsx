@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./Home.css";
+import Pin from "@/components/Pin";
 
 type AuthMode = "login" | "register";
 
@@ -11,6 +12,7 @@ function HomePage() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const searchMarkerRef = useRef<mapboxgl.Marker | null>(null);
+  const [mouseCoords, setMouseCoords] = useState({ lng: 0, lat: 0 });
 
   // Auth state
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
@@ -46,6 +48,16 @@ function HomePage() {
       });
 
       mapRef.current.addControl(new mapboxgl.NavigationControl(), "bottom-right");
+    }
+
+    if (mapRef.current) {
+      mapRef.current.on('click', (e) => {
+        setMouseCoords(e.lngLat);
+        // const popup = new mapboxgl.Popup({ closeOnClick: false })
+        // 	.setLngLat(e.lngLat)
+        // 	.setHTML('<h1>Hello World!</h1>')
+        // 	.addTo(mapRef.current!);
+      });
     }
 
     return () => {
@@ -120,7 +132,7 @@ function HomePage() {
 
     try {
       const endpoint = authMode === "register" ? "/api/register" : "/api/login";
-      
+
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: "POST",
         headers: {
@@ -160,6 +172,8 @@ function HomePage() {
     setCredentials({ email: "", password: "" });
   };
 
+
+
   return (
     <div className="home-container">
       {/* Search Bar - top-left overlay */}
@@ -185,9 +199,9 @@ function HomePage() {
             <div className="auth-modal-header">
               <div className="auth-brand">
                 <svg className="auth-logo" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="40" cy="40" r="36" stroke="#2d6a4f" strokeWidth="2" fill="#e9f5e9"/>
-                  <path d="M40 20C32 20 26 28 26 36C26 48 40 60 40 60C40 60 54 48 54 36C54 28 48 20 40 20Z" fill="#2d6a4f"/>
-                  <circle cx="40" cy="35" r="6" fill="#faf9f7"/>
+                  <circle cx="40" cy="40" r="36" stroke="#2d6a4f" strokeWidth="2" fill="#e9f5e9" />
+                  <path d="M40 20C32 20 26 28 26 36C26 48 40 60 40 60C40 60 54 48 54 36C54 28 48 20 40 20Z" fill="#2d6a4f" />
+                  <circle cx="40" cy="35" r="6" fill="#faf9f7" />
                 </svg>
               </div>
               <h2>{authMode === "login" ? "Welcome back" : "Create account"}</h2>
@@ -266,6 +280,15 @@ function HomePage() {
       )}
 
       <div ref={mapContainerRef} className="map-container" />
+      {mapRef.current && mouseCoords && (
+        <Pin
+          map={mapRef.current}
+          latitude={mouseCoords.lat}
+          longitude={mouseCoords.lng}
+          content={"GEM ALARM"}
+        />)
+      })
+      {/* {mouseCoords && <Pin />} */}
     </div>
   );
 }
