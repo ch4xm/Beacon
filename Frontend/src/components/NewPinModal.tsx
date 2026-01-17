@@ -220,9 +220,9 @@ export default function NewPinModal({
                         <circle cx="40" cy="35" r="6" fill="#faf9f7" />
                     </svg>
                     <h2 className="pin-modal__title">Drop a Pin</h2>
-                    <p className="pin-modal__subtitle">
+                    {/* <p className="pin-modal__subtitle">
                         Share a spot you love with the community
-                    </p>
+                    </p> */}
                     <div className="pin-modal__location">
                         <svg
                             viewBox="0 0 24 24"

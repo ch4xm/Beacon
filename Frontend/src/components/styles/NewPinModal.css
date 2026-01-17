@@ -13,6 +13,8 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     animation: overlayFadeIn 0.3s ease;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
 }
 
 @keyframes overlayFadeIn {
@@ -42,12 +44,15 @@
     border-radius: 24px;
     max-width: 480px;
     width: 90%;
+    max-height: 100%;
     box-shadow:
         0 20px 60px rgba(0, 0, 0, 0.15),
         0 0 40px rgba(45, 106, 79, 0.08);
     border: 1px solid #e5e3df;
     animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ===== Modal Header ===== */
@@ -55,16 +60,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem 2rem 1.5rem;
+    padding: 1.25rem 2rem 1rem;
     background: linear-gradient(180deg, #e9f5e9 0%, #faf9f7 100%);
     border-bottom: 1px solid #e5e3df;
     position: relative;
+    flex-shrink: 0;
 }
 
 .pin-modal__logo {
-    width: 56px;
-    height: 56px;
-    margin-bottom: 0.75rem;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 0.5rem;
 }
 
 .pin-modal__title {
@@ -90,12 +96,12 @@
 
 .pin-modal__close {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 0.75rem;
+    right: 0.75rem;
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid #e5e3df;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -118,6 +124,9 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
 }
 
 .pin-modal__field {
@@ -314,13 +323,13 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.625rem 1rem;
+    padding: 0.5rem 0.875rem;
     background: #e9f5e9;
     border-radius: 999px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #2d6a4f;
     font-weight: 500;
-    margin-top: 0.5rem;
+    margin-top: 0.375rem;
 }
 
 .pin-modal__location svg {
@@ -475,15 +484,18 @@
 
 /* ===== Responsive ===== */
 @media (max-width: 600px) {
+    .pin-modal-overlay {
+        padding: 1.5rem 1rem;
+    }
+
     .pin-modal {
         width: 95%;
         max-width: none;
-        margin: 1rem;
         border-radius: 20px;
     }
 
     .pin-modal__header {
-        padding: 1.5rem 1.5rem 1.25rem;
+        padding: 1rem 1.5rem 0.75rem;
     }
 
     .pin-modal__form {

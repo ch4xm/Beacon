@@ -127,6 +127,7 @@
     font-family: inherit;
     background: white;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
 .form-input:focus,
@@ -147,6 +148,7 @@
     font-family: inherit;
     background: white;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
 .form-textarea:focus {
@@ -163,6 +165,7 @@
     border: 1px solid #e5e3df;
     cursor: pointer;
     font-size: 0.9rem;
+    box-sizing: border-box;
 }
 
 .form-file-input::-webkit-file-upload-button {
