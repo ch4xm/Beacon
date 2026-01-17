@@ -1,42 +1,45 @@
 /**
- * Reverse geocoding utility using Mapbox Search Box API
- * API Docs: https://docs.mapbox.com/api/search/search-box/
+ * Reverse geocoding utility using LocationIQ API
+ * API Docs: https://docs.locationiq.com/docs/reverse-geocoding
  * 
- * Note: The Geocoding API (v5/v6) no longer returns POI data.
- * Search Box API is required for POI/business names.
+ * LocationIQ provides POI data and has a generous free tier (5,000 requests/day).
  */
 
-interface SearchBoxFeature {
-  type: string;
-  geometry: {
-    type: string;
-    coordinates: [number, number];
-  };
-  properties: {
-    mapbox_id: string;
-    feature_type: string;
-    name: string;
-    name_preferred?: string;
-    address?: string;
-    full_address?: string;
-    place_formatted?: string;
-    poi_category?: string[];
-    brand?: string[];
-    context?: {
-      street?: { name: string };
-      neighborhood?: { name: string };
-      postcode?: { name: string };
-      place?: { name: string };
-      region?: { name: string; region_code?: string };
-      country?: { name: string; country_code?: string };
-    };
-  };
+interface LocationIQAddress {
+  name?: string;
+  house_number?: string;
+  road?: string;
+  neighbourhood?: string;
+  suburb?: string;
+  city?: string;
+  town?: string;
+  village?: string;
+  county?: string;
+  state?: string;
+  postcode?: string;
+  country?: string;
+  country_code?: string;
+  // POI-specific fields
+  amenity?: string;
+  shop?: string;
+  building?: string;
+  tourism?: string;
+  leisure?: string;
+  office?: string;
 }
 
-interface SearchBoxResponse {
-  type: string;
-  features: SearchBoxFeature[];
-  attribution: string;
+interface LocationIQResponse {
+  place_id: string;
+  licence: string;
+  osm_type: string;
+  osm_id: string;
+  lat: string;
+  lon: string;
+  display_name: string;
+  address: LocationIQAddress;
+  boundingbox: string[];
+  // Match level indicates precision: venue, building, street, etc.
+  matchlevel?: string;
 }
 
 export interface ReverseGeocodeResult {
@@ -52,62 +55,111 @@ export interface ReverseGeocodeResult {
 }
 
 /**
+ * Extracts the best available name from LocationIQ address data.
+ * Prioritizes POI names (amenity, shop, tourism, etc.) over generic address.
+ */
+function extractName(address: LocationIQAddress, displayName: string): string {
+  // Check for POI-specific names first
+  const poiName = address.name || address.amenity || address.shop || 
+                  address.tourism || address.leisure || address.office;
+  
+  if (poiName) {
+    return poiName;
+  }
+
+  // Build a meaningful address string from house number + street
+  if (address.house_number && address.road) {
+    return `${address.house_number} ${address.road}`;
+  }
+  
+  // If we only have a street name, use that
+  if (address.road) {
+    return address.road;
+  }
+
+  // Fall back to first two parts of display_name for more context
+  const parts = displayName.split(',').map(p => p.trim());
+  const firstPart = parts[0];
+  
+  // If the first part is just a number, include the second part (usually street)
+  if (firstPart && /^\d+$/.test(firstPart) && parts[1]) {
+    return `${firstPart} ${parts[1]}`;
+  }
+  
+  if (firstPart) {
+    return firstPart;
+  }
+
+  return 'Unknown Location';
+}
+
+/**
+ * Extracts city from LocationIQ address, checking multiple fields.
+ */
+function extractCity(address: LocationIQAddress): string | undefined {
+  return address.city || address.town || address.village || address.suburb;
+}
+
+/**
  * Performs reverse geocoding to get a location name from coordinates
- * Uses Mapbox Search Box API (supports POI/business names)
+ * Uses LocationIQ API (supports POI/business names)
  * 
  * @param lat - Latitude coordinate
  * @param lon - Longitude coordinate
  * @returns Location information including name and address
  */
 export async function reverseGeocode(lat: number, lon: number): Promise<ReverseGeocodeResult> {
-  const accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+  const accessToken = import.meta.env.VITE_LOCATIONIQ_TOKEN;
   
   if (!accessToken) {
-    throw new Error('Mapbox access token not configured');
+    throw new Error('LocationIQ access token not configured. Set VITE_LOCATIONIQ_TOKEN in your environment.');
   }
 
-  const url = new URL('https://api.mapbox.com/search/searchbox/v1/reverse');
-  url.searchParams.set('longitude', lon.toString());
-  url.searchParams.set('latitude', lat.toString());
-  url.searchParams.set('access_token', accessToken);
-  url.searchParams.set('limit', '5'); // Get multiple results to find POIs
-  url.searchParams.set('types', 'poi,address'); // Include POIs and addresses
+  const url = new URL('https://us1.locationiq.com/v1/reverse');
+  url.searchParams.set('key', accessToken);
+  url.searchParams.set('lat', lat.toString());
+  url.searchParams.set('lon', lon.toString());
+  url.searchParams.set('format', 'json');
+  url.searchParams.set('addressdetails', '1'); // Include detailed address breakdown
 
   const response = await fetch(url.toString());
 
   if (!response.ok) {
-    throw new Error(`Reverse geocoding failed: ${response.statusText}`);
+    const errorText = await response.text();
+    throw new Error(`Reverse geocoding failed: ${response.statusText} - ${errorText}`);
   }
 
-  const data: SearchBoxResponse = await response.json();
+  const data: LocationIQResponse = await response.json();
 
-  if (!data.features || data.features.length === 0) {
+  if (!data || !data.address) {
     return {
-      name: 'Gem Alarm',
+      name: 'Unknown Location',
       fullAddress: '',
       featureType: 'unknown',
       details: {},
     };
   }
 
-  // Prioritize POI results over addresses
-  const poiFeature = data.features.find(f => f.properties.feature_type === 'poi');
-  const feature = poiFeature || data.features[0];
-  const props = feature.properties;
-  const context = props.context || {};
-
-  // Use the most specific name available
-  const displayName = props.name_preferred || props.name || 'Unknown Location';
+  const address = data.address;
+  const name = extractName(address, data.display_name);
+  
+  // Determine feature type based on what data is available
+  let featureType = 'address';
+  if (address.amenity || address.shop || address.tourism || address.leisure) {
+    featureType = 'poi';
+  } else if (address.building) {
+    featureType = 'building';
+  }
 
   return {
-    name: displayName,
-    fullAddress: props.full_address || props.place_formatted || props.address || '',
-    featureType: props.feature_type,
+    name,
+    fullAddress: data.display_name,
+    featureType,
     details: {
-      street: context.street?.name,
-      city: context.place?.name,
-      state: context.region?.name,
-      country: context.country?.name,
+      street: address.road,
+      city: extractCity(address),
+      state: address.state,
+      country: address.country,
     },
   };
 }
