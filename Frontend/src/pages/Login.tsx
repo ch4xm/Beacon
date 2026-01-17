@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 
-const API_BASE_URL = "http://localhost:3000";
-
 export function LoginPage() {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
@@ -25,7 +23,7 @@ export function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/login`, {
+      const response = await fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
