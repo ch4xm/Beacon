@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import "./SavedPlacesPanel.css";
 
 interface SavedPlace {
-    id: string;
-    name?: string;
-    message?: string;
-    latitude?: number;
-    longitude?: number;
+    id: number;
+    creatorID: number;
+    latitude: number;
+    longitude: number;
+    message: string | null;
+    image: string | null;
+    color: string;
 }
 
 function SavedPlacesPanel() {
@@ -58,7 +60,7 @@ function SavedPlacesPanel() {
                 onClick={() => setIsExpanded(!isExpanded)}
                 title="Toggle Saved Places"
             >
-                {isExpanded ? "−" : "+"}
+                {isExpanded ? "-" : "+"}
             </button>
 
             {isExpanded && (
@@ -72,12 +74,30 @@ function SavedPlacesPanel() {
                     ) : (
                         <ul className="places-list">
                             {savedPlaces.map((place) => (
-                                <li key={place.id} className="place-item">
-                                    <span className="place-name">
-                                        {place.name || `Place #${place.id}`}
-                                    </span>
+                                <li 
+                                    key={place.id} 
+                                    className="place-item"
+                                    onClick={() => {
+                                        // Navigate to the pin location if map interaction is needed
+                                        console.log(`Navigate to pin at ${place.latitude}, ${place.longitude}`);
+                                    }}
+                                >
+                                    <div className="place-header">
+                                        <span 
+                                            className="place-color-indicator" 
+                                            style={{ backgroundColor: place.color || '#007cbf' }}
+                                        />
+                                        <span className="place-coords">
+                                            {place.latitude.toFixed(4)}°, {place.longitude.toFixed(4)}°
+                                        </span>
+                                    </div>
                                     {place.message && (
                                         <span className="place-message">{place.message}</span>
+                                    )}
+                                    {place.image && (
+                                        <div className="place-image-preview">
+                                            <img src={place.image} alt="Pin location" />
+                                        </div>
                                     )}
                                 </li>
                             ))}

@@ -127,33 +127,46 @@ function HomePage() {
   const onMouseLeave = useCallback(() => setCursor('auto'), []);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/pins', {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-      }
-    })
-      .then(res => res.json())
-      .then(res => {
+    const fetchPins = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const headers: HeadersInit = {};
+        
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+
+        const res = await fetch('http://localhost:3000/api/pins', { headers });
+        
+        if (!res.ok) {
+          console.error('Failed to fetch pins:', res.status);
+          return;
+        }
+
+        const data = await res.json();
         const geojson = {
           type: 'FeatureCollection',
-          features: res.map(p => {
-            return {
-              type: 'Feature',
-              geometry: {
-                type: 'Point',
-                coordinates: [p.longitude, p.latitude]
-              },
-              properties: {
-                message: p.message,
-                image: p.image,
-                color: p.color
-              }
+          features: data.map((p: any) => ({
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [p.longitude, p.latitude]
+            },
+            properties: {
+              message: p.message,
+              image: p.image,
+              color: p.color
             }
-          })
+          }))
         };
-        setAllPins(geojson)
-      })
-  }, []);
+        setAllPins(geojson);
+      } catch (error) {
+        console.error('Error fetching pins:', error);
+      }
+    };
+
+    fetchPins();
+  }, [isLoggedIn]);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");

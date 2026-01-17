@@ -103,6 +103,29 @@
     background: #ede9e4;
 }
 
+.place-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.place-color-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.place-coords {
+    display: block;
+    font-weight: 600;
+    color: #1a1a1a;
+    font-size: 0.85rem;
+}
+
 .place-name {
     display: block;
     font-weight: 600;
@@ -118,6 +141,22 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin-top: 4px;
+}
+
+.place-image-preview {
+    margin-top: 8px;
+    border-radius: 8px;
+    overflow: hidden;
+    max-height: 100px;
+}
+
+.place-image-preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 100px;
 }
 
 .loading,
