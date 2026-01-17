@@ -309,7 +309,7 @@ function HomePage() {
                   }}
                 />
               )}
-              <p style={{ margin: 0, fontWeight: 'bold' }}>{selectedPoint.message}</p>
+              <p style={{ margin: 0, fontWeight: 'bold', color: '#1a1a1a' }}>{selectedPoint.message}</p>
             </div>
           </Popup>
         )}
