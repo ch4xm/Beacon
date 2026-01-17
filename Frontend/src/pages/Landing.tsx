@@ -1,22 +1,54 @@
 import "./Landing.css";
-import { NavLink } from "react-router";
-
-import { useEffect } from "react";
+import { NavLink, useNavigate } from "react-router";
+import { useEffect, useRef } from "react";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 function Landing() {
+  const navigate = useNavigate();
+  const mapPreviewRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<mapboxgl.Map | null>(null);
+
   useEffect(() => {
-      const heartbeat = async () => {
-        try {
-          const res = await fetch("/heartbeat");
-          const data = await res.json();
-          console.log("[Client-side] Server reachable:", data);
-        } catch (err) {
-          console.error("[Cleint-side] Server unreachable:", err);
-        }
-      };
-  
-      heartbeat();
-    }, []);
+    const heartbeat = async () => {
+      try {
+        const res = await fetch("/heartbeat");
+        const data = await res.json();
+        console.log("[Client-side] Server reachable:", data);
+      } catch (err) {
+        console.error("[Client-side] Server unreachable:", err);
+      }
+    };
+
+    heartbeat();
+  }, []);
+
+  useEffect(() => {
+    const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+    if (!token || !mapPreviewRef.current || mapRef.current) return;
+
+    mapboxgl.accessToken = token;
+
+    mapRef.current = new mapboxgl.Map({
+      container: mapPreviewRef.current,
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: [-122, 37],
+      zoom: 9,
+      interactive: false, // Disable interactions for preview
+      attributionControl: false,
+    });
+
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleMapPreviewClick = () => {
+    navigate("/home");
+  };
 
   return (
     <div className="landing">
@@ -61,46 +93,31 @@ function Landing() {
             </div>
           </div>
           <div className="hero__visual">
-            <div className="hero__card">
-              <div className="hero__card-bar">
-                <span>Beacon Map</span>
-                <span className="hero__badge">Live</span>
+            <div 
+              className="map-preview-window"
+              onClick={handleMapPreviewClick}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && handleMapPreviewClick()}
+            >
+              <div className="map-preview-header">
+                <div className="map-preview-dots">
+                  <span className="dot dot--red" />
+                  <span className="dot dot--yellow" />
+                  <span className="dot dot--green" />
+                </div>
+                <span className="map-preview-title">Beacon Map</span>
+                {/* <span className="map-preview-badge">Live</span> */}
               </div>
-              <div className="hero__card-body">
-                <aside className="hero__sidebar">
-                  <h4>Local Gems</h4>
-                  <div className="hero__pill">🌱 84% green</div>
-                  <ul>
-                    <li>Sunrise Market</li>
-                    <li>Riverwalk Bakery</li>
-                    <li>Community Bike Hub</li>
-                  </ul>
-                </aside>
-                <div className="hero__map">
-                  <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width: '100%', maxHeight: '160px', opacity: 0.5}}>
-                    <ellipse cx="100" cy="60" rx="85" ry="50" fill="#d8f3dc" fillOpacity="0.5"/>
-                    <path d="M30 55C40 40 70 35 100 40C130 45 160 55 175 65" stroke="#2d6a4f" strokeWidth="2" strokeOpacity="0.3" fill="none"/>
-                    <path d="M25 70C45 80 80 85 110 80C140 75 165 65 180 55" stroke="#2d6a4f" strokeWidth="2" strokeOpacity="0.2" fill="none"/>
-                    <circle cx="50" cy="50" r="8" fill="#2d6a4f" fillOpacity="0.2"/>
-                    <circle cx="120" cy="45" r="12" fill="#2d6a4f" fillOpacity="0.15"/>
-                    <circle cx="160" cy="70" r="6" fill="#2d6a4f" fillOpacity="0.25"/>
+              <div className="map-preview-container" ref={mapPreviewRef} />
+              <div className="map-preview-overlay">
+                <div className="map-preview-cta">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  <div className="hero__pin hero__pin--one" />
-                  <div className="hero__pin hero__pin--two" />
-                  <div className="hero__pin hero__pin--three" />
+                  <span>Click to explore</span>
                 </div>
               </div>
-              <div className="hero__card-footer">
-                <div>
-                  <strong>Walking guide:</strong> 4.2 km · 3 hrs · net-zero
-                </div>
-                <button className="button button--tiny" type="button">
-                  View itinerary
-                </button>
-              </div>
-            </div>
-            <div className="hero__stamp">
-              <p>AI tags photos, suggests green alternatives, and builds itineraries.</p>
             </div>
           </div>
         </section>

@@ -10,6 +10,11 @@
   height: 100%;
 }
 
+.map-container .mapboxgl-ctrl-logo,
+.map-container .mapboxgl-ctrl-attrib {
+  display: none !important;
+}
+
 .logout-button {
   position: absolute;
   top: 16px;
