@@ -127,6 +127,7 @@ export default function Pin({
                 <NewPinModal
                     latitude={latitude}
                     longitude={longitude}
+                    locationName={name}
                     onClose={() => setModalOpen(false)}
                     onSubmit={() => console.log("submit")}
                 />

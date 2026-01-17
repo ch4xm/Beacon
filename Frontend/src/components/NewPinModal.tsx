@@ -6,6 +6,7 @@ interface NewPinModalProps {
 	onSubmit: (data: { message: string; image?: string; color?: string }) => void;
 	latitude: number;
 	longitude: number;
+	locationName: string;
 }
 
 const COLOR_PRESETS = [
@@ -19,7 +20,7 @@ const COLOR_PRESETS = [
 const MAX_FILE_SIZE = 4.5 * 1024 * 1024; // 4.5MB limit for Vercel Blob
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-export default function NewPinModal({ onClose, onSubmit, latitude, longitude }: NewPinModalProps) {
+export default function NewPinModal({ onClose, onSubmit, latitude, longitude, locationName }: NewPinModalProps) {
 	const [message, setMessage] = useState("");
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -170,7 +171,7 @@ export default function NewPinModal({ onClose, onSubmit, latitude, longitude }: 
 						<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor"/>
 						</svg>
-						<span>{formatCoordinate(latitude, true)}, {formatCoordinate(longitude, false)}</span>
+						<span>{locationName}, {formatCoordinate(latitude, true)} {formatCoordinate(longitude, false)}</span>
 					</div>
 				</header>
 
