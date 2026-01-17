@@ -10,6 +10,7 @@ const API_BASE_URL = "http://localhost:3000";
 function HomePage() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
+  const searchMarkerRef = useRef<mapboxgl.Marker | null>(null);
 
   // Auth state
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
@@ -22,6 +23,8 @@ function HomePage() {
   });
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isSearching, setIsSearching] = useState<boolean>(false);
 
   useEffect(() => {
     // Check if token exists
@@ -52,6 +55,51 @@ function HomePage() {
       }
     };
   }, []);
+
+  const handleSearchSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim() || !mapRef.current) return;
+
+    const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+    if (!token) {
+      console.error("Missing Mapbox token");
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+        searchQuery
+      )}.json?access_token=${token}&limit=2`;
+
+      const resp = await fetch(url);
+      const data = await resp.json();
+
+      const feature = data?.features?.[0];
+      if (!feature || !feature.center) {
+        console.warn("No results found");
+        setIsSearching(false);
+        return;
+      }
+
+      const [lng, lat] = feature.center as [number, number];
+
+      if (!searchMarkerRef.current) {
+        searchMarkerRef.current = new mapboxgl.Marker({ color: "#1a1a1a" });
+      }
+      searchMarkerRef.current.setLngLat([lng, lat]).addTo(mapRef.current);
+
+      mapRef.current.flyTo({
+        center: [lng, lat],
+        zoom: 12,
+        essential: true,
+      });
+    } catch (err) {
+      console.error("Geocoding error:", err);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -114,6 +162,22 @@ function HomePage() {
 
   return (
     <div className="home-container">
+      {/* Search Bar - top-left overlay */}
+      <div className="search-bar">
+        <form onSubmit={handleSearchSubmit} className="search-form">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search places..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="submit" className="search-button" aria-label="Search" disabled={isSearching}>
+            {isSearching ? "…" : "🔍"}
+          </button>
+        </form>
+      </div>
+
       {/* Auth Modal - shown when not logged in */}
       {!isLoggedIn && (
         <div className="auth-modal-overlay">

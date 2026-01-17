@@ -1,5 +1,5 @@
 .home-container {
-  position: relative;
+  position: relative; /* Ensure overlays position correctly */
   height: 100vh;
   width: 100vw;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -259,4 +259,43 @@
 .auth-switch-btn:hover {
   color: #1b4332;
   text-decoration: underline;
+}
+
+/* Search bar overlay */
+.search-bar {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 8px 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  width: 220px;
+  font-size: 14px;
+}
+
+.search-button {
+  border: none;
+  background: #2d6a4f;
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background: #245a41;
 }
