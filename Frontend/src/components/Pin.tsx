@@ -1,48 +1,37 @@
-import { useEffect, useRef } from "react";
-import mapboxgl from "mapbox-gl";
-import { createPortal } from "react-dom";
-
 interface PinProps {
-	map: mapboxgl.Map,
-	latitude: number,
-	longitude: number,
 	content: string
 }
 
-export default function Pin({ map, latitude, longitude, content }: PinProps) {
-	const markerRef = useRef<mapboxgl.Marker|null>(null);
-	const contentRef = useRef(document.createElement("div"));
-
-	useEffect(() => {
-		markerRef.current = new mapboxgl.Marker(contentRef.current)
-			.setLngLat([longitude, latitude])
-			.addTo(map);
-
-		return () => {
-			markerRef.current!.remove();
-		};
-	}, []);
+export default function Pin({ content }: PinProps) {
 	return (
-		<>
-			{createPortal(
-				<div
-					style={{
-						display: "inline-block",
-						padding: "2px 10px",
-						borderRadius: "50px",
-						backgroundColor: "#fff",
-						boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.5)",
-						fontFamily: "Arial, sans-serif",
-						fontSize: "14px",
-						fontWeight: "bold",
-						color: "#333",
-						textAlign: "center",
-					}}
-				>
-					{content}
-				</div>,
-				contentRef.current
-			)}
-		</>
+		<div
+			style={{
+				display: "inline-block",
+				padding: "12px 20px",
+				borderRadius: "16px",
+				background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+				boxShadow: "0 8px 24px rgba(102, 126, 234, 0.4), 0 4px 8px rgba(0, 0, 0, 0.1)",
+				fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+				fontSize: "15px",
+				fontWeight: "600",
+				color: "#fff",
+				textAlign: "center",
+				letterSpacing: "0.3px",
+				cursor: "pointer",
+				transition: "all 0.3s ease",
+				border: "2px solid rgba(255, 255, 255, 0.2)",
+				backdropFilter: "blur(10px)",
+			}}
+			onMouseEnter={(e) => {
+				e.currentTarget.style.transform = "translateY(-2px) scale(1.05)";
+				e.currentTarget.style.boxShadow = "0 12px 32px rgba(102, 126, 234, 0.5), 0 6px 12px rgba(0, 0, 0, 0.15)";
+			}}
+			onMouseLeave={(e) => {
+				e.currentTarget.style.transform = "translateY(0) scale(1)";
+				e.currentTarget.style.boxShadow = "0 8px 24px rgba(102, 126, 234, 0.4), 0 4px 8px rgba(0, 0, 0, 0.1)";
+			}}
+		>
+			{content}
+		</div>
 	);
 };

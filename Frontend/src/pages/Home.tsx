@@ -1,73 +1,30 @@
 import { useEffect, useRef, useState } from "react";
-import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./Home.css";
 import Pin from "@/components/Pin";
+import { createRoot } from "react-dom/client";
+import * as React from 'react';
+import Map from 'react-map-gl/mapbox';
 
-type AuthMode = "login" | "register";
-
-const API_BASE_URL = "http://localhost:3000";
 
 function HomePage() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const searchMarkerRef = useRef<mapboxgl.Marker | null>(null);
-  const [mouseCoords, setMouseCoords] = useState({ lng: 0, lat: 0 });
 
-  // Auth state
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     return !!localStorage.getItem("accessToken");
   });
-  const [authMode, setAuthMode] = useState<AuthMode>("login");
+
+  // Auth state
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
-
-  useEffect(() => {
-    // Check if token exists
-    const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
-    if (!token) {
-      console.error("Mapbox access token is missing. Please set VITE_MAPBOX_ACCESS_TOKEN in your .env file.");
-      return;
-    }
-
-    mapboxgl.accessToken = token;
-
-    if (mapContainerRef.current && !mapRef.current) {
-      mapRef.current = new mapboxgl.Map({
-        container: mapContainerRef.current,
-        style: "mapbox://styles/mapbox/streets-v12",
-        center: [-122, 37],
-        zoom: 9,
-        minZoom: 3
-      });
-
-      mapRef.current.addControl(new mapboxgl.NavigationControl(), "bottom-right");
-    }
-
-    if (mapRef.current) {
-      mapRef.current.on('click', (e) => {
-        setMouseCoords(e.lngLat);
-        // const popup = new mapboxgl.Popup({ closeOnClick: false })
-        // 	.setLngLat(e.lngLat)
-        // 	.setHTML('<h1>Hello World!</h1>')
-        // 	.addTo(mapRef.current!);
-      });
-    }
-
-    return () => {
-      if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
-      }
-    };
-  }, []);
 
   // Debounced search-as-you-type
   useEffect(() => {
@@ -143,64 +100,7 @@ function HomePage() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setCredentials({ ...credentials, [name]: value });
-    if (error) setError("");
-  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    if (!credentials.email.trim() || !credentials.password.trim()) {
-      setError("Please fill in all fields");
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const endpoint = authMode === "register" ? "/api/register" : "/api/login";
-
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: credentials.email,
-          password: credentials.password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || (authMode === "register" ? "Registration failed" : "Login failed"));
-      }
-
-      // Store the token
-      localStorage.setItem("accessToken", data.accessToken);
-      setIsLoggedIn(true);
-      setCredentials({ email: "", password: "" });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    setIsLoggedIn(false);
-  };
-
-  const switchAuthMode = () => {
-    setAuthMode(authMode === "login" ? "register" : "login");
-    setError("");
-    setCredentials({ email: "", password: "" });
-  };
 
 
 
@@ -326,16 +226,16 @@ function HomePage() {
         </button>
       )}
 
-      <div ref={mapContainerRef} className="map-container" />
-      {mapRef.current && mouseCoords && (
-        <Pin
-          map={mapRef.current}
-          latitude={mouseCoords.lat}
-          longitude={mouseCoords.lng}
-          content={"GEM ALARM"}
-        />)
-      })
-      {/* {mouseCoords && <Pin />} */}
+      <Map
+        mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+        initialViewState={{
+          longitude: -122.4,
+          latitude: 37.8,
+          zoom: 9,
+          // minZoom: 3
+        }}
+        mapStyle="mapbox://styles/mapbox/streets-v12"
+      />
     </div>
   );
 }
