@@ -1,11 +1,7 @@
 import { useState, useRef } from "react";
 import "./styles/DetailedPinModal.css";
-<<<<<<< Updated upstream
-import { BASE_API_URL } from '../../constants.ts';
+import { BASE_API_URL,PIN_COLOR } from '../../constants';
 import {ReverseGeocodeResult} from "@/utils/geocoding";
-=======
-import { BASE_API_URL, PIN_COLOR } from '../../constants';
->>>>>>> Stashed changes
 
 interface DetailedPinModalProps {
     selectedPoint: {
