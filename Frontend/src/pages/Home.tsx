@@ -87,6 +87,7 @@ interface SelectedPoint {
     creatorID?: number;
     longitude: number;
     latitude: number;
+    title?: string;
     message: string;
     image: string;
     color: string;
@@ -112,6 +113,7 @@ function HomePage() {
             properties: {
                 id?: number;
                 creatorID?: number;
+                title?: string;
                 message: string;
                 image: string;
                 color: string;
@@ -173,6 +175,7 @@ function HomePage() {
                         properties: {
                             id: p.id,
                             creatorID: p.creatorID,
+                            title: p.title,
                             message: p.message,
                             image: p.image,
                             color: p.color,
@@ -220,6 +223,7 @@ function HomePage() {
                 creatorID: feature.properties?.creatorID,
                 longitude: coords[0],
                 latitude: coords[1],
+                title: feature.properties?.title || "",
                 message: feature.properties?.message || "No message",
                 image: feature.properties?.image || "",
                 color: feature.properties?.color || "#007cbf",
@@ -384,6 +388,7 @@ function HomePage() {
                                             ],
                                         },
                                         properties: {
+                                            title: data.title,
                                             message: data.message,
                                             image: data.image || "",
                                             color: data.color || "#007cbf",

@@ -29,14 +29,15 @@ export function createPin(req: Request, res: Response) {
 
     const results = db.query(
         `
-		INSERT INTO pin(creatorID, latitude, longitude, message, image, color, email)
-		VALUES(?, ?, ?, ?, ?, ?, ?)
+		INSERT INTO pin(creatorID, latitude, longitude, title, message, image, color, email)
+		VALUES(?, ?, ?, ?, ?, ?, ?, ?)
 		RETURNING id;
 	`,
         [
             req.user.id,
             req.body.latitude,
             req.body.longitude,
+            req.body.title ?? null,
             req.body.message ?? null,
             req.body.image ?? null,
             req.body.color ?? null,
@@ -50,7 +51,7 @@ export function createPin(req: Request, res: Response) {
 export function updatePin(req: Request, res: Response) {
     const pinID = req.params.id;
     const userID = req.user.id;
-    const { message, image, color } = req.body;
+    const { title, message, image, color } = req.body;
 
     const pin = db.query("SELECT creatorID FROM pin WHERE id = ?", [pinID])[0];
     if (!pin) {
@@ -68,6 +69,10 @@ export function updatePin(req: Request, res: Response) {
     if (message !== undefined) {
         updates.push("message = ?");
         params.push(message);
+    }
+    if (title !== undefined) {
+        updates.push("title = ?");
+        params.push(title);
     }
     if (image !== undefined) {
         updates.push("image = ?");

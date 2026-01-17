@@ -4,6 +4,7 @@ import "./styles/NewPinModal.css";
 interface NewPinModalProps {
     onClose: () => void;
     onSubmit: (data: {
+        title: string;
         message: string;
         image?: string;
         color?: string;
@@ -148,7 +149,12 @@ export default function NewPinModal({
             });
 
             if (response.ok) {
-                onSubmit({ message, image: imageUrl || undefined, color });
+                onSubmit({
+                    title,
+                    message,
+                    image: imageUrl || undefined,
+                    color,
+                });
                 setTitle("");
                 setMessage("");
                 setImageFile(null);

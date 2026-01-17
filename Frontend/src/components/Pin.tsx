@@ -11,6 +11,7 @@ interface PinProps {
     onClose: () => void;
     onDetails?: () => void;
     onPinCreated?: (data: {
+        title: string;
         message: string;
         image?: string;
         color?: string;

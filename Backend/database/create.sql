@@ -12,6 +12,7 @@ CREATE TABLE pin (
 	creatorID INTEGER,
 	latitude REAL,
 	longitude REAL,
+	title VARCHAR(200),
 	message VARCHAR(200),
 	email VARCHAR(32),
 	image VARCHAR(2000),

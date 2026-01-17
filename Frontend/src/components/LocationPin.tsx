@@ -5,6 +5,7 @@ interface LocationPinProps {
     selectedPoint: {
         latitude: number;
         longitude: number;
+        title?: string;
         image: string;
         message: string;
         color?: string;
@@ -19,6 +20,17 @@ export default function LocationPin({
     setSelectedPoint,
     onShowDetails,
 }: LocationPinProps) {
+    const titleText =
+        selectedPoint.title?.trim() ||
+        selectedPoint.message?.trim() ||
+        "Untitled Pin";
+    const messageText = selectedPoint.message?.trim() || "";
+    const showMessage = messageText && messageText !== titleText;
+    const descriptionPreview =
+        messageText.length > 50
+            ? `${messageText.slice(0, 50).trimEnd()}...`
+            : messageText;
+
     return (
         <Popup
             longitude={selectedPoint.longitude}
@@ -30,6 +42,17 @@ export default function LocationPin({
             className="location-pin-popup"
         >
             <div style={{ maxWidth: "220px" }}>
+                <div
+                    style={{
+                        margin: "0 4px 8px 4px",
+                        fontWeight: "700",
+                        color: "#1a1a1a",
+                        fontSize: "16px",
+                        lineHeight: "1.4",
+                    }}
+                >
+                    {titleText}
+                </div>
                 {selectedPoint.image && (
                     <img
                         src={selectedPoint.image}
@@ -43,17 +66,19 @@ export default function LocationPin({
                         }}
                     />
                 )}
-                <p
-                    style={{
-                        margin: "0 4px 8px 4px",
-                        fontWeight: "600",
-                        color: "#1a1a1a",
-                        fontSize: "15px",
-                        lineHeight: "1.4",
-                    }}
-                >
-                    {selectedPoint.message}
-                </p>
+                {showMessage && (
+                    <p
+                        style={{
+                            margin: "0 4px 8px 4px",
+                            fontWeight: "500",
+                            color: "#6b7280",
+                            fontSize: "14px",
+                            lineHeight: "1.4",
+                        }}
+                    >
+                        {descriptionPreview}
+                    </p>
+                )}
                 <button
                     onClick={onShowDetails}
                     style={{

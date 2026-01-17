@@ -7,6 +7,7 @@ interface DetailedPinModalProps {
         creatorID?: number;
         latitude: number;
         longitude: number;
+        title?: string;
         message: string;
         image: string;
         color?: string;
@@ -49,6 +50,13 @@ export default function DetailedPinModal({
 
     const isOwner =
         currentUserEmail != null && selectedPoint.email == currentUserEmail;
+
+    const titleText =
+        selectedPoint.title?.trim() ||
+        selectedPoint.message?.trim() ||
+        "Untitled Pin";
+    const messageText = selectedPoint.message?.trim() || "";
+    const showMessage = messageText && messageText !== titleText;
 
     // console.log( isOwner )
     // console.log( currentUserEmail )
@@ -240,11 +248,20 @@ export default function DetailedPinModal({
                             )}
 
                             <div className="detailed-info-section">
-                                <h3>Description</h3>
+                                <h3>Title</h3>
                                 <p className="detailed-message">
-                                    {selectedPoint.message}
+                                    {titleText}
                                 </p>
                             </div>
+
+                            {showMessage && (
+                                <div className="detailed-info-section">
+                                    <h3>Description</h3>
+                                    <p className="detailed-message">
+                                        {messageText}
+                                    </p>
+                                </div>
+                            )}
 
                             {selectedPoint.email && (
                                 <div className="detailed-info-section">

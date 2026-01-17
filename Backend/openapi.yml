@@ -72,6 +72,11 @@ paths:
                   type: number
                   description: Longitude coordinate of the pin
                   example: -74.0060
+                title:
+                  type: string
+                  maxLength: 200
+                  description: Title of the pin
+                  example: "Golden Gate Overlook"
                 message:
                   type: string
                   maxLength: 200
@@ -164,7 +169,7 @@ paths:
     
     put:
       summary: Update a specific pin by ID
-      description: Updates message/image/color for a pin (owner only)
+      description: Updates title/message/image/color for a pin (owner only)
       operationId: updatePin
       parameters:
         - in: path
@@ -181,6 +186,10 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                  maxLength: 200
+                  nullable: true
                 message:
                   type: string
                   maxLength: 200
@@ -610,6 +619,12 @@ components:
         longitude:
           type: number
           description: self explanatory
+        title:
+          type: string
+          maxLength: 200
+          description: Title of the pin
+          example: "Golden Gate Overlook"
+          nullable: true
         message:
           type: string
           maxLength: 200
