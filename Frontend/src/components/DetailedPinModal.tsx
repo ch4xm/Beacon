@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import "./DetailedPinModal.css";
+import "./styles/DetailedPinModal.css";
 
 interface DetailedPinModalProps {
     selectedPoint: {
