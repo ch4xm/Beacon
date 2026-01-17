@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import {LoginPage} from "./pages/Login";
 
 type HelloResponse = {
   message: string;
@@ -19,10 +20,11 @@ function App() {
   }, []);
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-      <h1>Vite + React + Express</h1>
-      <p>{message || "Loading..."}</p>
-    </div>
+    <LoginPage />
+    // <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+    //   <h1>Vite + React + Express</h1>
+    //   <p>{message || "Loading..."}</p>
+    // </div>
   );
 }
 
