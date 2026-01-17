@@ -1,0 +1,171 @@
+openapi: 3.0.0
+info:
+  title: Beacon API
+  version: 1.0.0
+  description: API for managing pins in the Beacon application
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /heartbeat:
+    get:
+      summary: Health check endpoint
+      description: Returns server status and current timestamp
+      operationId: heartbeat
+      responses:
+        '200':
+          description: Server is running
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  timestamp:
+                    type: integer
+                    description: Current server timestamp in milliseconds
+                    example: 1737043200000
+
+  /api/pins:
+    get:
+      summary: Get all pins
+      description: Retrieves all pins from the database
+      operationId: getAllPins
+      responses:
+        '200':
+          description: Successful response with array of pins
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pin'
+    
+    post:
+      summary: Create a new pin
+      description: Creates a new pin with the provided data
+      operationId: createPin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - creatorID
+              properties:
+                creatorID:
+                  type: integer
+                  description: ID of the account creating the pin
+                  example: 1
+                message:
+                  type: string
+                  maxLength: 20
+                  description: Message content of the pin
+                  example: "Check this out"
+                  nullable: true
+                image:
+                  type: string
+                  maxLength: 2000
+                  description: URL of the image
+                  example: "https://example.com/image.jpg"
+                  nullable: true
+                color:
+                  type: string
+                  maxLength: 10
+                  description: Color code for the pin
+                  example: "#FF6B6B"
+                  nullable: true
+      responses:
+        '200':
+          description: Pin created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID of the newly created pin
+        '400':
+          description: Bad request - missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/pins/{id}:
+    get:
+      summary: Get a specific pin by ID
+      description: Retrieves a single pin by its ID
+      operationId: getPin
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the pin to retrieve
+          example: 1
+      responses:
+        '200':
+          description: Successful response with pin data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pin'
+
+components:
+  schemas:
+    Pin:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the pin
+          example: 1
+        creatorID:
+          type: integer
+          description: ID of the account that created the pin
+          example: 1
+        message:
+          type: string
+          maxLength: 20
+          description: Message content of the pin
+          example: "Welcome to Beacon!"
+          nullable: true
+        image:
+          type: string
+          maxLength: 2000
+          description: URL of the image
+          example: "https://images.unsplash.com/photo-1516192518150-0d8fee5425e3"
+          nullable: true
+        color:
+          type: string
+          maxLength: 10
+          description: Color code for the pin
+          example: "#FF6B6B"
+          nullable: true
+    
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "creatorID is required"
+        details:
+          type: string
+          description: Additional error details
+          example: "FOREIGN KEY constraint failed"
