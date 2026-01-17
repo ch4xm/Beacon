@@ -34,7 +34,7 @@ function HomePage() {
       mapRef.current = new mapboxgl.Map({
         container: mapContainerRef.current,
         style: "mapbox://styles/mapbox/streets-v12",
-        center: [-74.5, 40],
+        center: [-122, 37],
         zoom: 9,
         minZoom: 3
       });
