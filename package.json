@@ -1,0 +1,11 @@
+{
+  "name": "my-app",
+  "private": true,
+  "packageManager": "pnpm@9.14.3",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "start": "pnpm --filter backend start"
+  }
+}
+
