@@ -370,7 +370,8 @@ function HomePage() {
                     properties: {
                       message: data.message,
                       image: data.image || '',
-                      color: data.color || '#007cbf'
+                      color: data.color || '#007cbf',
+                      email: userEmail
                     }
                   }
                 ]
