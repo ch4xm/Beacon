@@ -11,7 +11,7 @@ import Pin from "@/components/Pin";
 function HomePage() {
   const mapRef = useRef<MapRef | null>(null);
   const searchMarkerRef = useRef<mapboxgl.Marker | null>(null);
-  const [clickedCoords, setClickedCoords] = useState({ lat: 0, lng: 0 });
+  const [clickedCoords, setClickedCoords] = useState(null);
 
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
@@ -51,13 +51,14 @@ function HomePage() {
           zoom: 9,
         }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
-        onClick={(e) => setClickedCoords(e.lngLat)}
+        onClick={(e) => {console.log(e.lngLat); setClickedCoords(e.lngLat)}}
       >
-        <Pin
+        {clickedCoords && <Pin
           content={"GEM ALARM"}
           latitude={clickedCoords.lat}
           longitude={clickedCoords.lng}
-        />
+          onClose={() => setClickedCoords(null)}
+        />}
       </Map>
     </div>
   );
