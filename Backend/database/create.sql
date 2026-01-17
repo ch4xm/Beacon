@@ -13,7 +13,7 @@ CREATE TABLE pin (
 	latitude REAL,
 	longitude REAL,
 	title VARCHAR(200),
-	message VARCHAR(200),
+	message VARCHAR(500),
 	email VARCHAR(32),
 	image VARCHAR(2000),
 	color VARCHAR(10) DEFAULT "#0000FF",
