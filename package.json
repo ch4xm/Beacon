@@ -6,7 +6,8 @@
     "dev": "pnpm -r --parallel dev",
     "build": "pnpm --filter frontend build",
     "start": "pnpm --filter backend start"
+  },
+  "dependencies": {
+    "eslint": "^9.39.1"
   }
 }
-
-
