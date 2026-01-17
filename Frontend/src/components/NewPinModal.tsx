@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./NewPinModal.css";
 
 interface NewPinModalProps {
@@ -16,36 +16,133 @@ const COLOR_PRESETS = [
 	"#9c6644", // Brown
 ];
 
+const MAX_FILE_SIZE = 4.5 * 1024 * 1024; // 4.5MB limit for Vercel Blob
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
 export default function NewPinModal({ onClose, onSubmit, latitude, longitude }: NewPinModalProps) {
 	const [message, setMessage] = useState("");
-	const [image, setImage] = useState("");
+	const [imageFile, setImageFile] = useState<File | null>(null);
+	const [imagePreview, setImagePreview] = useState<string | null>(null);
 	const [color, setColor] = useState("#2d6a4f");
+	const [isUploading, setIsUploading] = useState(false);
+	const [uploadError, setUploadError] = useState<string | null>(null);
+	const [isDragging, setIsDragging] = useState(false);
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleFileSelect = (file: File) => {
+		setUploadError(null);
+
+		if (!ALLOWED_TYPES.includes(file.type)) {
+			setUploadError('Please select a valid image (JPEG, PNG, GIF, or WebP)');
+			return;
+		}
+
+		if (file.size > MAX_FILE_SIZE) {
+			setUploadError('Image must be less than 4.5MB');
+			return;
+		}
+
+		setImageFile(file);
+		
+		// Create preview
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			setImagePreview(e.target?.result as string);
+		};
+		reader.readAsDataURL(file);
+	};
+
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (file) {
+			handleFileSelect(file);
+		}
+	};
+
+	const handleDragOver = (e: React.DragEvent) => {
 		e.preventDefault();
+		setIsDragging(true);
+	};
 
-		fetch('http://localhost:3000/api/pins', {
+	const handleDragLeave = (e: React.DragEvent) => {
+		e.preventDefault();
+		setIsDragging(false);
+	};
+
+	const handleDrop = (e: React.DragEvent) => {
+		e.preventDefault();
+		setIsDragging(false);
+		const file = e.dataTransfer.files?.[0];
+		if (file) {
+			handleFileSelect(file);
+		}
+	};
+
+	const removeImage = () => {
+		setImageFile(null);
+		setImagePreview(null);
+		setUploadError(null);
+		if (fileInputRef.current) {
+			fileInputRef.current.value = "";
+		}
+	};
+
+	const uploadImage = async (file: File): Promise<string> => {
+		const response = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-			},
-			body: JSON.stringify({
-				latitude: latitude,
-				longitude: longitude,
-				message: message,
-				image: image,
-				color: color
-			})
-		}).then(res => {
-			if (res.ok) {
-				onSubmit({ message, image: image || undefined, color });
+			body: file,
+		});
+
+		if (!response.ok) {
+			throw new Error('Upload failed');
+		}
+
+		const blob = await response.json();
+		return blob.url;
+	};
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setIsUploading(true);
+		setUploadError(null);
+
+		try {
+			let imageUrl: string | null = null;
+
+			// Upload image if one is selected
+			if (imageFile) {
+				imageUrl = await uploadImage(imageFile);
+			}
+
+			const response = await fetch('http://localhost:3000/api/pins', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+				},
+				body: JSON.stringify({
+					latitude: latitude,
+					longitude: longitude,
+					message: message,
+					image: imageUrl,
+					color: color
+				})
+			});
+
+			if (response.ok) {
+				onSubmit({ message, image: imageUrl || undefined, color });
 				setMessage("");
-				setImage("");
+				setImageFile(null);
+				setImagePreview(null);
 				setColor("#2d6a4f");
 				onClose();
 			}
-		})
+		} catch (error) {
+			console.error('Error creating pin:', error);
+			setUploadError('Failed to upload image. Please try again.');
+		} finally {
+			setIsUploading(false);
+		}
 	};
 
 	const formatCoordinate = (coord: number, isLat: boolean) => {
@@ -95,18 +192,54 @@ export default function NewPinModal({ onClose, onSubmit, latitude, longitude }: 
 					</div>
 
 					<div className="pin-modal__field">
-						<label htmlFor="image" className="pin-modal__label">
-							Photo URL
+						<label className="pin-modal__label">
+							Photo
 							<span className="pin-modal__label-hint">optional</span>
 						</label>
-						<input
-							type="url"
-							id="image"
-							className="pin-modal__input"
-							value={image}
-							onChange={(e) => setImage(e.target.value)}
-							placeholder="https://example.com/photo.jpg"
-						/>
+						
+						{imagePreview ? (
+							<div className="pin-modal__image-preview">
+								<img src={imagePreview} alt="Preview" />
+								<button 
+									type="button" 
+									className="pin-modal__image-remove"
+									onClick={removeImage}
+									aria-label="Remove image"
+								>
+									<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M1 1L13 13M1 13L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+									</svg>
+								</button>
+							</div>
+						) : (
+							<div 
+								className={`pin-modal__upload-area ${isDragging ? 'pin-modal__upload-area--dragging' : ''}`}
+								onDragOver={handleDragOver}
+								onDragLeave={handleDragLeave}
+								onDrop={handleDrop}
+								onClick={() => fileInputRef.current?.click()}
+							>
+								<input
+									ref={fileInputRef}
+									type="file"
+									accept="image/jpeg,image/png,image/gif,image/webp"
+									onChange={handleFileChange}
+									className="pin-modal__file-input"
+								/>
+								<svg className="pin-modal__upload-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M4 16L4 17C4 18.6569 5.34315 20 7 20L17 20C18.6569 20 20 18.6569 20 17L20 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+									<path d="M12 4L12 14M12 4L8 8M12 4L16 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+								</svg>
+								<span className="pin-modal__upload-text">
+									<strong>Click to upload</strong> or drag and drop
+								</span>
+								<span className="pin-modal__upload-hint">JPEG, PNG, GIF or WebP (max 4.5MB)</span>
+							</div>
+						)}
+						
+						{uploadError && (
+							<span className="pin-modal__error">{uploadError}</span>
+						)}
 					</div>
 
 					<div className="pin-modal__field">
@@ -135,11 +268,18 @@ export default function NewPinModal({ onClose, onSubmit, latitude, longitude }: 
 					</div>
 
 					<div className="pin-modal__actions">
-						<button type="button" onClick={onClose} className="pin-modal__btn pin-modal__btn--secondary">
+						<button type="button" onClick={onClose} className="pin-modal__btn pin-modal__btn--secondary" disabled={isUploading}>
 							Cancel
 						</button>
-						<button type="submit" className="pin-modal__btn pin-modal__btn--primary">
-							Drop Pin
+						<button type="submit" className="pin-modal__btn pin-modal__btn--primary" disabled={isUploading}>
+							{isUploading ? (
+								<>
+									<span className="pin-modal__spinner"></span>
+									Uploading...
+								</>
+							) : (
+								'Drop Pin'
+							)}
 						</button>
 					</div>
 				</form>
