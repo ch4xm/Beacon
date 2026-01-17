@@ -125,7 +125,7 @@ function Landing() {
           </div>
         </section>
 
-        <section className="logos" aria-label="Community partners">
+        {/* <section className="logos" aria-label="Community partners">
           <p>Used by neighborhood collectives and sustainable travel clubs</p>
           <div className="logos__row">
             <span>Urban Roots</span>
@@ -134,7 +134,7 @@ function Landing() {
             <span>Locals First</span>
             <span>Coastline Co-op</span>
           </div>
-        </section>
+        </section> */}
 
         <section className="features" id="impact">
           <h2>Understand the impact of where you go.</h2>
