@@ -1,6 +1,6 @@
 {
-  "installCommand": "pnpm -C frontend install",
-  "buildCommand": "pnpm -C frontend build",
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm build",
   "outputDirectory": "frontend/dist",
   "routes": [
     {
