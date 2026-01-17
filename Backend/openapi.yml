@@ -74,7 +74,7 @@ paths:
                   example: -74.0060
                 message:
                   type: string
-                  maxLength: 20
+                  maxLength: 200
                   description: Message content of the pin
                   nullable: true
                 image:
@@ -315,7 +315,7 @@ components:
           description: self explanatory
         message:
           type: string
-          maxLength: 20
+          maxLength: 200
           description: Message content of the pin
           example: "Welcome to Beacon!"
           nullable: true

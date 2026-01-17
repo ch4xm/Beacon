@@ -4,6 +4,7 @@ import './index.css'
 import Landing from "./pages/Landing";
 
 import { createBrowserRouter, RouterProvider } from "react-router";
+import {PostsPage} from "./pages/PostsPage";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
     // Lazy load Home page so prefetch can preload it
     lazy: () => import("./pages/Home").then((m) => ({ Component: m.default })),
   },
+  {
+    path: "/explore",
+    element: <PostsPage />,
+  }
 ]);
 
 const root = document.getElementById("root");

@@ -93,12 +93,14 @@ function Landing() {
           <span className="landing__brand-tag">Local gems, mapped together</span>
         </div>
         <nav className="landing__nav">
-          <a href="#product">Product</a>
-          <a href="#impact">Impact</a>
-          <a href="#community">Community</a>
-          <a href="#guide">Guides</a>
-          <NavLink to="/home" className="button button--primary" prefetch="intent">
-              Open App
+          <a href="#product">About</a>
+          <NavLink to="/explore" className="button button--primary" prefetch="intent">
+            Explore Hot Spots
+          </NavLink>
+          <NavLink to="/home" className="button button--primary" style={{backgroundColor: '#5cbd51'
+
+          }} prefetch="intent">
+              Open Map
             </NavLink>
         </nav>
       </header>

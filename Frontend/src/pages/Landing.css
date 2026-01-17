@@ -1,8 +1,8 @@
 /* ===== CSS Variables for Consistent Design ===== */
 :root {
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-display: 'Playfair Display', Georgia, serif;
-  
+  /* --font-body: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; */
+  --font-display: 'Helvetica';
+
   --color-bg: #faf9f7;
   --color-bg-alt: #f4f2ef;
   --color-bg-accent: #e8f3e8;
@@ -16,17 +16,17 @@
   --color-green-bg: #e9f5e9;
   --color-border: #e5e3df;
   --color-card: #ffffff;
-  
+
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.1);
   --shadow-glow: 0 0 40px rgba(45, 106, 79, 0.15);
-  
+
   --radius-sm: 12px;
   --radius-md: 20px;
   --radius-lg: 28px;
   --radius-full: 999px;
-  
+
   --transition-fast: 0.15s ease;
   --transition-base: 0.25s ease;
   --transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -38,6 +38,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -45,8 +46,13 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInRight {
@@ -54,6 +60,7 @@
     opacity: 0;
     transform: translateX(40px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -65,6 +72,7 @@
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -72,24 +80,39 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { 
+
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(45, 106, 79, 0.4);
     transform: scale(1);
   }
-  50% { 
+
+  50% {
     box-shadow: 0 0 0 12px rgba(45, 106, 79, 0);
     transform: scale(1.05);
   }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* ===== Base Styles ===== */
@@ -184,7 +207,6 @@
 /* ===== Buttons ===== */
 .button {
   border: none;
-  padding: 0.85rem 1.75rem;
   border-radius: var(--radius-full);
   font-family: var(--font-body);
   font-weight: 600;
@@ -200,6 +222,10 @@
   overflow: hidden;
 }
 
+.button--primary {
+  padding: 0.85rem 1.75rem;
+}
+
 .button::before {
   content: '';
   position: absolute;
@@ -207,7 +233,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: var(--transition-slow);
 }
 
@@ -222,7 +248,7 @@
 }
 
 .button--primary:hover {
-  background: var(--color-primary-hover);
+  /* background: var(--color-primary-hover); */
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
@@ -238,8 +264,8 @@
 }
 
 .button--ghost:hover {
-  border-color: var(--color-text);
-  background: var(--color-bg-alt);
+  /* border-color: var(--color-text); */
+  /* background: var(--color-bg-alt); */
 }
 
 .button--tiny {
@@ -419,7 +445,8 @@
 .map-preview-overlay {
   position: absolute;
   inset: 0;
-  top: 45px; /* Account for header */
+  top: 45px;
+  /* Account for header */
   background: rgba(0, 0, 0, 0.3);
   opacity: 0;
   transition: opacity var(--transition-base);
@@ -719,7 +746,7 @@
   margin-bottom: 1rem;
 }
 
-.workflow__content > p {
+.workflow__content>p {
   color: var(--color-text-muted);
   font-size: 1.05rem;
   max-width: 480px;
@@ -732,13 +759,13 @@
   gap: 1.5rem;
 }
 
-.workflow__list > div {
+.workflow__list>div {
   padding-left: 1.5rem;
   border-left: 3px solid var(--color-green);
   transition: var(--transition-base);
 }
 
-.workflow__list > div:hover {
+.workflow__list>div:hover {
   padding-left: 2rem;
   border-left-color: var(--color-primary);
 }
