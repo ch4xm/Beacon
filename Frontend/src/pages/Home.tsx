@@ -7,7 +7,7 @@ import Pin from "@/components/Pin";
 
 
 function HomePage() {
-  const mapRef = useRef<MapRef | null>(null);
+  const mapRef = useRef<mapboxgl.Map | null>(null);
   const searchMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const [clickedCoords, setClickedCoords] = useState<{lat: number, lng: number} | null>(null);
 
@@ -41,7 +41,9 @@ function HomePage() {
       )}
 
       <Map
-        ref={mapRef}
+        ref={(map) => {
+          if (map) mapRef.current = map.getMap();
+        }}
         mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
         initialViewState={{
           longitude: -122.4,
