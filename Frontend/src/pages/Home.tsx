@@ -71,13 +71,9 @@ function HomePage() {
     setIsLoading(true);
 
     try {
-      if (authMode === "register") {
-        // Registration endpoint not implemented yet
-        setError("Registration is not available yet. Please use login.");
-        return;
-      }
-
-      const response = await fetch(`${API_BASE_URL}/api/login`, {
+      const endpoint = authMode === "register" ? "/api/register" : "/api/login";
+      
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +87,7 @@ function HomePage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+        throw new Error(data.message || (authMode === "register" ? "Registration failed" : "Login failed"));
       }
 
       // Store the token

@@ -45,13 +45,15 @@ export async function register(req: Request, res: Response) {
     }
 
     try {
-        const result = db.run(
+        db.query(
             `INSERT INTO account (email, password, name) VALUES (?, ?, ?)`,
             [email, password, name || null]
         );
 
+        const [{ id }] = db.query(`SELECT last_insert_rowid() as id`);
+
         const accessToken = jwt.sign(
-            { id: result.lastInsertRowid },
+            { id },
             process.env.SECRET as string,
             {
                 expiresIn: '1h',
