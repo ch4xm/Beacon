@@ -1,7 +1,5 @@
 import { useRef, useState } from "react";
-import type { MapRef } from "react-map-gl/mapbox";
-import "mapbox-gl/dist/mapbox-gl.css";
-import "./Home.css";
+import type { MapRef } from "react-map-gl/mapbox";import "./Home.css";
 import AuthModal from "@/components/AuthModal";
 import SearchBar from "@/components/SearchBar";
 import Map from 'react-map-gl/mapbox';
