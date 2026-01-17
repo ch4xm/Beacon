@@ -44,6 +44,9 @@ function HomePage() {
       )}
 
       <Map
+        ref={(ref) => {
+          if (ref) mapRef.current = ref.getMap();
+        }}
         mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
         initialViewState={{
           longitude: -122.4,
