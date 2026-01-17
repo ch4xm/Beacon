@@ -66,3 +66,51 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* ===== View Transitions for Map Expand Animation ===== */
+@keyframes map-expand-in {
+  from {
+    clip-path: inset(0 0 0 0 round 20px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 0);
+  }
+}
+
+@keyframes map-expand-out {
+  from {
+    clip-path: inset(0 0 0 0 round 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 20px);
+  }
+}
+
+/* View transition for the map element */
+::view-transition-old(beacon-map) {
+  animation: 400ms cubic-bezier(0.4, 0, 0.2, 1) both map-expand-out;
+}
+
+::view-transition-new(beacon-map) {
+  animation: 400ms cubic-bezier(0.4, 0, 0.2, 1) both map-expand-in;
+}
+
+/* Fade out the rest of the page during transition */
+::view-transition-old(root) {
+  animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both fade-in;
+  animation-delay: 100ms;
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

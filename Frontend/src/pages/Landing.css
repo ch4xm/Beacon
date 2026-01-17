@@ -409,6 +409,7 @@
 .map-preview-container {
   width: 100%;
   height: 500px;
+  view-transition-name: beacon-map;
 }
 
 .map-preview-container .mapboxgl-ctrl-logo,

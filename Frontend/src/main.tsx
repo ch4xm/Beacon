@@ -1,15 +1,31 @@
 import ReactDOM from "react-dom/client";
 import './index.css'
 
-import App from './App'
-import HomePage from "./pages/Home";
 import Landing from "./pages/Landing";
 import { LoginPage } from "./pages/Login";
 import { RegistrationPage } from "./pages/Registration";
 
-import { BrowserRouter } from "react-router";
-import { Routes } from "react-router";
-import { Route } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Landing />,
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/home",
+    // Lazy load Home page so prefetch can preload it
+    lazy: () => import("./pages/Home").then((m) => ({ Component: m.default })),
+  },
+  {
+    path: "/register",
+    element: <RegistrationPage />,
+  },
+]);
 
 const root = document.getElementById("root");
 
@@ -18,12 +34,5 @@ if (!root) {
 }
 
 ReactDOM.createRoot(root).render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/register" element={<RegistrationPage />} />
-    </Routes>
-  </BrowserRouter>,
+  <RouterProvider router={router} />
 );

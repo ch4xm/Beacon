@@ -38,6 +38,41 @@ function Landing() {
       attributionControl: false,
     });
 
+    // Create a hidden map to preload tiles at different zoom levels
+    const preloaderContainer = document.createElement("div");
+    preloaderContainer.style.cssText = "position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;";
+    document.body.appendChild(preloaderContainer);
+
+    const preloaderMap = new mapboxgl.Map({
+      container: preloaderContainer,
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: [-122, 37],
+      zoom: 9,
+      interactive: false,
+      attributionControl: false,
+    });
+
+    // Preload tiles at zoom levels the user might use on Home page
+    preloaderMap.on("load", () => {
+      const zoomLevels = [7, 8, 10, 11, 12];
+      let currentIndex = 0;
+
+      const preloadNextZoom = () => {
+        if (currentIndex >= zoomLevels.length) {
+          // Clean up preloader after all zooms are cached
+          preloaderMap.remove();
+          preloaderContainer.remove();
+          return;
+        }
+
+        preloaderMap.setZoom(zoomLevels[currentIndex]);
+        currentIndex++;
+        preloaderMap.once("idle", () => setTimeout(preloadNextZoom, 50));
+      };
+
+      preloaderMap.once("idle", preloadNextZoom);
+    });
+
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
@@ -47,7 +82,7 @@ function Landing() {
   }, []);
 
   const handleMapPreviewClick = () => {
-    navigate("/home");
+    navigate("/home", { viewTransition: true });
   };
 
   return (
@@ -62,7 +97,7 @@ function Landing() {
           <a href="#impact">Impact</a>
           <a href="#community">Community</a>
           <a href="#guide">Guides</a>
-          <NavLink to="/home" className="button button--primary">
+          <NavLink to="/home" className="button button--primary" prefetch="intent">
               Open App
             </NavLink>
         </nav>
@@ -82,7 +117,7 @@ function Landing() {
               spots, attach a photo and story, and tag places that aren’t part of the corporate rat race.
             </p>
             <div className="hero__actions">
-              <NavLink to="/home" className="button button--primary">
+              <NavLink to="/home" className="button button--primary" prefetch="intent">
                 Open App
               </NavLink>
             </div>
@@ -255,7 +290,7 @@ function Landing() {
             thriving.
           </p>
           <div className="cta__actions">
-            <NavLink to="/home" className="button button--primary">
+            <NavLink to="/home" className="button button--primary" prefetch="intent">
               Open App
             </NavLink>
           </div>
