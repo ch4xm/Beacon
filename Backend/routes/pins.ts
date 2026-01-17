@@ -13,11 +13,6 @@ export function getPin(req: Request, res: Response) {
 }
 
 export function createPin(req: Request, res: Response) {
-	// if (!req.body) {
-	// 	res.status(400).send();
-	// 	return;
-	// }	
-
 	const results = db.query(`
 		INSERT INTO pin(creatorID, message, image, color)
 		VALUES(?, ?, ?, ?)
@@ -32,6 +27,11 @@ export function createPin(req: Request, res: Response) {
 	res.json(results[0]);
 }
 
-export function editPin(req: Request, res: Response) {
-
+export function deletePin(req: Request, res: Response) {
+	const pinID = req.params.id;
+	const result = db.query('DELETE FROM pin WHERE id = ?', [pinID]);
+	if (result.changes === 0)
+		res.status(404).send()
+	else
+		res.status(200).send();
 }

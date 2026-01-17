@@ -42,7 +42,7 @@ app.post("/api/login", auth.login);
 app.get("/api/pins", pins.getAllPins);
 app.get("/api/pins/:id", pins.getPin);
 app.post("/api/pins", pins.createPin);
-app.put("/api/pins", pins.editPin);
+app.put("/api/pins", pins.deletePin);
 
 app.listen(PORT, () => {
   console.log(`Backend listening on http://localhost:${PORT}`);
