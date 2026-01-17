@@ -234,7 +234,7 @@ export default function NewPinModal({ onClose, onSubmit, latitude, longitude, lo
 								<span className="pin-modal__upload-text">
 									<strong>Click to upload</strong> or drag and drop
 								</span>
-								<span className="pin-modal__upload-hint">JPEG, PNG, GIF or WebP (max 4.5MB)</span>
+								<span className="pin-modal__upload-hint">JPEG, PNG, GIF or WebP</span>
 							</div>
 						)}
 						
