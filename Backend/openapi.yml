@@ -60,7 +60,18 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - latitude
+                - longitude
               properties:
+                latitude:
+                  type: number
+                  description: Latitude coordinate of the pin
+                  example: 40.7128
+                longitude:
+                  type: number
+                  description: Longitude coordinate of the pin
+                  example: -74.0060
                 message:
                   type: string
                   maxLength: 20
@@ -275,6 +286,12 @@ components:
           type: integer
           description: ID of the account that created the pin
           example: 1
+        latitude:
+          type: integer
+          description: self explanatory
+        longitude:
+          type: integer
+          description: self explanatory
         message:
           type: string
           maxLength: 20
