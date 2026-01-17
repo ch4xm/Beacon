@@ -4,9 +4,11 @@ import mapboxgl from "mapbox-gl";
 interface SearchBarProps {
 	mapRef: React.MutableRefObject<mapboxgl.Map | null>;
 	searchMarkerRef: React.MutableRefObject<mapboxgl.Marker | null>;
+	// Called when a suggestion is selected: { name, lng, lat }
+	onSelectPlace?: (place: { name?: string; lng: number; lat: number }) => void;
 }
 
-export default function SearchBar({ mapRef, searchMarkerRef }: SearchBarProps) {
+export default function SearchBar({ mapRef, searchMarkerRef, onSelectPlace }: SearchBarProps) {
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const [isSearching, setIsSearching] = useState<boolean>(false);
 	const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -77,6 +79,10 @@ export default function SearchBar({ mapRef, searchMarkerRef }: SearchBarProps) {
 
 			mapRef.current.flyTo({ center: [lng, lat], zoom: 12, essential: true });
 			setSearchQuery(suggestion.name || suggestion.full_address || "");
+			// Notify parent to add a Pin popup
+			if (typeof onSelectPlace === "function") {
+				onSelectPlace({ name: suggestion.name || suggestion.full_address, lng, lat });
+			}
 			setSearchResults([]);
 		} catch (err) {
 			console.error("Retrieve API error:", err);
