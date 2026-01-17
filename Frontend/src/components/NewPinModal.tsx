@@ -14,7 +14,6 @@ const COLOR_PRESETS = [
 	"#e07a5f", // Coral
 	"#3d5a80", // Blue
 	"#9c6644", // Brown
-	"#7c3aed", // Purple
 ];
 
 export default function NewPinModal({ onClose, onSubmit, latitude, longitude }: NewPinModalProps) {
@@ -59,7 +58,9 @@ export default function NewPinModal({ onClose, onSubmit, latitude, longitude }: 
 			<div className="pin-modal" onClick={(e) => e.stopPropagation()}>
 				<header className="pin-modal__header">
 					<button className="pin-modal__close" onClick={onClose} aria-label="Close modal">
-						×
+						<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M1 1L13 13M1 13L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+						</svg>
 					</button>
 					<svg className="pin-modal__logo" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<circle cx="40" cy="40" r="36" stroke="#2d6a4f" strokeWidth="2" fill="#e9f5e9" />

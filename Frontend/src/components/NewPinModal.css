@@ -98,8 +98,6 @@
   cursor: pointer;
   transition: all 0.2s ease;
   color: #5c5c5c;
-  font-size: 1.25rem;
-  line-height: 1;
   padding: 0;
 }
 
@@ -107,7 +105,6 @@
   background: #ffffff;
   border-color: #1a1a1a;
   color: #1a1a1a;
-  transform: rotate(90deg);
 }
 
 /* ===== Modal Form ===== */
