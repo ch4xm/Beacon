@@ -178,12 +178,8 @@ function HomePage() {
                             location: p.location,
                             message: p.message,
                             image: p.image,
-<<<<<<< Updated upstream
-                            color: localStorage.getItem("userEmail") == p.email ? "#FFD700" : "#007cbf",
-                            address: p.address,
-=======
                             color: localStorage.getItem("userEmail") == p.email ? USER_PIN_COLOR : PIN_COLOR,
->>>>>>> Stashed changes
+                            address: p.address,
                         },
                     })),
                 };
