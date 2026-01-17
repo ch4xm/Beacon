@@ -60,24 +60,16 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - creatorID
               properties:
-                creatorID:
-                  type: integer
-                  description: ID of the account creating the pin
-                  example: 1
                 message:
                   type: string
                   maxLength: 20
                   description: Message content of the pin
-                  example: "Check this out"
                   nullable: true
                 image:
                   type: string
                   maxLength: 2000
                   description: URL of the image
-                  example: "https://example.com/image.jpg"
                   nullable: true
                 color:
                   type: string
@@ -96,13 +88,19 @@ paths:
                   id:
                     type: integer
                     description: ID of the newly created pin
-        '400':
+        400:
           description: Bad request - missing required fields
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '500':
+        401:
+          description: Unauthorized - invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
           description: Internal server error
           content:
             application/json:
@@ -131,6 +129,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Pin'
+
   /api/login:
     post:
       summary: User login
@@ -238,6 +237,7 @@ paths:
           description: Successfully deleted pin
         404:
           description: Pin not found
+
   /api/check:
     get:
       summary: Check token validity

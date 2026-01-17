@@ -18,7 +18,7 @@ export function createPin(req: Request, res: Response) {
 		VALUES(?, ?, ?, ?)
 		RETURNING id;
 	`, [
-		req.body.creatorID ?? 1, 
+		req.user.id, 
 		req.body.message ?? null,
 		req.body.image ?? null,
 		req.body.color ?? null

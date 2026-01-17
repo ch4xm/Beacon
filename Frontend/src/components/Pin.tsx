@@ -15,7 +15,8 @@ export default function Pin({ name, latitude, longitude, onClose, onDetails }: P
 	const [modalIsOpen, setModalOpen] = useState<boolean>(false);
 
 	const onAdd = () => {
-
+		setModalOpen(true);
+		console.log("open")
 	}
 
 	return (
