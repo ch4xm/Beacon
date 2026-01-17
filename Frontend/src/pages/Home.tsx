@@ -15,7 +15,9 @@ const layerStyle: CircleLayerSpecification = {
   paint: {
     'circle-radius': 10,
     'circle-color': '#007cbf'
-  }
+  },
+  maxzoom: 9,
+  minzoom: 5,
 };
 
 const heatmapLayerStyle = {
@@ -23,6 +25,7 @@ const heatmapLayerStyle = {
   type: 'heatmap',
   source: 'my-data',
   maxzoom: 9,
+  minzoom: 5,
   paint: {
     'heatmap-weight': [
       'interpolate',
@@ -258,6 +261,7 @@ function HomePage() {
         doubleClickZoom={true}
         dragRotate={true}
         touchZoomRotate={true}
+        attributionControl={false}
       >
         <GeolocateControl
           position="bottom-right"
