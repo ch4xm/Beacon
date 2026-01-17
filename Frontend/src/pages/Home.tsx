@@ -73,6 +73,7 @@ interface SelectedPoint {
     longitude: number;
     latitude: number;
     title?: string;
+    location?: string;
     message: string;
     image: string;
     color: string;
@@ -80,7 +81,7 @@ interface SelectedPoint {
 }
 
 function HomePage() {
-     useEffect(() => {
+    useEffect(() => {
         const heartbeat = async () => {
             try {
                 console.log("sending API heartbeat")
@@ -120,6 +121,7 @@ function HomePage() {
                 id?: number;
                 creatorID?: number;
                 title?: string;
+                location?: string;
                 message: string;
                 image: string;
                 color: string;
@@ -144,9 +146,9 @@ function HomePage() {
         const fetchPins = async () => {
             try {
                 const res = await fetch(`${BASE_API_URL}/api/pins`, {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-                  }
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                    }
                 });
 
                 if (res.status == 401) {
@@ -172,6 +174,7 @@ function HomePage() {
                             id: p.id,
                             email: p.email,
                             title: p.title,
+                            location: p.location,
                             message: p.message,
                             image: p.image,
                             color: localStorage.getItem("userEmail") == p.email ? "#FFD700" : "#007cbf",
@@ -207,6 +210,7 @@ function HomePage() {
                 longitude: coords[0],
                 latitude: coords[1],
                 title: feature.properties?.title || "",
+                location: feature.properties?.location || "",
                 message: feature.properties?.message || "No message",
                 image: feature.properties?.image || "",
                 color: feature.properties?.color || "#007cbf",
@@ -272,7 +276,7 @@ function HomePage() {
                 </button>
             </div>
 
-            <SavedPlacesPanel />
+            <SavedPlacesPanel mapRef={mapRef} />
 
             <AuthModal isOpen={!isLoggedIn} onAuthSuccess={authSuccess} />
 
@@ -372,6 +376,7 @@ function HomePage() {
                                         },
                                         properties: {
                                             title: data.title,
+                                            location: pinData.name,
                                             message: data.message,
                                             image: data.image || "",
                                             color: data.color || "#007cbf",

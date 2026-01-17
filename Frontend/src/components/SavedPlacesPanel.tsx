@@ -11,7 +11,11 @@ interface SavedPlace {
     color: string;
 }
 
-function SavedPlacesPanel() {
+interface SavedPlacesPanelProps {
+    mapRef: React.RefObject<mapboxgl.Map | null>;
+}
+
+function SavedPlacesPanel({ mapRef }: SavedPlacesPanelProps) {
     const [savedPlaces, setSavedPlaces] = useState<SavedPlace[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isExpanded, setIsExpanded] = useState(false);
@@ -84,10 +88,13 @@ function SavedPlacesPanel() {
                                     key={place.id}
                                     className="place-item"
                                     onClick={() => {
-                                        // Navigate to the pin location if map interaction is needed
-                                        console.log(
-                                            `Navigate to pin at ${place.latitude}, ${place.longitude}`,
-                                        );
+                                        if (mapRef.current) {
+                                            mapRef.current.flyTo({
+                                                center: [place.longitude, place.latitude],
+                                                zoom: 14,
+                                                essential: true,
+                                            });
+                                        }
                                     }}
                                 >
                                     <div className="place-header">
@@ -99,13 +106,14 @@ function SavedPlacesPanel() {
                                             }}
                                         />
                                         <span className="place-coords">
-                                            {place.latitude.toFixed(4)}°,{" "}
-                                            {place.longitude.toFixed(4)}°
+                                            {place.message}
                                         </span>
                                     </div>
                                     {place.message && (
                                         <span className="place-message">
-                                            {place.message}
+                                            {place.latitude.toFixed(4)}°,{" "}
+                                            {place.longitude.toFixed(4)}°
+
                                         </span>
                                     )}
                                     {place.image && (
