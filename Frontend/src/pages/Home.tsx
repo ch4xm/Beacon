@@ -14,6 +14,7 @@ import { reverseGeocode } from "@/utils/geocoding";
 import LocationPin from "@/components/LocationPin";
 import DetailedPinModal from "@/components/DetailedPinModal";
 import { NavLink, useNavigate } from "react-router";
+import AuthHook from "./AuthHook";
 
 const layerStyle: CircleLayerSpecification = {
     id: "point",
@@ -107,19 +108,9 @@ function HomePage() {
         type: "FeatureCollection",
         features: [],
     });
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-        return !!localStorage.getItem("accessToken");
-    });
+
     const [cursor, setCursor] = useState<string>("auto");
-    const [userEmail, setUserEmail] = useState<string>(() => {
-        const email = localStorage.getItem("userEmail");
-        console.log("Initial userEmail from localStorage:", email);
-        return email || "";
-    });
-    const [userId, setUserId] = useState<number | null>(() => {
-        const id = localStorage.getItem("userId");
-        return id ? parseInt(id) : null;
-    });
+    const [userEmail, userId, isLoggedIn, logout, authSuccess] = AuthHook();
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
     const onMouseEnter = useCallback(() => setCursor("pointer"), []);
@@ -130,15 +121,10 @@ function HomePage() {
     useEffect(() => {
         const fetchPins = async () => {
             try {
-                const token = localStorage.getItem("accessToken");
-                const headers: HeadersInit = {};
-
-                if (token) {
-                    headers.Authorization = `Bearer ${token}`;
-                }
-
                 const res = await fetch("http://localhost:3000/api/pins", {
-                    headers,
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                  }
                 });
 
                 if (res.status == 401) {
@@ -180,20 +166,8 @@ function HomePage() {
     }, [isLoggedIn]);
 
     const handleLogout = () => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("userEmail");
-        localStorage.removeItem("userId");
-        setIsLoggedIn(false);
-        setUserEmail("");
-        setUserId(null);
+        logout();
         setIsDropdownOpen(false);
-    };
-
-    const handleAuthSuccess = () => {
-        setIsLoggedIn(true);
-        setUserEmail(localStorage.getItem("userEmail") || "");
-        const storedId = localStorage.getItem("userId");
-        if (storedId) setUserId(parseInt(storedId));
     };
 
     const handleMapClick = async (e: mapboxgl.MapMouseEvent) => {
@@ -278,7 +252,7 @@ function HomePage() {
 
             <SavedPlacesPanel />
 
-            <AuthModal isOpen={!isLoggedIn} onAuthSuccess={handleAuthSuccess} />
+            <AuthModal isOpen={!isLoggedIn} onAuthSuccess={authSuccess} />
 
             {isLoggedIn && (
                 <div className="user-menu">
