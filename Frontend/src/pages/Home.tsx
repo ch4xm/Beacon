@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import "./Home.css";
 import AuthModal from "@/components/AuthModal";
 import SearchBar from "@/components/SearchBar";
+import SavedPlacesPanel from "@/components/SavedPlacesPanel";
 import Map, { GeolocateControl, NavigationControl } from "react-map-gl/mapbox";
 import Pin from "@/components/Pin";
 import { useControl } from "react-map-gl/mapbox";
@@ -95,6 +96,8 @@ function HomePage() {
           })
         }
       />
+
+      <SavedPlacesPanel />
 
       <AuthModal isOpen={!isLoggedIn} onAuthSuccess={handleAuthSuccess} />
 
