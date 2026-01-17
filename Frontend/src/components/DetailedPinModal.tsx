@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import "./styles/DetailedPinModal.css";
 import { BASE_API_URL } from '../../constants.ts';
+import {ReverseGeocodeResult} from "@/utils/geocoding";
 
 interface DetailedPinModalProps {
     selectedPoint: {
@@ -13,6 +14,7 @@ interface DetailedPinModalProps {
         image: string;
         color?: string;
         email?: string;
+        address?: ReverseGeocodeResult;
     };
     currentUserId: number | null;
     currentUserEmail: string | null;
@@ -254,6 +256,17 @@ export default function DetailedPinModal({
 
                             <div className="detailed-info-section">
                                 <h3>Location</h3>
+                                <div className="location-details"  style={{display: 'flex', justifyContent: 'center'}}>
+                                    <div className="detail-item">
+                                        <span className="detail-label">
+                                            Address
+                                        </span>
+                                        <span className="detail-value">
+                                            {selectedPoint.address?.fullAddress ||
+                                                "Unknown Location"}
+                                        </span>
+                                    </div>
+                                </div>
                                 <div className="location-details">
                                     <div className="detail-item">
                                         <span className="detail-label">

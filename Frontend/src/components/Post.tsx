@@ -1,3 +1,5 @@
+import {Avatar} from "./Avatar";
+
 export interface Post {
     id: number;
     title: string;
@@ -46,8 +48,9 @@ export function CategoryBadge({ category }: { category: string }) {
     return (
         <div
             style={{
-                fontSize: 13,
+                fontSize: 16,
                 fontWeight: 600,
+                // width: '10%',
                 background: style.background,
                 color: style.color,
                 boxShadow: style.boxShadow,
@@ -55,7 +58,7 @@ export function CategoryBadge({ category }: { category: string }) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 100,
-                padding: "4px 20px",
+                padding: "6px 30px",
                 letterSpacing: "0.3px",
             }}
         >
@@ -68,7 +71,8 @@ export function PostCard({ content }: PostProps) {
     return (
         <div
             style={{
-                maxWidth: 600,
+                // maxWidth: 600,
+                // minWidth: 600,
                 margin: "20px auto",
                 padding: 16,
                 borderRadius: 12,
@@ -78,7 +82,7 @@ export function PostCard({ content }: PostProps) {
             }}
         >
             {/* Header */}
-            <div style={{ marginBottom: 8 }}>
+            <div style={{ marginBottom: 20 }}>
                 <h2 style={{ margin: 0, fontSize: 20, color: "#1a1a1a" }}>
                     {content.title}
                 </h2>
@@ -87,7 +91,8 @@ export function PostCard({ content }: PostProps) {
                     style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 8,
+                        justifyContent: "center",
+                        gap: 12,
                         marginTop: 8,
                         flexWrap: "wrap",
                     }}
@@ -98,13 +103,13 @@ export function PostCard({ content }: PostProps) {
                     <div
                         style={{
                             color: "#64748b",
-                            fontSize: 13,
+                            fontSize: 14,
                             display: "inline-flex",
                             alignItems: "center",
-                            gap: 5,
-                            padding: "4px 10px",
+                            gap: 10,
+                            padding: "6px 30px",
                             backgroundColor: "#f1f5f9",
-                            borderRadius: 6,
+                            borderRadius: 20,
                             fontWeight: 500,
                         }}
                     >
@@ -136,7 +141,7 @@ export function PostCard({ content }: PostProps) {
                                 display: "inline-block",
                                 padding: "4px 10px",
                                 marginRight: 6,
-                                marginBottom: 6,
+                                marginBottom: 0,
                                 fontSize: 12,
                                 color: "#475569",
                                 backgroundColor: "#f1f5f9",
@@ -162,6 +167,7 @@ export function PostCard({ content }: PostProps) {
                     alt={content.title}
                     style={{
                         width: "100%",
+                        maxWidth: 600,
                         maxHeight: 400,
                         objectFit: "cover",
                         borderRadius: 10,
@@ -198,7 +204,7 @@ export function PostCard({ content }: PostProps) {
                                 marginBottom: 10,
                             }}
                         >
-                            <div
+                            {/* <div
                                 style={{
                                     width: 32,
                                     height: 32,
@@ -211,7 +217,8 @@ export function PostCard({ content }: PostProps) {
                                     backgroundPosition: "center",
                                     flexShrink: 0,
                                 }}
-                            />
+                            /> */}
+                            <Avatar letter={comment.author.charAt(0).toLowerCase()} />
 
                             <div
                                 style={{

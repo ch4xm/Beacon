@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import mapboxgl from "mapbox-gl";
+import {reverseGeocode} from "@/utils/geocoding";
 
 interface SearchBarProps {
     mapRef: React.MutableRefObject<mapboxgl.Map | null>;
@@ -9,6 +10,7 @@ interface SearchBarProps {
         name?: string;
         lng: number;
         lat: number;
+        address?: any;
     }) => void;
 }
 
@@ -80,6 +82,8 @@ export default function SearchBar({
 
             const [lng, lat] = feature.geometry.coordinates as [number, number];
 
+            const address = await reverseGeocode(lat, lng);
+
             if (!searchMarkerRef.current) {
                 searchMarkerRef.current = new mapboxgl.Marker({
                     color: "#1a1a1a",
@@ -99,6 +103,7 @@ export default function SearchBar({
                     name: suggestion.name || suggestion.full_address,
                     lng,
                     lat,
+                    address: address,
                 });
             }
             setSearchResults([]);

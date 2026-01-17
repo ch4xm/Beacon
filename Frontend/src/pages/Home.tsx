@@ -10,7 +10,7 @@ import Map, {
 } from "react-map-gl/mapbox";
 import { Source, Layer, CircleLayerSpecification } from "react-map-gl/mapbox";
 import Pin from "@/components/Pin";
-import { reverseGeocode } from "@/utils/geocoding";
+import { reverseGeocode, ReverseGeocodeResult } from "@/utils/geocoding";
 import LocationPin from "@/components/LocationPin";
 import DetailedPinModal from "@/components/DetailedPinModal";
 import { NavLink, useNavigate } from "react-router";
@@ -63,8 +63,8 @@ const heatmapLayerStyle = {
 interface PinData {
     lat: number;
     lng: number;
-    name: string;
     isLoading: boolean;
+    address: ReverseGeocodeResult | string | undefined;
 }
 
 interface SelectedPoint {
@@ -78,6 +78,7 @@ interface SelectedPoint {
     image: string;
     color: string;
     email?: string;
+    address?: ReverseGeocodeResult;
 }
 
 function HomePage() {
@@ -93,7 +94,6 @@ function HomePage() {
                 }
 
                 const text = await res.text();
-                console.log("[CloudFlare] Tunnel reachable:", text);
             } catch (err) {
                 console.log("[CloudFlare] Tunnel unreachable:", err);
             }
@@ -126,6 +126,7 @@ function HomePage() {
                 image: string;
                 color: string;
                 email?: string;
+                address?: ReverseGeocodeResult;
             };
         }>;
     }>({
@@ -178,6 +179,7 @@ function HomePage() {
                             message: p.message,
                             image: p.image,
                             color: localStorage.getItem("userEmail") == p.email ? "#FFD700" : "#007cbf",
+                            address: p.address,
                         },
                     })),
                 };
@@ -197,12 +199,21 @@ function HomePage() {
 
     const handleMapClick = async (e: mapboxgl.MapMouseEvent) => {
         // Check if we clicked on a point feature
+        // console.log("Map clicked at:", e.lngLat);
         const features = e.target.queryRenderedFeatures(e.point, {
             layers: ["point"],
         });
 
+        const { lat, lng } = e.lngLat;
+        console.log("Map clicked at lat:", lat, "lng:", lng);
+
+        const result = await reverseGeocode(lat, lng);
+        console.log("Reverse geocode result:", result);
+
+        // console.log("Features at click:", features);
         if (features && features.length > 0) {
             const feature = features[0];
+            console.log("Clicked on feature:", result);
             const coords = (feature.geometry as any).coordinates;
             setSelectedPoint({
                 id: feature.properties?.id,
@@ -215,35 +226,34 @@ function HomePage() {
                 image: feature.properties?.image || "",
                 color: feature.properties?.color || "#007cbf",
                 email: feature.properties?.email || "",
+                address: result,
             });
+            
             setPinData(null); // Close any existing pin
             return;
         }
 
         // Otherwise, handle as a new pin creation
         setSelectedPoint(null);
-        const { lat, lng } = e.lngLat;
         setPinData({
             lat,
             lng,
-            name: "Loading...",
+            address: "Loading...",
             isLoading: true,
         });
 
         try {
-            const result = await reverseGeocode(lat, lng);
-
             setPinData({
                 lat,
                 lng,
-                name: result.name,
+                address: result,
                 isLoading: false,
             });
         } catch (error) {
             setPinData({
                 lat,
                 lng,
-                name: "Unknown Location",
+                address: undefined,
                 isLoading: false,
             });
         }
@@ -266,7 +276,7 @@ function HomePage() {
                         setPinData({
                             lat: place.lat,
                             lng: place.lng,
-                            name: place.name ?? "Unknown Location",
+                            address: place.address,
                             isLoading: false,
                         })
                     }
@@ -354,12 +364,12 @@ function HomePage() {
 
                 {pinData && (
                     <Pin
-                        name={pinData.name}
+                        name={pinData.address?.name || "Unknown Location"}
                         latitude={pinData.lat}
                         longitude={pinData.lng}
                         isLoading={pinData.isLoading}
                         onClose={() => setPinData(null)}
-                        onDetails={() => console.log("Details clicked")}
+                        onDetails={() => {}}
                         onPinCreated={(data) => {
                             setAllPins((prev) => ({
                                 ...prev,

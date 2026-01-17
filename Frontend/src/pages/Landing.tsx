@@ -14,7 +14,6 @@ function Landing() {
             try {
                 const res = await fetch("/heartbeat");
                 const data = await res.json();
-                console.log("[Client-side] Server reachable:", data);
             } catch (err) {
                 console.error("[Client-side] Server unreachable:", err);
             }
