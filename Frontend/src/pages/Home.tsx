@@ -24,10 +24,11 @@ function HomePage() {
         style: "mapbox://styles/mapbox/streets-v12", // standard style
         center: [-74.5, 40], // starting position [lng, lat]
         zoom: 9, // starting zoom
+        minZoom: 3
       });
 
       // Add navigation controls
-      mapRef.current.addControl(new mapboxgl.NavigationControl(), "top-right");
+      mapRef.current.addControl(new mapboxgl.NavigationControl(), "bottom-right");
     }
 
     return () => {
@@ -40,15 +41,9 @@ function HomePage() {
 
   return (
     <div className="home-container">
-      <div className="sidebar">
-        <h1>Beacon</h1>
-        <p>Map View</p>
-        <nav>
-            <NavLink to="/" end className="logout-link">
-              Logout
-            </NavLink>
-        </nav>
-      </div>
+      <NavLink to="/" end className="logout-button">
+        Logout
+      </NavLink>
       <div ref={mapContainerRef} className="map-container" />
     </div>
   );
