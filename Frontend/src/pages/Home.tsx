@@ -94,6 +94,29 @@ interface SelectedPoint {
 }
 
 function HomePage() {
+    console.log("HomePage")
+
+     useEffect(() => {
+        const heartbeat = async () => {
+            try {
+                console.log("sending API heartbeat")
+                const base = import.meta.env.VITE_API_BASE;
+                const res = await fetch(`${base}/heartbeat`);
+
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+
+                const text = await res.text();
+                console.log("[CloudFlare] Tunnel reachable:", text);
+            } catch (err) {
+                console.log("[CloudFlare] Tunnel unreachable:", err);
+            }
+        };
+
+        heartbeat();
+    }, []);
+
     const mapRef = useRef<mapboxgl.Map | null>(null);
     const searchMarkerRef = useRef<mapboxgl.Marker | null>(null);
     const [pinData, setPinData] = useState<PinData | null>(null);

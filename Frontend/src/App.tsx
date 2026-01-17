@@ -7,8 +7,11 @@ type HelloResponse = {
 function App() {
     const [message, setMessage] = useState<string>("");
 
+    console.log("app opening")
+
+
     useEffect(() => {
-        const heartbeat = async () => {
+        const heartbeat_local = async () => {
             try {
                 const res = await fetch("/heartbeat");
                 const data = await res.json();
@@ -18,7 +21,7 @@ function App() {
             }
         };
 
-        heartbeat();
+        heartbeat_local();
     }, []);
 
     useEffect(() => {
