@@ -82,7 +82,7 @@ function Landing() {
   }, []);
 
   const handleMapPreviewClick = () => {
-    navigate("/home", { viewTransition: true });
+    navigate("/home");
   };
 
   return (
@@ -113,7 +113,7 @@ function Landing() {
             </svg>
             <h1>Map the world's local gems.</h1>
             <p>
-              Beacon is a sustainability-first travel assistant. Drop pins on hidden
+              Beacon is a community-first travel assistant. Drop pins on hidden
               spots, attach a photo and story, and tag places that aren’t part of the corporate rat race.
             </p>
             <div className="hero__actions">
@@ -204,7 +204,7 @@ function Landing() {
             <article>
               <h3>AI that actually gets it</h3>
               <p>
-                Beacon tags photos for sustainability signals and flags large
+                Beacon tags photos for local authenticity and flags large
                 corporate chains automatically.
               </p>
             </article>
@@ -230,7 +230,7 @@ function Landing() {
             <h2>Plan carbon-neutral adventures with friends.</h2>
             <p>
               Coordinate trips, vote on pins, and co-create itineraries that
-              prioritize sustainability over convenience.
+              prioritize local experiences over tourist traps.
             </p>
             <div className="workflow__list">
               <div>
@@ -267,7 +267,7 @@ function Landing() {
           <div className="testimonial__quote">
             <p>
               “I used to juggle five apps to plan ethical trips. Now Beacon keeps
-              every local gem, guide, and sustainability insight connected.”
+              every local gem, guide, and insider tip connected.”
             </p>
             <span>Riya · Climate-minded traveler</span>
           </div>
