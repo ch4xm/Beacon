@@ -58,9 +58,6 @@ function HomePage() {
     });
 
     try {
-      console.log(lat);
-      console.log(lng);
-      console.log("TRANSLATING... 🔄🔄🔄");
       const result = await reverseGeocode(lat, lng);
 
       setPinData({
@@ -70,7 +67,6 @@ function HomePage() {
         isLoading: false,
       });
 
-      console.log("TRANSLATION COMPLETE -> pindata = ", pinData);
     } catch (error) {
       console.error("Reverse geocoding failed:", error);
       setPinData({
