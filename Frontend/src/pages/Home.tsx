@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./Home.css";
-import Pin from "@/components/Pin";
-import { createRoot } from "react-dom/client";
-import * as React from 'react';
+import AuthModal from "@/components/AuthModal";
 import Map from 'react-map-gl/mapbox';
 
 
@@ -14,12 +13,6 @@ function HomePage() {
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     return !!localStorage.getItem("accessToken");
-  });
-
-  // Auth state
-  const [credentials, setCredentials] = useState({
-    email: "",
-    password: "",
   });
 
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -100,9 +93,14 @@ function HomePage() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    setIsLoggedIn(false);
+  };
 
-
-
+  const handleAuthSuccess = () => {
+    setIsLoggedIn(true);
+  };
 
   return (
     <div className="home-container">
@@ -140,84 +138,10 @@ function HomePage() {
       </div>
 
       {/* Auth Modal - shown when not logged in */}
-      {!isLoggedIn && (
-        <div className="auth-modal-overlay">
-          <div className="auth-modal">
-            <div className="auth-modal-header">
-              <div className="auth-brand">
-                <svg className="auth-logo" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="40" cy="40" r="36" stroke="#2d6a4f" strokeWidth="2" fill="#e9f5e9" />
-                  <path d="M40 20C32 20 26 28 26 36C26 48 40 60 40 60C40 60 54 48 54 36C54 28 48 20 40 20Z" fill="#2d6a4f" />
-                  <circle cx="40" cy="35" r="6" fill="#faf9f7" />
-                </svg>
-              </div>
-              <h2>{authMode === "login" ? "Welcome back" : "Create account"}</h2>
-            </div>
-
-            <div className="auth-tabs">
-              <button
-                className={`auth-tab ${authMode === "login" ? "active" : ""}`}
-                onClick={() => setAuthMode("login")}
-              >
-                Login
-              </button>
-              <button
-                className={`auth-tab ${authMode === "register" ? "active" : ""}`}
-                onClick={() => setAuthMode("register")}
-              >
-                Sign Up
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="auth-form">
-              {error && <div className="auth-error">{error}</div>}
-
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={credentials.email}
-                  onChange={handleChange}
-                  placeholder="Enter your email"
-                  autoComplete="email"
-                  disabled={isLoading}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={credentials.password}
-                  onChange={handleChange}
-                  placeholder="Enter your password"
-                  autoComplete={authMode === "login" ? "current-password" : "new-password"}
-                  disabled={isLoading}
-                />
-              </div>
-
-              <button type="submit" className="auth-submit-btn" disabled={isLoading}>
-                {isLoading ? "Please wait..." : authMode === "login" ? "Sign In" : "Create Account"}
-              </button>
-            </form>
-
-            <div className="auth-footer">
-              <p>
-                {authMode === "login"
-                  ? "Don't have an account?"
-                  : "Already have an account?"}
-                <button onClick={switchAuthMode} className="auth-switch-btn">
-                  {authMode === "login" ? "Sign Up" : "Sign In"}
-                </button>
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      <AuthModal
+        isOpen={!isLoggedIn}
+        onAuthSuccess={handleAuthSuccess}
+      />
 
       {/* Logout button - only shown when logged in */}
       {isLoggedIn && (
@@ -232,7 +156,6 @@ function HomePage() {
           longitude: -122.4,
           latitude: 37.8,
           zoom: 9,
-          // minZoom: 3
         }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
       />

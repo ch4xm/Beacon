@@ -3,8 +3,13 @@ import { useState } from "react";
 type AuthMode = "login" | "register";
 const API_BASE_URL = "http://localhost:3000";
 
+interface AuthModalProps {
+	isOpen: boolean;
+	onClose?: () => void;
+	onAuthSuccess: () => void;
+}
 
-export default function AuthModal() {
+export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
 	const [authMode, setAuthMode] = useState<AuthMode>("login");
 	const [error, setError] = useState<string>("");
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -52,18 +57,13 @@ export default function AuthModal() {
 
 			// Store the token
 			localStorage.setItem("accessToken", data.accessToken);
-			setIsLoggedIn(true);
 			setCredentials({ email: "", password: "" });
+			onAuthSuccess();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : "An error occurred");
 		} finally {
 			setIsLoading(false);
 		}
-	};
-
-	const handleLogout = () => {
-		localStorage.removeItem("accessToken");
-		setIsLoggedIn(false);
 	};
 
 	const switchAuthMode = () => {
@@ -72,9 +72,11 @@ export default function AuthModal() {
 		setCredentials({ email: "", password: "" });
 	};
 
+	if (!isOpen) return null;
+
 	return (
-		<div className="auth-modal-overlay">
-			<div className="auth-modal">
+		<div className="auth-modal-overlay" onClick={onClose}>
+			<div className="auth-modal" onClick={(e) => e.stopPropagation()}>
 				<div className="auth-modal-header">
 					<div className="auth-brand">
 						<svg className="auth-logo" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">

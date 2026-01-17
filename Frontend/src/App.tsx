@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import {LoginPage} from "./pages/Login";
 
 type HelloResponse = {
   message: string;
@@ -15,7 +14,7 @@ function App() {
         const data = await res.json();
         console.log("[Client-side] Server reachable:", data);
       } catch (err) {
-        console.error("[Cleint-side] Server unreachable:", err);
+        console.error("[Client-side] Server unreachable:", err);
       }
     };
 
@@ -34,14 +33,11 @@ function App() {
   }, []);
 
   return (
-    <LoginPage />
-    // <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-    //   <h1>Vite + React + Express</h1>
-    //   <p>{message || "Loading..."}</p>
-    // </div>
+    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+      <h1>Vite + React + Express</h1>
+      <p>{message || "Loading..."}</p>
+    </div>
   );
 }
 
 export default App;
-
-
