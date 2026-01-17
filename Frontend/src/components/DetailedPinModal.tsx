@@ -215,27 +215,6 @@ export default function DetailedPinModal({
                                     className="edit-textarea"
                                 />
                             </div>
-
-                            <div className="form-group">
-                                <label>Color</label>
-                                <div className="color-picker">
-                                    {[
-                                        "#2d6a4f",
-                                        "#1a1a1a",
-                                        "#e07a5f",
-                                        "#3d5a80",
-                                        "#9c6644",
-                                        "#007cbf",
-                                    ].map((c) => (
-                                        <div
-                                            key={c}
-                                            className={`color-option ${color === c ? "selected" : ""}`}
-                                            style={{ backgroundColor: c }}
-                                            onClick={() => setColor(c)}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
                         </div>
                     ) : (
                         <>
@@ -293,24 +272,6 @@ export default function DetailedPinModal({
                                     </div>
                                 </div>
                             </div>
-
-                            {selectedPoint.color && (
-                                <div className="detailed-info-section">
-                                    <h3>Pin Color</h3>
-                                    <div className="color-display">
-                                        <div
-                                            className="color-swatch"
-                                            style={{
-                                                backgroundColor:
-                                                    selectedPoint.color,
-                                            }}
-                                        />
-                                        <span className="color-code">
-                                            {selectedPoint.color}
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
                         </>
                     )}
 

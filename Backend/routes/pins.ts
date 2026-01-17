@@ -76,21 +76,17 @@ export function updatePin(req: Request, res: Response) {
     const updates: string[] = [];
     const params: any[] = [];
 
-    if (message !== undefined) {
+    if (message) {
         updates.push("message = ?");
         params.push(message);
     }
-    if (title !== undefined) {
+    if (title) {
         updates.push("title = ?");
         params.push(title);
     }
-    if (image !== undefined) {
+    if (image) {
         updates.push("image = ?");
         params.push(image);
-    }
-    if (color !== undefined) {
-        updates.push("color = ?");
-        params.push(color);
     }
 
     if (updates.length > 0) {
