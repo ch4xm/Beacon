@@ -18,6 +18,8 @@ app.get("/heartbeat", (req, res) => {
 app.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from Express!" });
 });
+app.get("/api/pins", pinRoutes.getAllPins);
+app.get("/api/pins/:id", pinRoutes.getPin);
 
 app.listen(PORT, () => {
   console.log(`Backend listening on http://localhost:${PORT}`);

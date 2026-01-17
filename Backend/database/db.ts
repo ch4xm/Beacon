@@ -8,7 +8,7 @@ export const db = new DatabaseSync(dbPath);
 console.log('Connected to SQLite database');
 
 // Helper function to run queries that return rows
-// export function query(sql: string, params: any[] = []): any[] {
-//   const stmt = db.prepare(sql);
-//   return stmt.all(...params);
-// }
+export function query(sql: string, params: any[] = []): any[] {
+  const stmt = db.prepare(sql);
+  return stmt.all(...params);
+}
