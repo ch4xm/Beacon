@@ -55,8 +55,9 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
 				throw new Error(data.message || (authMode === "register" ? "Registration failed" : "Login failed"));
 			}
 
-			// Store the token
+			// Store the token and user email
 			localStorage.setItem("accessToken", data.accessToken);
+			localStorage.setItem("userEmail", credentials.email);
 			setCredentials({ email: "", password: "" });
 			onAuthSuccess();
 		} catch (err) {

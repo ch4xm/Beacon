@@ -140,6 +140,12 @@ function HomePage() {
     return !!localStorage.getItem("accessToken");
   });
   const [cursor, setCursor] = useState<string>('auto');
+  const [userEmail, setUserEmail] = useState<string>(() => {
+    const email = localStorage.getItem("username");
+    console.log("Initial userEmail from localStorage:", email);
+    return email || "";
+  });
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const onMouseEnter = useCallback(() => setCursor('pointer'), []);
   const onMouseLeave = useCallback(() => setCursor('auto'), []);
@@ -188,11 +194,15 @@ function HomePage() {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("userEmail");
     setIsLoggedIn(false);
+    setUserEmail("");
+    setIsDropdownOpen(false);
   };
 
   const handleAuthSuccess = () => {
     setIsLoggedIn(true);
+    setUserEmail(localStorage.getItem("userEmail") || "");
   };
 
   const handleMapClick = async (e: mapboxgl.MapMouseEvent) => {
@@ -264,9 +274,34 @@ function HomePage() {
       <AuthModal isOpen={!isLoggedIn} onAuthSuccess={handleAuthSuccess} />
 
       {isLoggedIn && (
-        <button onClick={handleLogout} className="logout-button">
-          Log Out
-        </button>
+        <div className="user-menu">
+          <button 
+            className="user-menu-toggle" 
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <span className="user-email">{userEmail || "Account"}</span>
+            <svg 
+              className={`chevron ${isDropdownOpen ? 'open' : ''}`}
+              width="16" 
+              height="16" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          {isDropdownOpen && (
+            <div className="user-dropdown">
+              <button onClick={handleLogout} className="dropdown-item logout">
+                Log Out
+              </button>
+            </div>
+          )}
+        </div>
       )}
 
       <Map
