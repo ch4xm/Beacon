@@ -14,8 +14,18 @@ CREATE TABLE pin (
 	longitude REAL,
 	title VARCHAR(200),
 	location VARCHAR(200),
-	message VARCHAR(500),
+	description VARCHAR(500),
 	image VARCHAR(2000),
-	
+
 	FOREIGN KEY (creatorID) REFERENCES account(id)
+);
+
+DROP TABLE IF EXISTS comment;
+CREATE TABLE comment (
+	pinID INTEGER,
+	accountID INTEGER,
+	comment VARCHAR(280),
+
+	FOREIGN KEY (pinID) REFERENCES pin(id),
+	FOREIGN KEY (accountID) REFERENCES pin(accountID)
 );

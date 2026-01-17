@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import "./styles/DetailedPinModal.css";
 import { BASE_API_URL, PIN_COLOR } from '../../constants';
-import { ReverseGeocodeResult } from "@/utils/geocoding";
+import {ReverseGeocodeResult} from "@/utils/geocoding";
 
 interface DetailedPinModalProps {
     selectedPoint: {
@@ -253,7 +253,7 @@ export default function DetailedPinModal({
 
                             <div className="detailed-info-section">
                                 <h3>Location</h3>
-                                <div className="location-details">
+                                <div className="location-details"  style={{display: 'flex', justifyContent: 'center'}}>
                                     <div className="detail-item">
                                         <span className="detail-label">
                                             Address
