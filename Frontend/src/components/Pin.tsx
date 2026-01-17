@@ -7,11 +7,12 @@ interface PinProps {
 	name: string;
 	latitude: number;
 	longitude: number;
+	isLoading?: boolean;
 	onClose: () => void;
 	onDetails?: () => void;
 }
 
-export default function Pin({ name, latitude, longitude, onClose, onDetails }: PinProps) {
+export default function Pin({ name, latitude, longitude, isLoading, onClose, onDetails }: PinProps) {
 	const [modalIsOpen, setModalOpen] = useState<boolean>(false);
 
 	const onAdd = () => {
@@ -31,7 +32,30 @@ export default function Pin({ name, latitude, longitude, onClose, onDetails }: P
 				className="pin-popup"
 			>
 				<div className="pin-card">
-					<div className="pin-name">{name}</div>
+					<div className="pin-header">
+						<div className={`pin-name ${isLoading ? "pin-name-loading" : ""}`}>
+							{isLoading ? (
+								<span className="loading-text">Loading...</span>
+							) : (
+								name
+							)}
+						</div>
+						<button className="pin-close" onClick={onClose} aria-label="Close">
+							<svg
+								width="18"
+								height="18"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+							>
+								<line x1="18" y1="6" x2="6" y2="18"></line>
+								<line x1="6" y1="6" x2="18" y2="18"></line>
+							</svg>
+						</button>
+					</div>
 					<div className="pin-divider"></div>
 					<div className="pin-actions">
 						<button className="pin-btn" onClick={onAdd} aria-label="Add">

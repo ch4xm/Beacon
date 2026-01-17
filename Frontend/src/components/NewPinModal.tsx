@@ -4,9 +4,11 @@ import "./NewPinModal.css";
 interface NewPinModalProps {
 	onClose: () => void;
 	onSubmit: (data: { message: string; image?: string; color?: string }) => void;
+	latitude: number;
+	longitude: number;
 }
 
-export default function NewPinModal({ onClose, onSubmit }: NewPinModalProps) {
+export default function NewPinModal({ onClose, onSubmit, latitude, longitude }: NewPinModalProps) {
 	const [message, setMessage] = useState("");
 	const [image, setImage] = useState("");
 	const [color, setColor] = useState("#667eea");
@@ -21,6 +23,8 @@ export default function NewPinModal({ onClose, onSubmit }: NewPinModalProps) {
 				Authorization: `Bearer ${localStorage.getItem("accessToken")}`
 			},
 			body: JSON.stringify({
+				latitude: latitude,
+				longitude: longitude,
 				message: message,
 				image: image,
 				color: color

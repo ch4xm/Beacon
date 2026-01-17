@@ -14,7 +14,8 @@
   background: var(--color-card, #ffffff);
   border-radius: var(--radius-md, 20px);
   overflow: hidden;
-  min-width: 220px;
+  min-width: 280px;
+  max-width: 320px;
   box-shadow: var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.1));
   border: 1px solid var(--color-border, #e5e3df);
   display: flex;
@@ -31,11 +32,32 @@
 
 .pin-name {
   font-family: var(--font-display, 'Playfair Display', serif);
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-text, #1a1a1a);
   text-align: left;
-  line-height: 1.2;
+  line-height: 1.3;
+  flex: 1;
+  padding-right: 8px;
+  overflow-wrap: break-word;
+}
+
+.pin-name-loading {
+  color: var(--color-text-light, #8a8a8a);
+}
+
+.loading-text {
+  display: inline-block;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .pin-close {

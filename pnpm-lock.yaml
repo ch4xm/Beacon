@@ -51,64 +51,6 @@ importers:
 
   Frontend:
     dependencies:
-      mapbox-gl:
-        specifier: ^3.18.0
-        version: 3.18.0
-      react:
-        specifier: ^19.2.0
-        version: 19.2.3
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.3(react@19.2.3)
-      react-map-gl:
-        specifier: ^8.1.0
-        version: 8.1.0(mapbox-gl@3.18.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      react-router:
-        specifier: ^7.12.0
-        version: 7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-    devDependencies:
-      '@eslint/js':
-        specifier: ^9.39.1
-        version: 9.39.2
-      '@types/mapbox-gl':
-        specifier: ^3.4.1
-        version: 3.4.1
-      '@types/node':
-        specifier: ^25.0.9
-        version: 25.0.9
-      '@types/react':
-        specifier: ^19.2.8
-        version: 19.2.8
-      '@types/react-dom':
-        specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.8)
-      '@vitejs/plugin-react':
-        specifier: ^5.1.1
-        version: 5.1.2(vite@7.3.1(@types/node@25.0.9)(jiti@1.21.7)(tsx@4.21.0)(yaml@2.8.2))
-      eslint:
-        specifier: ^9.39.1
-        version: 9.39.2(jiti@1.21.7)
-      eslint-plugin-react-hooks:
-        specifier: ^7.0.1
-        version: 7.0.1(eslint@9.39.2(jiti@1.21.7))
-      eslint-plugin-react-refresh:
-        specifier: ^0.4.24
-        version: 0.4.26(eslint@9.39.2(jiti@1.21.7))
-      globals:
-        specifier: ^16.5.0
-        version: 16.5.0
-      lucide-react:
-        specifier: ^0.562.0
-        version: 0.562.0(react@19.2.3)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vite:
-        specifier: ^7.2.4
-        version: 7.3.1(@types/node@25.0.9)(jiti@1.21.7)(tsx@4.21.0)(yaml@2.8.2)
-
-  frontend:
-    dependencies:
       '@mapbox/mapbox-gl-draw':
         specifier: ^1.5.1
         version: 1.5.1

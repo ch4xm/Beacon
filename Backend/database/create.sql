@@ -10,6 +10,8 @@ DROP TABLE IF EXISTS pin;
 CREATE TABLE pin (
 	id INTEGER PRIMARY KEY,
 	creatorID INTEGER,
+	latitude INTEGER,
+	longitude INTEGER,
 	message VARCHAR(20),
 	image VARCHAR(2000),
 	color VARCHAR(10) DEFAULT "#0000FF",
