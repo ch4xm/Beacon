@@ -287,10 +287,10 @@ components:
           description: ID of the account that created the pin
           example: 1
         latitude:
-          type: integer
+          type: number
           description: self explanatory
         longitude:
-          type: integer
+          type: number
           description: self explanatory
         message:
           type: string
