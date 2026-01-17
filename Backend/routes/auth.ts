@@ -79,6 +79,7 @@ export function check(req: Request, res: Response, next: Function) {
         if (err) {
             return res.status(401).json({ message: 'Invalid token' });
         }
+		console.log(decoded);
         req.user = decoded;
         next();
     });

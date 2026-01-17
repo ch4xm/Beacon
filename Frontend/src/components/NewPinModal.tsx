@@ -1,5 +1,5 @@
 import { useState } from "react";
-// import "./NewPinModal.css";
+import "./NewPinModal.css";
 
 interface NewPinModalProps {
 	onClose: () => void;
@@ -13,11 +13,29 @@ export default function NewPinModal({ onClose, onSubmit }: NewPinModalProps) {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		onSubmit({ message, image: image || undefined, color });
-		setMessage("");
-		setImage("");
-		setColor("#667eea");
-		onClose();
+
+		fetch('http://localhost:3000/api/pins', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+			},
+			body: JSON.stringify({
+				message: message,
+				image: image,
+				color: color
+			})
+		}).then(res => {
+			if (res.ok) {
+				onSubmit({ message, image: image || undefined, color });
+				setMessage("");
+				setImage("");
+				setColor("#667eea");
+				onClose();
+			}
+		})
+
+
 	};
 
 	return (
