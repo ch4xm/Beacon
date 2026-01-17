@@ -142,8 +142,8 @@ function HomePage() {
                 });
 
                 if (res.status == 401) {
-                  handleLogout();
-                  return;
+                    handleLogout();
+                    return;
                 }
 
                 if (!res.ok) {
@@ -166,7 +166,7 @@ function HomePage() {
                             title: p.title,
                             message: p.message,
                             image: p.image,
-                            color: localStorage.getItem("userEmail") ==  p.email ? "#FFFF00" : "#007cbf",
+                            color: localStorage.getItem("userEmail") == p.email ? "#FFD700" : "#007cbf",
                         },
                     })),
                 };
@@ -249,7 +249,7 @@ function HomePage() {
         }
     };
 
-    
+
 
     const handleDiscoverClick = () => {
         // console.log('Discover button clicked');
@@ -426,11 +426,11 @@ function HomePage() {
                             setSelectedPoint((prev) =>
                                 prev
                                     ? {
-                                          ...prev,
-                                          ...updatedPoint,
-                                          color:
-                                              updatedPoint.color || prev.color,
-                                      }
+                                        ...prev,
+                                        ...updatedPoint,
+                                        color:
+                                            updatedPoint.color || prev.color,
+                                    }
                                     : null,
                             );
                         }}
