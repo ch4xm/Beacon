@@ -31,16 +31,9 @@ export function getPin(req: Request, res: Response) {
 }
 
 export function createPin(req: Request, res: Response) {
-    // Look up the user's email
-    const user = db.query("SELECT email FROM account WHERE id = ?", [
-        req.user.id,
-    ])[0];
-    const email = user ? user.email : null;
-
-    const results = db.query(
-        `
-		INSERT INTO pin(creatorID, latitude, longitude, title, message, image, color, email)
-		VALUES(?, ?, ?, ?, ?, ?, ?, ?)
+    const results = db.query(`
+		INSERT INTO pin(creatorID, latitude, longitude, title, message, image)
+		VALUES(?, ?, ?, ?, ?, ?)
 		RETURNING id;
 	`,
         [
@@ -50,8 +43,6 @@ export function createPin(req: Request, res: Response) {
             req.body.title ?? null,
             req.body.message ?? null,
             req.body.image ?? null,
-            req.body.color ?? null,
-            email,
         ],
     );
 

@@ -7,20 +7,11 @@ interface NewPinModalProps {
         title: string;
         message: string;
         image?: string;
-        color?: string;
     }) => void;
     latitude: number;
     longitude: number;
     locationName: string;
 }
-
-const COLOR_PRESETS = [
-    "#2d6a4f", // Green (brand)
-    "#1a1a1a", // Black
-    "#e07a5f", // Coral
-    "#3d5a80", // Blue
-    "#9c6644", // Brown
-];
 
 const MAX_FILE_SIZE = 4.5 * 1024 * 1024; // 4.5MB limit for Vercel Blob
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
@@ -38,7 +29,6 @@ export default function NewPinModal({
     const [message, setMessage] = useState("");
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [color, setColor] = useState("#2d6a4f");
     const [isUploading, setIsUploading] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [titleError, setTitleError] = useState<string | null>(null);
@@ -159,7 +149,6 @@ export default function NewPinModal({
                     title: title,
                     message: message,
                     image: imageUrl,
-                    color: color,
                 }),
             });
 
@@ -168,13 +157,11 @@ export default function NewPinModal({
                     title,
                     message,
                     image: imageUrl || undefined,
-                    color,
                 });
                 setTitle("");
                 setMessage("");
                 setImageFile(null);
                 setImagePreview(null);
-                setColor("#2d6a4f");
                 onClose();
             }
         } catch (error) {
@@ -414,31 +401,6 @@ export default function NewPinModal({
                                 {uploadError}
                             </span>
                         )}
-                    </div>
-
-                    <div className="pin-modal__field">
-                        <label className="pin-modal__label">Pin Color</label>
-                        <div className="pin-modal__color-field">
-                            <input
-                                type="color"
-                                className="pin-modal__color-input"
-                                value={color}
-                                onChange={(e) => setColor(e.target.value)}
-                                aria-label="Choose custom color"
-                            />
-                            <div className="pin-modal__color-presets">
-                                {COLOR_PRESETS.map((preset) => (
-                                    <button
-                                        key={preset}
-                                        type="button"
-                                        className={`pin-modal__color-preset ${color === preset ? "pin-modal__color-preset--active" : ""}`}
-                                        style={{ background: preset }}
-                                        onClick={() => setColor(preset)}
-                                        aria-label={`Select color ${preset}`}
-                                    />
-                                ))}
-                            </div>
-                        </div>
                     </div>
 
                     <div className="pin-modal__actions">
