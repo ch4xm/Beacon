@@ -9,6 +9,20 @@ function App() {
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
+    const heartbeat = async () => {
+      try {
+        const res = await fetch("/heartbeat");
+        const data = await res.json();
+        console.log("[Client-side] Server reachable:", data);
+      } catch (err) {
+        console.error("[Cleint-side] Server unreachable:", err);
+      }
+    };
+
+    heartbeat();
+  }, []);
+
+  useEffect(() => {
     fetch("/api/hello")
       .then((res) => res.json())
       .then((data: HelloResponse) => {
