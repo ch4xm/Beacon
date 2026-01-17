@@ -1,9 +1,9 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import "./Home.css";
 import AuthModal from "@/components/AuthModal";
 import SearchBar from "@/components/SearchBar";
 import SavedPlacesPanel from "@/components/SavedPlacesPanel";
-import Map, { GeolocateControl, NavigationControl } from "react-map-gl/mapbox";
+import Map, { GeolocateControl, NavigationControl, Popup } from "react-map-gl/mapbox";
 import { Source, Layer, CircleLayerSpecification } from "react-map-gl/mapbox";
 import Pin from "@/components/Pin";
 import { reverseGeocode } from "@/utils/geocoding";
@@ -101,10 +101,19 @@ interface PinData {
   isLoading: boolean;
 }
 
+interface SelectedPoint {
+  longitude: number;
+  latitude: number;
+  message: string;
+  image: string;
+  color: string;
+}
+
 function HomePage() {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const searchMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const [pinData, setPinData] = useState<PinData | null>(null);
+  const [selectedPoint, setSelectedPoint] = useState<SelectedPoint | null>(null);
   const [allPins, setAllPins] = useState({
     type: 'FeatureCollection',
     features: []
@@ -112,6 +121,10 @@ function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     return !!localStorage.getItem("accessToken");
   });
+  const [cursor, setCursor] = useState<string>('auto');
+
+  const onMouseEnter = useCallback(() => setCursor('pointer'), []);
+  const onMouseLeave = useCallback(() => setCursor('auto'), []);
 
   useEffect(() => {
     fetch('http://localhost:3000/api/pins', {
@@ -152,6 +165,27 @@ function HomePage() {
   };
 
   const handleMapClick = async (e: mapboxgl.MapMouseEvent) => {
+    // Check if we clicked on a point feature
+    const features = e.target.queryRenderedFeatures(e.point, {
+      layers: ['point']
+    });
+
+    if (features && features.length > 0) {
+      const feature = features[0];
+      const coords = feature.geometry.coordinates;
+      setSelectedPoint({
+        longitude: coords[0],
+        latitude: coords[1],
+        message: feature.properties?.message || 'No message',
+        image: feature.properties?.image || '',
+        color: feature.properties?.color || '#007cbf'
+      });
+      setPinData(null); // Close any existing pin
+      return;
+    }
+
+    // Otherwise, handle as a new pin creation
+    setSelectedPoint(null);
     const { lat, lng } = e.lngLat;
     setPinData({
       lat,
@@ -216,6 +250,10 @@ function HomePage() {
         }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
         onClick={handleMapClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        interactiveLayerIds={['point']}
+        cursor={cursor}
         interactive={true}
         doubleClickZoom={true}
         dragRotate={true}
@@ -244,7 +282,34 @@ function HomePage() {
             onClose={() => setPinData(null)}
             onDetails={() => console.log("Details clicked")}
           />
+        )}
 
+        {selectedPoint && (
+          <Popup
+            longitude={selectedPoint.longitude}
+            latitude={selectedPoint.latitude}
+            anchor="bottom"
+            closeButton={true}
+            closeOnClick={false}
+            onClose={() => setSelectedPoint(null)}
+          >
+            <div style={{ maxWidth: '200px' }}>
+              {selectedPoint.image && (
+                <img 
+                  src={selectedPoint.image} 
+                  alt="Pin image"
+                  style={{ 
+                    width: '100%', 
+                    height: '120px', 
+                    objectFit: 'cover', 
+                    borderRadius: '8px',
+                    marginBottom: '8px'
+                  }}
+                />
+              )}
+              <p style={{ margin: 0, fontWeight: 'bold' }}>{selectedPoint.message}</p>
+            </div>
+          </Popup>
         )}
 
         <Source id="my-data" type="geojson" data={allPins}>
