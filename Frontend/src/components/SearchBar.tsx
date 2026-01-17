@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import mapboxgl from "mapbox-gl";
 
 interface SearchBarProps {
@@ -10,8 +10,13 @@ export default function SearchBar({ mapRef, searchMarkerRef }: SearchBarProps) {
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const [isSearching, setIsSearching] = useState<boolean>(false);
 	const [searchResults, setSearchResults] = useState<any[]>([]);
+	
+	// Generate a session token for the Search Box API
+	const sessionToken = useMemo(() => {
+		return crypto.randomUUID();
+	}, []);
 
-	// Debounced search-as-you-type
+	// Debounced search-as-you-type using Search Box API
 	useEffect(() => {
 		const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 		if (!token || !mapRef.current) return;
@@ -24,15 +29,17 @@ export default function SearchBar({ mapRef, searchMarkerRef }: SearchBarProps) {
 		const timeout = setTimeout(async () => {
 			setIsSearching(true);
 			try {
-				const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+				const center = mapRef.current.getCenter();
+				const proximity = `${center.lng},${center.lat}`;
+				const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(
 					searchQuery
-				)}.json?access_token=${token}&limit=7&autocomplete=true&types=place,address,poi`;
+				)}&access_token=${token}&session_token=${sessionToken}&proximity=${proximity}&language=en&limit=7`;
 				const resp = await fetch(url, { signal: controller.signal });
 				const data = await resp.json();
-				setSearchResults(data?.features ?? []);
+				setSearchResults(data?.suggestions ?? []);
 			} catch (err) {
 				if ((err as any)?.name !== "AbortError") {
-					console.error("Geocoding search error:", err);
+					console.error("Search Box API error:", err);
 				}
 			} finally {
 				setIsSearching(false);
@@ -43,45 +50,44 @@ export default function SearchBar({ mapRef, searchMarkerRef }: SearchBarProps) {
 			controller.abort();
 			clearTimeout(timeout);
 		};
-	}, [searchQuery, mapRef]);
+	}, [searchQuery, mapRef, sessionToken]);
 
-	const handleSelectResult = (feature: any) => {
-		if (!feature?.center || !mapRef.current) return;
-		const [lng, lat] = feature.center as [number, number];
+	const handleSelectResult = async (suggestion: any) => {
+		if (!suggestion?.mapbox_id || !mapRef.current) return;
+		
+		const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+		if (!token) return;
+		
+		try {
+			// Retrieve full details for the selected suggestion
+			const url = `https://api.mapbox.com/search/searchbox/v1/retrieve/${suggestion.mapbox_id}?access_token=${token}&session_token=${sessionToken}`;
+			const resp = await fetch(url);
+			const data = await resp.json();
+			
+			const feature = data?.features?.[0];
+			if (!feature?.geometry?.coordinates) return;
+			
+			const [lng, lat] = feature.geometry.coordinates as [number, number];
 
-		if (!searchMarkerRef.current) {
-			searchMarkerRef.current = new mapboxgl.Marker({ color: "#1a1a1a" });
+			if (!searchMarkerRef.current) {
+				searchMarkerRef.current = new mapboxgl.Marker({ color: "#1a1a1a" });
+			}
+			searchMarkerRef.current.setLngLat([lng, lat]).addTo(mapRef.current);
+
+			mapRef.current.flyTo({ center: [lng, lat], zoom: 12, essential: true });
+			setSearchQuery(suggestion.name || suggestion.full_address || "");
+			setSearchResults([]);
+		} catch (err) {
+			console.error("Retrieve API error:", err);
 		}
-		searchMarkerRef.current.setLngLat([lng, lat]).addTo(mapRef.current);
-
-		mapRef.current.flyTo({ center: [lng, lat], zoom: 12, essential: true });
-		setSearchQuery(feature.place_name || "");
-		setSearchResults([]);
 	};
 
 	const handleSearchSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!searchQuery.trim() || !mapRef.current) return;
-		// If we already have results, pick the first; otherwise trigger fetch
+		// If we already have results, pick the first
 		if (searchResults[0]) {
-			handleSelectResult(searchResults[0]);
-			return;
-		}
-		// Fallback: single fetch then select
-		const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
-		if (!token) return;
-		setIsSearching(true);
-		try {
-			const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-				searchQuery
-			)}.json?access_token=${token}&limit=1`;
-			const resp = await fetch(url);
-			const data = await resp.json();
-			if (data?.features?.[0]) handleSelectResult(data.features[0]);
-		} catch (err) {
-			console.error("Geocoding error:", err);
-		} finally {
-			setIsSearching(false);
+			await handleSelectResult(searchResults[0]);
 		}
 	};
 
@@ -102,15 +108,15 @@ export default function SearchBar({ mapRef, searchMarkerRef }: SearchBarProps) {
 
 			{searchResults.length > 0 && (
 				<ul className="search-results">
-					{searchResults.map((feature) => (
+					{searchResults.map((suggestion) => (
 						<li
-							key={feature.id}
+							key={suggestion.mapbox_id}
 							className="search-result-item"
-							onMouseDown={() => handleSelectResult(feature)}
+							onMouseDown={() => handleSelectResult(suggestion)}
 						>
-							<div className="result-primary">{feature.text}</div>
-							{feature.place_name && (
-								<div className="result-secondary">{feature.place_name}</div>
+							<div className="result-primary">{suggestion.name}</div>
+							{suggestion.full_address && (
+								<div className="result-secondary">{suggestion.full_address}</div>
 							)}
 						</li>
 					))}
