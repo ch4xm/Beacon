@@ -36,6 +36,25 @@
   color: var(--color-text, #1a1a1a);
   text-align: left;
   line-height: 1.2;
+  min-height: 1.68rem;
+}
+
+.pin-name-loading {
+  color: var(--color-text-light, #8a8a8a);
+}
+
+.loading-text {
+  display: inline-block;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .pin-close {
