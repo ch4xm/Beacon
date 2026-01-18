@@ -17,6 +17,8 @@ CREATE TABLE pin (
 	description VARCHAR(500),
 	image VARCHAR(2000),
 
+	likes INTEGER,
+
 	FOREIGN KEY (creatorID) REFERENCES account(id)
 );
 
