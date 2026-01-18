@@ -26,8 +26,10 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 
 	const [likes, setLikes] = useState<number>(0);
 	const [isLiked, setIsLiked] = useState<boolean>(false);
+	const [likesLoading, setLikesLoading] = useState<boolean>(true);
 
 	useEffect(() => {
+		setLikesLoading(true);
 		fetch(`${BASE_API_URL}/api/likes/${selectedPoint.id}`, {
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("accessToken")}`
@@ -37,6 +39,10 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 			.then(res => {
 				setLikes(res.likes);
 				setIsLiked(res.wasLiked);
+				setLikesLoading(false);
+			})
+			.catch(() => {
+				setLikesLoading(false);
 			});
 	}, [selectedPoint]);
 
@@ -127,6 +133,7 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 					<button
 						className="location-popup-button"
 						onClick={toggleLike}
+						disabled={likesLoading}
 						onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
 						onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
 						style={{
@@ -136,9 +143,10 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 							background: 'none',
 							color: '#1a1a1a',
 							padding: '4px 8px',
+							opacity: likesLoading ? 0.5 : 1,
 						}}
 					>
-						<p>{likes}</p>
+						<p>{likesLoading ? '...' : likes}</p>
 						<HeartIcon filled={isLiked} />
 					</button>
 				</div>
