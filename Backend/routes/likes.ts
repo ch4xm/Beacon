@@ -13,7 +13,6 @@ export function getLikes(req: Request, res: Response) {
         return res.status(404).send();
     }
 
-	console.log(results[0])
     res.json({
 		likes: results[0].likes,
 		wasLiked: results[0].wasLiked == 1
