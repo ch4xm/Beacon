@@ -9,7 +9,7 @@ export function getAllPins(req: Request, res: Response) {
 			p.latitude,
 			p.longitude,
 			p.title,
-			p.location,
+			p.address,
 			p.description as message,
 			p.image
 		FROM pin p
@@ -34,7 +34,7 @@ export function getPin(req: Request, res: Response) {
 
 export function createPin(req: Request, res: Response) {
     const results = db.query(`
-		INSERT INTO pin(creatorID, latitude, longitude, title, location, description, image)
+		INSERT INTO pin(creatorID, latitude, longitude, title, address, description, image)
 		VALUES(?, ?, ?, ?, ?, ?, ?)
 		RETURNING id;
 	`,
@@ -43,7 +43,7 @@ export function createPin(req: Request, res: Response) {
             req.body.latitude,
             req.body.longitude,
             req.body.title ?? null,
-            req.body.location ?? null,
+            req.body.address ?? null,
             req.body.message ?? null,
             req.body.image ?? null,
         ],
@@ -55,7 +55,7 @@ export function createPin(req: Request, res: Response) {
 export function updatePin(req: Request, res: Response) {
     const pinID = req.params.id;
     const userID = req.user.id;
-    const { title, location, message, image } = req.body;
+    const { title, address, message, image } = req.body;
 
     const pin = db.query("SELECT creatorID FROM pin WHERE id = ?", [pinID])[0];
     if (!pin) {
@@ -82,9 +82,9 @@ export function updatePin(req: Request, res: Response) {
         updates.push("image = ?");
         params.push(image);
     }
-    if (location) {
-        updates.push("location = ?");
-        params.push(location);
+    if (address) {
+        updates.push("address = ?");
+        params.push(address);
     }
 
     if (updates.length > 0) {
