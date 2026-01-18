@@ -34,3 +34,12 @@ CREATE TABLE comment (
 	FOREIGN KEY (pinID) REFERENCES pin(id),
 	FOREIGN KEY (accountID) REFERENCES account(id)
 );
+
+DROP TABLE IF EXISTS likes;
+CREATE TABLE likes (
+	pinID INTEGER,
+	accountID INTEGER,
+
+	FOREIGN KEY (pinID) REFERENCES pin(id),
+	FOREIGN KEY (accountID) REFERENCES account(id)
+);

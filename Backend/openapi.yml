@@ -803,15 +803,22 @@ paths:
           content:
             application/json:
               schema:
-                type: integer
-                description: Number of likes on the pin
-                example: 42
+                type: object
+                properties:
+                  likes:
+                    type: integer
+                    description: Number of likes on the pin
+                    example: 42
+                  wasLiked:
+                    type: boolean
         404:
           description: Post not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        401:
+          description: idk
 
     post:
       summary: Get the number of likes on a pin
@@ -826,6 +833,26 @@ paths:
       responses:
         204:
           description: Successful response with like count
+        404:
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    delete:
+      summary: remove a like from a post
+      description: Retrieves likes on a pin
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the pin to retrieve
+      responses:
+        204:
+          description: Successful response
         404:
           description: Post not found
           content:

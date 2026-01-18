@@ -104,7 +104,8 @@ app.delete("/api/comments/:commentId", auth.check, comments.deleteComment);
 
 //likes routes
 app.get("/api/likes/:id", auth.check, likes.getLikes);
-app.post("/api/likes/:id", auth.check, likes.addLikes);
+app.post("/api/likes/:id", auth.check, likes.addLike);
+app.delete("/api/likes/:id", auth.check, likes.removeLike);
 
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Backend listening on http://0.0.0.0:${PORT}`);

@@ -1,7 +1,8 @@
 import { Popup } from "react-map-gl/mapbox";
 import "./styles/LocationPin.css";
-import { PIN_COLOR } from "../../constants";
+import { PIN_COLOR, BASE_API_URL } from "../../constants";
 import { SelectedPoint } from "@/pages/Home";
+import { useEffect, useState } from "react";
 
 interface LocationPinProps {
 	selectedPoint: SelectedPoint;
@@ -25,24 +26,42 @@ function PopupButton({ onClick, color, content }: { onClick: () => void, color: 
 	)
 }
 
-export default function LocationPin({
-	selectedPoint,
-	setSelectedPoint,
-	onShowDetails,
-}: LocationPinProps) {
-	const titleText =
-		selectedPoint.title?.trim() ||
-		selectedPoint.description?.trim() ||
-		"Untitled Pin";
+export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDetails }: LocationPinProps) {
+	const titleText = selectedPoint.title?.trim() || selectedPoint.description?.trim() || "Untitled Pin";
 	const messageText = selectedPoint.description?.trim() || "";
 	const showMessage = messageText && messageText !== titleText;
-	const descriptionPreview =
-		messageText.length > 50
-			? `${messageText.slice(0, 50).trimEnd()}...`
-			: messageText;
+	const descriptionPreview = messageText.length > 50 ? `${messageText.slice(0, 50).trimEnd()}...` : messageText;
+
+	const [likes, setLikes] = useState<number>(0);
+
+	useEffect(() => {
+		fetch(`${BASE_API_URL}/api/likes/${selectedPoint.id}`, {
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+			}
+		})
+		.then(res => res.json())
+		.then(res => setLikes(res.likes));
+	}, [selectedPoint])
 
 	const onLike = () => {
-		console.log("like")
+		setLikes(prev => prev + 1);
+		fetch(`${BASE_API_URL}/api/likes/${selectedPoint.id}`, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+			}
+		});
+	}
+
+	const onDislike = () => {
+		setLikes(prev => prev - 1);
+		fetch(`${BASE_API_URL}/api/likes/${selectedPoint.id}`, {
+			method: 'DELETE',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+			}
+		});
 	}
 
 	return (
@@ -101,8 +120,8 @@ export default function LocationPin({
 					/>
 					<PopupButton
 						color={selectedPoint.color || PIN_COLOR}
-						content={"❤️"}
-						onClick={() => console.log("liked")}
+						content={`${likes}❤️`}
+						onClick={onLike}
 					/>
 				</div>
 			</div>
