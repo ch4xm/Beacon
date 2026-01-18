@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import "./styles/DetailedPinModal.css";
 import { BASE_API_URL, PIN_COLOR } from '../../constants';
-import { ReverseGeocodeResult } from "@/utils/geocoding";
 
 interface DetailedPinModalProps {
     selectedPoint: {
@@ -424,7 +423,7 @@ export default function DetailedPinModal({ selectedPoint, currentUserId, current
                             {selectedPoint.email && (
                                 <ModalSection
                                     header={"Uploaded by"}
-                                    content={selectedPoint.email.split("@")[0]}
+                                    content={`@${selectedPoint.email.split("@")[0]}`}
                                 />
                             )}
 

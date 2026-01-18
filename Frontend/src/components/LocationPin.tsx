@@ -111,16 +111,17 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 						{descriptionPreview}
 					</p>
 				)}
-				<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+				<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
 					<button
 						className="location-popup-button"
 						onClick={onShowDetails}
-						style={{ backgroundColor: selectedPoint.color || PIN_COLOR }}
+						style={{ background: 'none', padding: '4px 8px', transform: 'translateY(3px)' }}
 						onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
 						onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
 					>
-						{"ℹ️"}
-
+						<img
+							src={'/info.svg'}
+						/>
 					</button>
 
 					<button
@@ -134,6 +135,7 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 							justifyContent: 'center',
 							background: 'none',
 							color: '#1a1a1a',
+							padding: '4px 8px',
 						}}
 					>
 						<p>{likes}</p>
