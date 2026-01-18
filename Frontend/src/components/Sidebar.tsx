@@ -142,21 +142,21 @@ export default function Sidebar({ mapRef, allPins, savedPlaces, isLoggedIn, isSe
             </header> */}
 
             <div className="sidebar-content">
-                {activeTab === "discovery" ? (
-                    <>
-                        {/* <h3 style={{ fontSize: "1rem", marginBottom: "16px", color: "#666" }}>Nearby Discovery</h3> */}
+                <div
+                    className="sidebar-slider"
+                    style={{ transform: `translateX(${activeTab === "discovery" ? "0%" : "-50%"})` }}
+                >
+                    <div className="sidebar-panel">
                         {renderPinList(nearbyPins)}
-                    </>
-                ) : (
-                    <>
-                        {/* <h3 style={{ fontSize: "1rem", marginBottom: "16px", color: "#666" }}>Saved Places</h3> */}
+                    </div>
+                    <div className="sidebar-panel">
                         {!isLoggedIn ? (
                             <div className="empty-state">
                                 <p>Log in to see your saved places</p>
                             </div>
                         ) : renderPinList(savedPlaces)}
-                    </>
-                )}
+                    </div>
+                </div>
             </div>
 
             <nav className="sidebar-tabs">
