@@ -1,0 +1,1441 @@
+[
+  {
+    "name": "Lost Coast Trail",
+    "location": "King Range, Humboldt/Mendocino",
+    "existing_coords": {
+      "lat": 40.28918,
+      "lon": -124.35588
+    },
+    "new_coords": {
+      "lat": 40.169328,
+      "lon": -124.2271324
+    },
+    "display_name": "Lost Coast Trail, Humboldt County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.11985200000000162,
+      "lon_diff": 0.12874759999999696
+    }
+  },
+  {
+    "name": "Fern Canyon",
+    "location": "Prairie Creek Redwoods SP, Orick",
+    "existing_coords": {
+      "lat": 41.40067,
+      "lon": -124.06574
+    },
+    "new_coords": {
+      "lat": 34.1708578,
+      "lon": -117.9332738
+    },
+    "display_name": "Fern Canyon, Duarte, Los Angeles County, California, 91008, United States",
+    "coord_difference": {
+      "lat_diff": 7.229812199999998,
+      "lon_diff": 6.13246620000001
+    }
+  },
+  {
+    "name": "Castle Crags Dome Trail",
+    "location": "Castle Crags SP, Castella",
+    "existing_coords": {
+      "lat": 41.17556,
+      "lon": -122.33944
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Bumpass Hell Trail",
+    "location": "Lassen Volcanic NP",
+    "existing_coords": {
+      "lat": 40.45738,
+      "lon": -121.50304
+    },
+    "new_coords": {
+      "lat": 40.4532818,
+      "lon": -121.4940683
+    },
+    "display_name": "Bumpass Hell Trail, Shasta County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.004098200000001384,
+      "lon_diff": 0.00897170000000358
+    }
+  },
+  {
+    "name": "Feather Falls Trail",
+    "location": "Plumas NF, Oroville",
+    "existing_coords": {
+      "lat": 39.64294,
+      "lon": -121.27441
+    },
+    "new_coords": {
+      "lat": 39.6261391,
+      "lon": -121.2683679
+    },
+    "display_name": "Feather Falls Trail, Butte County, California, 95940, United States",
+    "coord_difference": {
+      "lat_diff": 0.016800899999999785,
+      "lon_diff": 0.006042100000001938
+    }
+  },
+  {
+    "name": "Alamere Falls",
+    "location": "Point Reyes NS, Marin County",
+    "existing_coords": {
+      "lat": 37.95372,
+      "lon": -122.78339
+    },
+    "new_coords": {
+      "lat": 37.9537367,
+      "lon": -122.7833527
+    },
+    "display_name": "Alamere Falls, Marin County, California, United States",
+    "coord_difference": {
+      "lat_diff": 1.670000000331129e-05,
+      "lon_diff": 3.7300000002460365e-05
+    }
+  },
+  {
+    "name": "Cataract Falls Trail",
+    "location": "Mount Tamalpais Watershed, Marin",
+    "existing_coords": {
+      "lat": 37.93184,
+      "lon": -122.63539
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Purisima Creek Redwoods",
+    "location": "Half Moon Bay area, San Mateo",
+    "existing_coords": {
+      "lat": 37.4375,
+      "lon": -122.34583
+    },
+    "new_coords": {
+      "lat": 37.429725,
+      "lon": -122.3371513
+    },
+    "display_name": "Purisima Creek Redwoods Open Space Preserve, San Mateo County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.007775000000002308,
+      "lon_diff": 0.008678700000004369
+    }
+  },
+  {
+    "name": "Boronda Trail",
+    "location": "Big Sur, Monterey County",
+    "existing_coords": {
+      "lat": 36.19834,
+      "lon": -121.71773
+    },
+    "new_coords": {
+      "lat": 36.0873537,
+      "lon": -121.5946174
+    },
+    "display_name": "Boronda Trail, Monterey County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.11098630000000043,
+      "lon_diff": 0.1231125999999989
+    }
+  },
+  {
+    "name": "Salmon Creek Falls Trail",
+    "location": "Big Sur, Monterey/SLO County",
+    "existing_coords": {
+      "lat": 35.81542,
+      "lon": -121.35915
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Montaña de Oro Bluff Trail",
+    "location": "Montaña de Oro SP, Los Osos",
+    "existing_coords": {
+      "lat": 35.2728,
+      "lon": -120.8887
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Bridge to Nowhere Hike",
+    "location": "San Gabriel Mts, Azusa",
+    "existing_coords": {
+      "lat": 34.28306,
+      "lon": -117.74667
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Painted Canyon",
+    "location": "Ladder Canyon) (Mecca Hills, Riverside County",
+    "existing_coords": {
+      "lat": 33.62352,
+      "lon": -115.99672
+    },
+    "new_coords": {
+      "lat": 33.7034924,
+      "lon": -116.2269696
+    },
+    "display_name": "Painted Canyon Avenue, Indio, Riverside County, California, 92201, United States",
+    "coord_difference": {
+      "lat_diff": 0.07997240000000261,
+      "lon_diff": 0.2302496000000076
+    }
+  },
+  {
+    "name": "Black Star Canyon Trail",
+    "location": "Santa Ana Mts, Orange County",
+    "existing_coords": {
+      "lat": 33.76609,
+      "lon": -117.67915
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "The Slot",
+    "location": "Anza-Borrego Desert SP, Borrego Springs",
+    "existing_coords": {
+      "lat": 33.18213,
+      "lon": -116.21417
+    },
+    "new_coords": {
+      "lat": 33.1824871,
+      "lon": -116.2154463
+    },
+    "display_name": "The Slot, San Diego County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.00035710000000221953,
+      "lon_diff": 0.0012763000000006741
+    }
+  },
+  {
+    "name": "Big Pine Lakes Trail",
+    "location": "Eastern Sierra, Inyo County",
+    "existing_coords": {
+      "lat": 37.13215,
+      "lon": -118.50927
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Panum Crater",
+    "location": "Mono Lake, Mono County",
+    "existing_coords": {
+      "lat": 37.92965,
+      "lon": -119.04459
+    },
+    "new_coords": {
+      "lat": 37.9295411,
+      "lon": -119.045671
+    },
+    "display_name": "Panum Crater, Mono County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.00010890000000074451,
+      "lon_diff": 0.0010809999999992215
+    }
+  },
+  {
+    "name": "Santa Paula Canyon",
+    "location": "“Punch Bowls” hike, Ventura County",
+    "existing_coords": {
+      "lat": 34.42769,
+      "lon": -119.09147
+    },
+    "new_coords": {
+      "lat": 34.4398008,
+      "lon": -119.0805579
+    },
+    "display_name": "Santa Paula Canyon Trail, Ventura County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.012110800000002087,
+      "lon_diff": 0.010912099999998759
+    }
+  },
+  {
+    "name": "Cedar Creek Falls",
+    "location": "Cleveland NF, San Diego County",
+    "existing_coords": {
+      "lat": 32.98949,
+      "lon": -116.7303
+    },
+    "new_coords": {
+      "lat": 32.9899492,
+      "lon": -116.7296427
+    },
+    "display_name": "Cedar Creek Falls, San Diego County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.00045919999999455285,
+      "lon_diff": 0.0006573000000003049
+    }
+  },
+  {
+    "name": "Kelso Dunes",
+    "location": "Mojave National Preserve, San Bernardino",
+    "existing_coords": {
+      "lat": 34.9035,
+      "lon": -115.71805
+    },
+    "new_coords": {
+      "lat": 34.9341862,
+      "lon": -115.7196087
+    },
+    "display_name": "Kelso Dunes, San Bernardino County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.03068619999999811,
+      "lon_diff": 0.0015586999999896989
+    }
+  },
+  {
+    "name": "Boy Scout Tree Trail",
+    "location": "Jedediah Smith Redwoods SP, Del Norte",
+    "existing_coords": {
+      "lat": 41.7685,
+      "lon": -124.11033
+    },
+    "new_coords": {
+      "lat": 41.7783561,
+      "lon": -124.1315808
+    },
+    "display_name": "Boy Scout Tree Trail, Del Norte County, California, 95531, United States",
+    "coord_difference": {
+      "lat_diff": 0.009856100000000367,
+      "lon_diff": 0.021250799999990022
+    }
+  },
+  {
+    "name": "Table Mountain “Phantom Falls”",
+    "location": "Butte County",
+    "existing_coords": {
+      "lat": 39.61041,
+      "lon": -121.56063
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Deep Creek Hot Springs",
+    "location": "San Bernardino NF, Apple Valley",
+    "existing_coords": {
+      "lat": 34.33944,
+      "lon": -117.17694
+    },
+    "new_coords": {
+      "lat": 34.3394243,
+      "lon": -117.177035
+    },
+    "display_name": "Deep Creek Hot Springs, Hot Springs Goat Trail, San Bernardino County, California, United States",
+    "coord_difference": {
+      "lat_diff": 1.5700000005836046e-05,
+      "lon_diff": 9.500000000173259e-05
+    }
+  },
+  {
+    "name": "Solstice Canyon",
+    "location": "Santa Monica Mts, Malibu",
+    "existing_coords": {
+      "lat": 34.0391,
+      "lon": -118.7548
+    },
+    "new_coords": {
+      "lat": 34.0440713,
+      "lon": -118.7556101
+    },
+    "display_name": "Solstice Canyon, El Nido, Unincorporated Santa Monica Mountains, Los Angeles County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.004971300000001122,
+      "lon_diff": 0.0008100999999953729
+    }
+  },
+  {
+    "name": "High Peaks Trail",
+    "location": "Pinnacles NP, San Benito County",
+    "existing_coords": {
+      "lat": 36.4785,
+      "lon": -121.184
+    },
+    "new_coords": {
+      "lat": 36.4895798,
+      "lon": -121.1972548
+    },
+    "display_name": "High Peaks Trail, San Benito County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.011079800000004525,
+      "lon_diff": 0.013254799999998568
+    }
+  },
+  {
+    "name": "Samoa Cookhouse",
+    "location": "Samoa, Humboldt County",
+    "existing_coords": {
+      "lat": 40.81994,
+      "lon": -124.18175
+    },
+    "new_coords": {
+      "lat": 40.8197249,
+      "lon": -124.1816255
+    },
+    "display_name": "Samoa Cookhouse, 908, Vance Road, Samoa, Eureka, Humboldt County, California, 95564, United States",
+    "coord_difference": {
+      "lat_diff": 0.0002151000000054637,
+      "lon_diff": 0.00012449999999830652
+    }
+  },
+  {
+    "name": "Hodad’s",
+    "location": "Ocean Beach, San Diego",
+    "existing_coords": {
+      "lat": 32.74725,
+      "lon": -117.25099
+    },
+    "new_coords": {
+      "lat": 32.7471357,
+      "lon": -117.2512075
+    },
+    "display_name": "Hodad's Ocean Beach, 5010, Newport Avenue, Ocean Beach, San Diego, San Diego County, California, 92107, United States",
+    "coord_difference": {
+      "lat_diff": 0.00011429999999990059,
+      "lon_diff": 0.00021750000000508862
+    }
+  },
+  {
+    "name": "La Super-Rica Taqueria",
+    "location": "Santa Barbara",
+    "existing_coords": {
+      "lat": 34.42,
+      "lon": -119.698
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Tito’s Tacos",
+    "location": "Culver City, Los Angeles",
+    "existing_coords": {
+      "lat": 34.008,
+      "lon": -118.395
+    },
+    "new_coords": {
+      "lat": 34.0081414,
+      "lon": -118.4144703
+    },
+    "display_name": "Tito's Tacos, 11222, Washington Place, Culver City, Los Angeles County, California, 90230, United States",
+    "coord_difference": {
+      "lat_diff": 0.0001413999999968496,
+      "lon_diff": 0.019470300000008933
+    }
+  },
+  {
+    "name": "Duarte’s Tavern",
+    "location": "Pescadero, San Mateo Co.",
+    "existing_coords": {
+      "lat": 37.255,
+      "lon": -122.38
+    },
+    "new_coords": {
+      "lat": 37.2520672,
+      "lon": -122.3827841
+    },
+    "display_name": "Duarte's Tavern, 202, Stage Road, Pescadero, San Mateo County, California, 94060, United States",
+    "coord_difference": {
+      "lat_diff": 0.0029328000000035104,
+      "lon_diff": 0.002784099999999512
+    }
+  },
+  {
+    "name": "Cafe 222",
+    "location": "Downtown San Diego",
+    "existing_coords": {
+      "lat": 32.719,
+      "lon": -117.162
+    },
+    "new_coords": {
+      "lat": 33.1188418,
+      "lon": -117.0852029
+    },
+    "display_name": "La Farfalla Cafe, 155, South Orange Street, Downtown, Escondido, San Diego County, California, 92025, United States",
+    "coord_difference": {
+      "lat_diff": 0.39984179999999725,
+      "lon_diff": 0.07679710000000739
+    }
+  },
+  {
+    "name": "Nepenthe",
+    "location": "Big Sur, Monterey Co.",
+    "existing_coords": {
+      "lat": 36.218,
+      "lon": -121.732
+    },
+    "new_coords": {
+      "lat": 36.2218116,
+      "lon": -121.7596565
+    },
+    "display_name": "Nepenthe, 48510, Cabrillo Highway, Posts, Monterey County, California, 93920, United States",
+    "coord_difference": {
+      "lat_diff": 0.003811599999998805,
+      "lon_diff": 0.02765650000000619
+    }
+  },
+  {
+    "name": "Brew Hawg BBQ & Root Beer",
+    "location": "Orange, Orange County",
+    "existing_coords": {
+      "lat": 33.803,
+      "lon": -117.853
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "China City Restaurant",
+    "location": "Cameron Park, El Dorado Co.",
+    "existing_coords": {
+      "lat": 38.663,
+      "lon": -120.987
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Philippe The Original",
+    "location": "Los Angeles – Chinatown",
+    "existing_coords": {
+      "lat": 34.059,
+      "lon": -118.235
+    },
+    "new_coords": {
+      "lat": 34.0596738,
+      "lon": -118.236941
+    },
+    "display_name": "Philippe The Original, 1001, North Alameda Street, New Chinatown, Chinatown, Los Angeles, Los Angeles County, California, 90012, United States",
+    "coord_difference": {
+      "lat_diff": 0.0006738000000012789,
+      "lon_diff": 0.001941000000002191
+    }
+  },
+  {
+    "name": "India Oven",
+    "location": "Sacramento",
+    "existing_coords": {
+      "lat": 38.575,
+      "lon": -121.473
+    },
+    "new_coords": {
+      "lat": 38.6364535,
+      "lon": -121.5050381
+    },
+    "display_name": "India Oven, 3511, Truxel Road, Natomas Crossing, Sacramento, Sacramento County, California, 95834, United States",
+    "coord_difference": {
+      "lat_diff": 0.06145349999999894,
+      "lon_diff": 0.032038099999994074
+    }
+  },
+  {
+    "name": "The Marshall Store",
+    "location": "Marshall, Marin County",
+    "existing_coords": {
+      "lat": 38.157,
+      "lon": -122.889
+    },
+    "new_coords": {
+      "lat": 38.1516292,
+      "lon": -122.8880588
+    },
+    "display_name": "The Marshall Store, 19225, Shoreline Highway, Reynolds, Marin County, California, 94940, United States",
+    "coord_difference": {
+      "lat_diff": 0.005370799999994347,
+      "lon_diff": 0.0009411999999997533
+    }
+  },
+  {
+    "name": "Lightwave Coffee & Kitchen",
+    "location": "Sonoma",
+    "existing_coords": {
+      "lat": 38.293,
+      "lon": -122.458
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Outta Sight Pizza",
+    "location": "San Francisco",
+    "existing_coords": {
+      "lat": 37.764,
+      "lon": -122.421
+    },
+    "new_coords": {
+      "lat": 37.7818381,
+      "lon": -122.4171104
+    },
+    "display_name": "Outta Sight Pizza, 422, Larkin Street, Civic Center, San Francisco, California, 94102, United States",
+    "coord_difference": {
+      "lat_diff": 0.017838099999998747,
+      "lon_diff": 0.003889600000007931
+    }
+  },
+  {
+    "name": "Rose Pizzeria",
+    "location": "Berkeley",
+    "existing_coords": {
+      "lat": 37.871,
+      "lon": -122.272
+    },
+    "new_coords": {
+      "lat": 37.8715901,
+      "lon": -122.2714953
+    },
+    "display_name": "Rose Pizzeria, 1960, University Avenue, Downtown Berkeley, Berkeley, Alameda County, California, 94704, United States",
+    "coord_difference": {
+      "lat_diff": 0.0005900999999965961,
+      "lon_diff": 0.0005047000000075741
+    }
+  },
+  {
+    "name": "Popoca",
+    "location": "Oakland",
+    "existing_coords": {
+      "lat": 37.804,
+      "lon": -122.27
+    },
+    "new_coords": {
+      "lat": 37.8015933,
+      "lon": -122.27424
+    },
+    "display_name": "Popoca Oakland, 906, Washington Street, Old Oakland Historic District, Downtown Oakland, Oakland, Alameda County, California, 94607, United States",
+    "coord_difference": {
+      "lat_diff": 0.002406700000001649,
+      "lon_diff": 0.0042400000000100135
+    }
+  },
+  {
+    "name": "Spoon & Pork",
+    "location": "Filipino, Los Angeles",
+    "existing_coords": {
+      "lat": 34.091,
+      "lon": -118.282
+    },
+    "new_coords": {
+      "lat": 34.0389675,
+      "lon": -118.442375
+    },
+    "display_name": "Spoon and Pork, 2121, Sawtelle Boulevard, Sawtelle Japantown, Sawtelle, Los Angeles, Los Angeles County, California, 90025, United States",
+    "coord_difference": {
+      "lat_diff": 0.05203250000000281,
+      "lon_diff": 0.16037500000000193
+    }
+  },
+  {
+    "name": "Elf Cafe",
+    "location": "Echo Park, Los Angeles",
+    "existing_coords": {
+      "lat": 34.077,
+      "lon": -118.26
+    },
+    "new_coords": {
+      "lat": 34.0775801,
+      "lon": -118.2646234
+    },
+    "display_name": "Elf Café, 2135, West Sunset Boulevard, Echo Park, Los Angeles, Los Angeles County, California, 90026, United States",
+    "coord_difference": {
+      "lat_diff": 0.0005801000000005274,
+      "lon_diff": 0.004623399999999833
+    }
+  },
+  {
+    "name": "Calabama",
+    "location": "Los Angeles",
+    "existing_coords": {
+      "lat": 34.099,
+      "lon": -118.327
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "The Old Place",
+    "location": "Cornell, Malibu Canyon",
+    "existing_coords": {
+      "lat": 34.103,
+      "lon": -118.756
+    },
+    "new_coords": {
+      "lat": 34.1145819,
+      "lon": -118.7782557
+    },
+    "display_name": "The Old Place, Mulholland Highway, Cornell, Unincorporated Santa Monica Mountains, Los Angeles County, California, 91301, United States",
+    "coord_difference": {
+      "lat_diff": 0.011581899999995926,
+      "lon_diff": 0.02225570000000232
+    }
+  },
+  {
+    "name": "Appu’s Cafe",
+    "location": "Long Beach",
+    "existing_coords": {
+      "lat": 33.853,
+      "lon": -118.183
+    },
+    "new_coords": {
+      "lat": 33.82809,
+      "lon": -118.1152833
+    },
+    "display_name": "Appu's Cafe, Harco Street, Long Beach, Los Angeles County, California, 90808, United States",
+    "coord_difference": {
+      "lat_diff": 0.024909999999998433,
+      "lon_diff": 0.0677167000000054
+    }
+  },
+  {
+    "name": "Las Cuatro Milpas",
+    "location": "Barrio Logan, San Diego",
+    "existing_coords": {
+      "lat": 32.705,
+      "lon": -117.141
+    },
+    "new_coords": {
+      "lat": 32.7018755,
+      "lon": -117.1451459
+    },
+    "display_name": "Las Cuatro Milpas, 1857, Logan Avenue, Barrio Logan, San Diego, San Diego County, California, 92113, United States",
+    "coord_difference": {
+      "lat_diff": 0.00312449999999842,
+      "lon_diff": 0.004145899999997482
+    }
+  },
+  {
+    "name": "Klamath River Overlook",
+    "location": "Redwood NP, Del Norte County",
+    "existing_coords": {
+      "lat": 41.554513,
+      "lon": -124.086651
+    },
+    "new_coords": {
+      "lat": 41.5543991,
+      "lon": -124.0866197
+    },
+    "display_name": "Klamath River Overlook, Coastal Trail, Del Norte County, California, 75548, United States",
+    "coord_difference": {
+      "lat_diff": 0.00011390000000233158,
+      "lon_diff": 3.1300000003398054e-05
+    }
+  },
+  {
+    "name": "Glass Beach",
+    "location": "Fort Bragg, Mendocino Coast",
+    "existing_coords": {
+      "lat": 39.45361,
+      "lon": -123.81306
+    },
+    "new_coords": {
+      "lat": 39.4536542,
+      "lon": -123.8129436
+    },
+    "display_name": "Glass Beach, Fort Bragg, Mendocino County, California, United States",
+    "coord_difference": {
+      "lat_diff": 4.4200000004934736e-05,
+      "lon_diff": 0.00011639999999601969
+    }
+  },
+  {
+    "name": "Mount Tamalpais East Peak",
+    "location": "Marin County",
+    "existing_coords": {
+      "lat": 37.92904,
+      "lon": -122.57772
+    },
+    "new_coords": {
+      "lat": 37.9290369,
+      "lon": -122.5777214
+    },
+    "display_name": "Mount Tamalpais East Peak, Marin County, California, 94957, United States",
+    "coord_difference": {
+      "lat_diff": 3.1000000006997652e-06,
+      "lon_diff": 1.4000000021496817e-06
+    }
+  },
+  {
+    "name": "Mount Diablo Summit",
+    "location": "Contra Costa County",
+    "existing_coords": {
+      "lat": 37.8817,
+      "lon": -121.91427
+    },
+    "new_coords": {
+      "lat": 37.8809143,
+      "lon": -121.9186787
+    },
+    "display_name": "Mount Diablo Summit Barbecue Area, Summit Road, Contra Costa County, California, 94157, United States",
+    "coord_difference": {
+      "lat_diff": 0.0007857000000015546,
+      "lon_diff": 0.004408699999999044
+    }
+  },
+  {
+    "name": "Red Rock Canyon Cliffs",
+    "location": "Red Rock Canyon SP, Kern",
+    "existing_coords": {
+      "lat": 35.37299,
+      "lon": -117.99069
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Font’s Point",
+    "location": "Borrego Badlands, San Diego County",
+    "existing_coords": {
+      "lat": 33.30342,
+      "lon": -116.23903
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Trona Pinnacles",
+    "location": "Searles Valley, San Bernardino",
+    "existing_coords": {
+      "lat": 35.6168,
+      "lon": -117.3703
+    },
+    "new_coords": {
+      "lat": 35.6169937,
+      "lon": -117.3721969
+    },
+    "display_name": "Trona Pinnacles, RM9245, San Bernardino County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.00019370000000407117,
+      "lon_diff": 0.0018969000000055303
+    }
+  },
+  {
+    "name": "Mobius Arch",
+    "location": "Alabama Hills, Inyo County",
+    "existing_coords": {
+      "lat": 36.6137,
+      "lon": -118.1256
+    },
+    "new_coords": {
+      "lat": 36.6135526,
+      "lon": -118.1257536
+    },
+    "display_name": "Mobius Arch, Inyo County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.00014740000000301734,
+      "lon_diff": 0.00015359999999020602
+    }
+  },
+  {
+    "name": "Mono Lake – South Tufa",
+    "location": "Mono County",
+    "existing_coords": {
+      "lat": 37.9387,
+      "lon": -119.02713
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Amboy Crater",
+    "location": "Mojave Desert, San Bernardino",
+    "existing_coords": {
+      "lat": 34.54388,
+      "lon": -115.79111
+    },
+    "new_coords": {
+      "lat": 34.5438831,
+      "lon": -115.7911091
+    },
+    "display_name": "Amboy Crater, San Bernardino County, California, 92304, United States",
+    "coord_difference": {
+      "lat_diff": 3.1000000006997652e-06,
+      "lon_diff": 9.000000034120603e-07
+    }
+  },
+  {
+    "name": "“Top of the World” Lookout",
+    "location": "Laguna Beach, Orange County",
+    "existing_coords": {
+      "lat": 33.5581,
+      "lon": -117.761
+    },
+    "new_coords": {
+      "lat": 37.0061829,
+      "lon": -121.997271
+    },
+    "display_name": "Top of the World Lookout, Upper Park Road, Santa Cruz, Santa Cruz County, California, 95065, United States",
+    "coord_difference": {
+      "lat_diff": 3.4480828999999957,
+      "lon_diff": 4.236271000000002
+    }
+  },
+  {
+    "name": "Point Vicente Bluffs",
+    "location": "Palos Verdes Peninsula, LA County",
+    "existing_coords": {
+      "lat": 33.74187,
+      "lon": -118.41074
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Sunset Cliffs",
+    "location": "Ocean Beach, San Diego",
+    "existing_coords": {
+      "lat": 32.7331,
+      "lon": -117.2565
+    },
+    "new_coords": {
+      "lat": 32.7344248,
+      "lon": -117.2564981
+    },
+    "display_name": "Sunset Cliffs, Ocean Beach, San Diego, San Diego County, California, 92017, United States",
+    "coord_difference": {
+      "lat_diff": 0.0013247999999990157,
+      "lon_diff": 1.900000000887303e-06
+    }
+  },
+  {
+    "name": "Torrey Pines Gliderport",
+    "location": "La Jolla, San Diego",
+    "existing_coords": {
+      "lat": 32.88972,
+      "lon": -117.24833
+    },
+    "new_coords": {
+      "lat": 32.8902399,
+      "lon": -117.2516928
+    },
+    "display_name": "Torrey Pines Gliderport, Torrey Pines Scenic Drive, Torrey Pines, San Diego, San Diego County, California, 92093, United States",
+    "coord_difference": {
+      "lat_diff": 0.0005199000000004617,
+      "lon_diff": 0.003362800000004995
+    }
+  },
+  {
+    "name": "Point Dume",
+    "location": "Malibu, Los Angeles County",
+    "existing_coords": {
+      "lat": 34.00087,
+      "lon": -118.80684
+    },
+    "new_coords": {
+      "lat": 34.001631,
+      "lon": -118.8066756
+    },
+    "display_name": "Point Dume, Malibu, Los Angeles County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.0007610000000042305,
+      "lon_diff": 0.00016439999998851818
+    }
+  },
+  {
+    "name": "Carrizo Plain Overlook",
+    "location": "Soda Lake, SLO County",
+    "existing_coords": {
+      "lat": 35.2395,
+      "lon": -119.9078
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "McArthur-Burney Falls",
+    "location": "Shasta County",
+    "existing_coords": {
+      "lat": 41.01072,
+      "lon": -121.65276
+    },
+    "new_coords": {
+      "lat": 41.0167664,
+      "lon": -121.6412627
+    },
+    "display_name": "McArthur-Burney Falls Memorial State Park, Shasta County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.00604640000000245,
+      "lon_diff": 0.011497300000002042
+    }
+  },
+  {
+    "name": "Pinnacles High Peaks",
+    "location": "Pinnacles NP, San Benito",
+    "existing_coords": {
+      "lat": 36.4785,
+      "lon": -121.18357
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Palos Verdes “Glass Church” View",
+    "location": "Wayfarers Chapel area",
+    "existing_coords": {
+      "lat": 33.758,
+      "lon": -118.398
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Inspiration Point",
+    "location": "Santa Barbara",
+    "existing_coords": {
+      "lat": 34.46,
+      "lon": -119.712
+    },
+    "new_coords": {
+      "lat": 34.4721779,
+      "lon": -119.7147841
+    },
+    "display_name": "Inspiration Point, Santa Barbara County, California, 93105, United States",
+    "coord_difference": {
+      "lat_diff": 0.012177899999997521,
+      "lon_diff": 0.002784099999999512
+    }
+  },
+  {
+    "name": "Capitola Wharf & Cliffs",
+    "location": "Capitola Village, Santa Cruz County",
+    "existing_coords": {
+      "lat": 36.974,
+      "lon": -121.953
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Shark Fin Cove",
+    "location": "Coastal bluff, Davenport, Santa Cruz Co.",
+    "existing_coords": {
+      "lat": 37.012,
+      "lon": -122.193
+    },
+    "new_coords": {
+      "lat": 37.0036665,
+      "lon": -122.1863253
+    },
+    "display_name": "Shark Fin Cove, Davenport, Santa Cruz County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.008333499999999106,
+      "lon_diff": 0.006674700000004918
+    }
+  },
+  {
+    "name": "Keyes View",
+    "location": "Joshua Tree NP, Riverside County",
+    "existing_coords": {
+      "lat": 33.922,
+      "lon": -116.248
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Gaviota Wind Caves Overlook",
+    "location": "Gaviota Coast, Santa Barbara Co.",
+    "existing_coords": {
+      "lat": 34.471,
+      "lon": -120.225
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Mount Shasta Reflection",
+    "location": "Heart Lake Viewpoint, Siskiyou County",
+    "existing_coords": {
+      "lat": 41.234,
+      "lon": -122.347
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Salvation Mountain",
+    "location": "Niland, Imperial County",
+    "existing_coords": {
+      "lat": 33.25417,
+      "lon": -115.4725
+    },
+    "new_coords": {
+      "lat": 33.2540516,
+      "lon": -115.4726227
+    },
+    "display_name": "Salvation Mountain, Beal Road, Niland, Imperial County, California, 92257, United States",
+    "coord_difference": {
+      "lat_diff": 0.00011840000000518103,
+      "lon_diff": 0.00012270000000569325
+    }
+  },
+  {
+    "name": "East Jesus Sculpture Garden",
+    "location": "Slab City, Imperial County",
+    "existing_coords": {
+      "lat": 33.25707,
+      "lon": -115.46356
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Bombay Beach Art Installations",
+    "location": "Salton Sea, Imperial County",
+    "existing_coords": {
+      "lat": 33.35083,
+      "lon": -115.72972
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Albany Bulb Art Park",
+    "location": "Albany, East Bay",
+    "existing_coords": {
+      "lat": 37.89,
+      "lon": -122.32472
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "The Wave Organ",
+    "location": "Marina District, San Francisco",
+    "existing_coords": {
+      "lat": 37.80851,
+      "lon": -122.44019
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Lands End Labyrinth",
+    "location": "Lands End, San Francisco",
+    "existing_coords": {
+      "lat": 37.78802,
+      "lon": -122.50583
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Forestiere Underground Gardens",
+    "location": "Fresno",
+    "existing_coords": {
+      "lat": 36.80722,
+      "lon": -119.88083
+    },
+    "new_coords": {
+      "lat": 36.8075845,
+      "lon": -119.8818411
+    },
+    "display_name": "Forestiere Underground Gardens, 5021, West Shaw Avenue, Highway City, Fresno, Fresno County, California, 93723, United States",
+    "coord_difference": {
+      "lat_diff": 0.0003644999999963261,
+      "lon_diff": 0.0010110999999994874
+    }
+  },
+  {
+    "name": "Moaning Cavern",
+    "location": "Vallecito, Calaveras County",
+    "existing_coords": {
+      "lat": 38.06902,
+      "lon": -120.4658
+    },
+    "new_coords": {
+      "lat": 38.0718876,
+      "lon": -120.4657812
+    },
+    "display_name": "Moaning Cavern Cave Park, Calaveras County, California, 95251, United States",
+    "coord_difference": {
+      "lat_diff": 0.002867599999994752,
+      "lon_diff": 1.880000000653581e-05
+    }
+  },
+  {
+    "name": "Bodie Ghost Town",
+    "location": "Bodie SHP, Mono County",
+    "existing_coords": {
+      "lat": 38.21331,
+      "lon": -119.01513
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Watts Towers",
+    "location": "Watts, Los Angeles",
+    "existing_coords": {
+      "lat": 33.93874,
+      "lon": -118.24195
+    },
+    "new_coords": {
+      "lat": 33.9387198,
+      "lon": -118.2410534
+    },
+    "display_name": "Watts Towers, East 107th Street, Watts, Los Angeles, Los Angeles County, California, 90002, United States",
+    "coord_difference": {
+      "lat_diff": 2.0200000001580065e-05,
+      "lon_diff": 0.000896600000004355
+    }
+  },
+  {
+    "name": "Museum of Jurassic Technology",
+    "location": "Culver City, Los Angeles",
+    "existing_coords": {
+      "lat": 34.02569,
+      "lon": -118.39535
+    },
+    "new_coords": {
+      "lat": 34.025875,
+      "lon": -118.3950859
+    },
+    "display_name": "Museum of Jurassic Technology, 9341, Venice Boulevard, Culver City, Los Angeles County, California, 90232, United States",
+    "coord_difference": {
+      "lat_diff": 0.0001850000000018781,
+      "lon_diff": 0.00026409999999543743
+    }
+  },
+  {
+    "name": "Elmer’s Bottle Tree Ranch",
+    "location": "Oro Grande, Route 66, San Bernardino",
+    "existing_coords": {
+      "lat": 34.6907,
+      "lon": -117.3395
+    },
+    "new_coords": {
+      "lat": 34.690342,
+      "lon": -117.3396295
+    },
+    "display_name": "Elmer’s Bottle Tree Ranch, 24266, National Trails Highway, San Bernardino County, California, 92368, United States",
+    "coord_difference": {
+      "lat_diff": 0.00035799999999852616,
+      "lon_diff": 0.0001294999999998936
+    }
+  },
+  {
+    "name": "The Integratron",
+    "location": "Landers, Mojave Desert",
+    "existing_coords": {
+      "lat": 34.29433,
+      "lon": -116.40374
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Galleta Meadows “Sky Art”",
+    "location": "Borrego Springs, Anza-Borrego Desert",
+    "existing_coords": {
+      "lat": 33.29007,
+      "lon": -116.37666
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Nitt Witt Ridge",
+    "location": "Cambria, San Luis Obispo County",
+    "existing_coords": {
+      "lat": 35.56667,
+      "lon": -121.09528
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Confusion Hill",
+    "location": "Gravity house, Piercy, Mendocino County",
+    "existing_coords": {
+      "lat": 39.91894,
+      "lon": -123.76495
+    },
+    "new_coords": {
+      "lat": 39.9180968,
+      "lon": -123.7636074
+    },
+    "display_name": "Confusion Hill, 75001, Redwood Highway, Piercy, Mendocino County, California, 95587, United States",
+    "coord_difference": {
+      "lat_diff": 0.0008431999999984896,
+      "lon_diff": 0.0013426000000009708
+    }
+  },
+  {
+    "name": "Bigfoot Discovery Museum",
+    "location": "Felton, Santa Cruz Mountains",
+    "existing_coords": {
+      "lat": 37.04148,
+      "lon": -122.07272
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Tio’s Tacos",
+    "location": "Folk Art Garden) (Riverside",
+    "existing_coords": {
+      "lat": 33.9841,
+      "lon": -117.3769
+    },
+    "new_coords": {
+      "lat": 33.984238,
+      "lon": -117.377025
+    },
+    "display_name": "Tio's Tacos, Mission Inn Avenue, Downtown Riverside, Riverside, Riverside County, California, 92501, United States",
+    "coord_difference": {
+      "lat_diff": 0.00013799999999974943,
+      "lon_diff": 0.00012499999999704414
+    }
+  },
+  {
+    "name": "Weaverville Joss House",
+    "location": "Chinese Temple, Trinity County",
+    "existing_coords": {
+      "lat": 40.7311,
+      "lon": -122.9408
+    },
+    "new_coords": {
+      "lat": 40.7312941,
+      "lon": -122.9407727
+    },
+    "display_name": "Weaverville Joss House State Historic Park, 630, Weaverville Historic District, Weaverville, Trinity County, California, 96093, United States",
+    "coord_difference": {
+      "lat_diff": 0.00019410000000164018,
+      "lon_diff": 2.729999999928623e-05
+    }
+  },
+  {
+    "name": "Preston Castle",
+    "location": "Historic Reformatory, Ione",
+    "existing_coords": {
+      "lat": 38.36087,
+      "lon": -120.93696
+    },
+    "new_coords": {
+      "lat": 38.3611113,
+      "lon": -120.936927
+    },
+    "display_name": "Preston Castle, Palm Drive, Ione, Amador County, California, 95640, United States",
+    "coord_difference": {
+      "lat_diff": 0.00024129999999900065,
+      "lon_diff": 3.300000000194814e-05
+    }
+  },
+  {
+    "name": "Point Sur Lightstation",
+    "location": "Haunted Lighthouse, Big Sur",
+    "existing_coords": {
+      "lat": 36.30625,
+      "lon": -121.90154
+    },
+    "new_coords": null,
+    "display_name": null,
+    "error": "Geocoding failed"
+  },
+  {
+    "name": "Cabazon Dinosaurs",
+    "location": "Cabazon, Inland Empire",
+    "existing_coords": {
+      "lat": 33.92028,
+      "lon": -116.77278
+    },
+    "new_coords": {
+      "lat": 33.9207743,
+      "lon": -116.7739454
+    },
+    "display_name": "Cabazon Dinosaurs, Seminole Drive, Cabazon, Riverside County, California, 92230, United States",
+    "coord_difference": {
+      "lat_diff": 0.0004942999999997255,
+      "lon_diff": 0.0011654000000049791
+    }
+  },
+  {
+    "name": "Venice Canals",
+    "location": "Historic District, Los Angeles",
+    "existing_coords": {
+      "lat": 33.98361,
+      "lon": -118.46528
+    },
+    "new_coords": {
+      "lat": 33.9869093,
+      "lon": -118.473587
+    },
+    "display_name": "Venice Beach Canals Mural, Windward Avenue, Venice, Los Angeles, Los Angeles County, California, 90291, United States",
+    "coord_difference": {
+      "lat_diff": 0.0032993000000018924,
+      "lon_diff": 0.008306999999987852
+    }
+  },
+  {
+    "name": "Winchester Mystery House",
+    "location": "San Jose – mysterious mansion",
+    "existing_coords": {
+      "lat": 37.318,
+      "lon": -121.95
+    },
+    "new_coords": {
+      "lat": 37.3182932,
+      "lon": -121.9509886
+    },
+    "display_name": "Winchester Mystery House, 525, Winchester Boulevard, San Jose, Santa Clara County, California, 95128, United States",
+    "coord_difference": {
+      "lat_diff": 0.0002932000000015478,
+      "lon_diff": 0.000988599999999451
+    }
+  },
+  {
+    "name": "Watts Towers Arts Center",
+    "location": "Los Angeles",
+    "existing_coords": {
+      "lat": 33.93886,
+      "lon": -118.24195
+    },
+    "new_coords": {
+      "lat": 33.9393075,
+      "lon": -118.2423498
+    },
+    "display_name": "Watts Towers Arts Center, Los Angeles, Los Angeles County, California, United States",
+    "coord_difference": {
+      "lat_diff": 0.00044749999999993406,
+      "lon_diff": 0.00039979999999673055
+    }
+  }
+]
