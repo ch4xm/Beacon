@@ -249,96 +249,96 @@ function HomePage() {
         navigate("/explore");
     };
 
-  return (
-    <div className="home-container">
-      <Sidebar
-        mapRef={mapRef}
-        allPins={allPins.features.map(f => ({
-          id: f.properties.id,
-          latitude: f.geometry.coordinates[1],
-          longitude: f.geometry.coordinates[0],
-          title: f.properties.title,
-          description: f.properties.description,
-          image: f.properties.image,
-          color: f.properties.color,
-          email: f.properties.email
-        }))}
-        savedPlaces={savedPlaces.map((p: any) => ({
-          id: p.id,
-          latitude: p.latitude,
-          longitude: p.longitude,
-          title: p.title || p.message, // Use message as fallback title
-          description: p.description,
-          image: p.image,
-          color: p.color || PIN_COLOR
-        }))}
-        isLoggedIn={isLoggedIn}
-        isSearchFocused={isSearchFocused}
-      />
-      <div className="main-content">
-        <div className="search-container">
-          <SearchBar
-            mapRef={mapRef}
-            searchMarkerRef={searchMarkerRef}
-            onSelectPlace={(place) =>
-              setPinData({
-                lat: place.lat,
-                lng: place.lng,
-                address: place.address,
-                isLoading: false,
-                email: userEmail || "",
-              })
-            }
-            onFocusChange={(focused) => setIsSearchFocused(focused)}
-            isFocused={isSearchFocused}
-          />
-            <button
-                className="explore-button"
-                style={{ backgroundColor: "#4db688", fontWeight: "bold", fontSize: 18 }}
-                onClick={handleDiscoverClick}
-            >
-                Explore
-            </button>
-        </div>
+    return (
+        <div className="home-container">
+            <Sidebar
+                mapRef={mapRef}
+                allPins={allPins.features.map(f => ({
+                    id: f.properties.id,
+                    latitude: f.geometry.coordinates[1],
+                    longitude: f.geometry.coordinates[0],
+                    title: f.properties.title,
+                    description: f.properties.description,
+                    image: f.properties.image,
+                    color: f.properties.color,
+                    email: f.properties.email
+                }))}
+                savedPlaces={savedPlaces.map((p: any) => ({
+                    id: p.id,
+                    latitude: p.latitude,
+                    longitude: p.longitude,
+                    title: p.title || p.message, // Use message as fallback title
+                    description: p.description,
+                    image: p.image,
+                    color: p.color || PIN_COLOR
+                }))}
+                isLoggedIn={isLoggedIn}
+                isSearchFocused={isSearchFocused}
+            />
+            <div className="main-content">
+                <div className="search-container">
+                    <SearchBar
+                        mapRef={mapRef}
+                        searchMarkerRef={searchMarkerRef}
+                        onSelectPlace={(place) =>
+                            setPinData({
+                                lat: place.lat,
+                                lng: place.lng,
+                                address: place.address,
+                                isLoading: false,
+                                email: userEmail || "",
+                            })
+                        }
+                        onFocusChange={(focused) => setIsSearchFocused(focused)}
+                        isFocused={isSearchFocused}
+                    />
+                    <button
+                        className="explore-button"
+                        style={{ backgroundColor: "#4db688", fontWeight: "bold", fontSize: 18 }}
+                        onClick={handleDiscoverClick}
+                    >
+                        Explore
+                    </button>
+                </div>
 
                 <AuthModal isOpen={!isLoggedIn} onAuthSuccess={authSuccess} />
 
 
-        {isLoggedIn && (
-          <div className="user-menu">
-            <button
-              className="user-menu-toggle"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            >
-              <span className="user-email">
-				<Avatar letter={userEmail[0]}/>
-              </span>
-              <svg
-                className={`chevron ${isDropdownOpen ? "open" : ""}`}
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            {isDropdownOpen && (
-              <div className="user-dropdown">
-                <button
-                  onClick={handleLogout}
-                  className="dropdown-item logout"
-                >
-                  Log Out
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+                {isLoggedIn && (
+                    <div className="user-menu">
+                        <button
+                            className="user-menu-toggle"
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        >
+                            <span className="user-email">
+                                <Avatar letter={userEmail[0]} />
+                            </span>
+                            <svg
+                                className={`chevron ${isDropdownOpen ? "open" : ""}`}
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        {isDropdownOpen && (
+                            <div className="user-dropdown">
+                                <button
+                                    onClick={handleLogout}
+                                    className="dropdown-item logout"
+                                >
+                                    Log Out
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <Map
                     ref={(map) => {
@@ -435,6 +435,19 @@ function HomePage() {
                             currentUserId={userId}
                             currentUserEmail={localStorage.getItem("userEmail")}
                             onClose={() => setShowDetailedModal(false)}
+                            onDelete={(deletedId) => {
+                                setAllPins((prev) => ({
+                                    type: "FeatureCollection",
+                                    features: prev.features.filter(
+                                        (f) => f.properties.id !== deletedId
+                                    ),
+                                }));
+                                setSavedPlaces((prev) =>
+                                    prev.filter((p: any) => p.id !== deletedId)
+                                );
+                                setSelectedPoint(null);
+                                setShowDetailedModal(false);
+                            }}
                             onUpdate={(updatedPoint) => {
                                 setAllPins((prev) => ({
                                     type: "FeatureCollection",

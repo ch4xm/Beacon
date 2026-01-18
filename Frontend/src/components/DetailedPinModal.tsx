@@ -23,6 +23,7 @@ interface DetailedPinModalProps {
         image: string;
         color?: string;
     }) => void;
+    onDelete?: (id: number) => void;
 }
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
@@ -48,7 +49,7 @@ function ModalSection({ header, content }: { header: string, content: any }) {
     )
 }
 
-export default function DetailedPinModal({ selectedPoint, currentUserId, currentUserEmail, onClose, onUpdate }: DetailedPinModalProps) {
+export default function DetailedPinModal({ selectedPoint, currentUserId, currentUserEmail, onClose, onUpdate, onDelete }: DetailedPinModalProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [description, setDescription] = useState(selectedPoint.description);
@@ -56,6 +57,7 @@ export default function DetailedPinModal({ selectedPoint, currentUserId, current
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [copied, setCopied] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -284,6 +286,36 @@ export default function DetailedPinModal({ selectedPoint, currentUserId, current
         }
     };
 
+    const handleDelete = async () => {
+        if (!selectedPoint.id) return;
+        if (!confirm("Are you sure you want to delete this pin? This action cannot be undone.")) return;
+
+        setIsDeleting(true);
+        try {
+            const response = await fetch(
+                `${BASE_API_URL}/api/pins/${selectedPoint.id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    },
+                }
+            );
+
+            if (response.ok) {
+                onDelete?.(selectedPoint.id);
+                handleClose();
+            } else {
+                alert("Failed to delete pin");
+            }
+        } catch (error) {
+            console.error("Error deleting pin:", error);
+            alert("Failed to delete pin");
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     return (
         <div className={`detailed-modal-overlay ${isClosing ? 'is-closing' : ''}`} onClick={handleClose}>
             <div
@@ -405,12 +437,21 @@ export default function DetailedPinModal({ selectedPoint, currentUserId, current
                         </div>
                     ) : (
                         <>
-                            {selectedPoint.image && (
+                            {selectedPoint.image ? (
                                 <img
                                     src={selectedPoint.image}
                                     alt="Pin location"
                                     className="detailed-modal-image"
                                 />
+                            ) : (
+                                <div
+                                    className="detailed-modal-image-placeholder"
+                                    style={{
+                                        background: `linear-gradient(135deg, ${PIN_COLOR}88 0%, ${PIN_COLOR} 100%)`,
+                                    }}
+                                >
+                                    {titleText.charAt(0).toUpperCase()}
+                                </div>
                             )}
 
                             {showMessage && (
@@ -599,12 +640,22 @@ export default function DetailedPinModal({ selectedPoint, currentUserId, current
 
 
                                 {isOwner ? (
-                                    <button
-                                        className="action-button primary"
-                                        onClick={() => setIsEditing(true)}
-                                    >
-                                        Edit Pin
-                                    </button>
+                                    <>
+                                        <button
+                                            className="action-button secondary"
+                                            onClick={handleDelete}
+                                            disabled={isDeleting}
+                                            style={{ color: '#dc2626' }}
+                                        >
+                                            {isDeleting ? "Deleting..." : "Delete Pin"}
+                                        </button>
+                                        <button
+                                            className="action-button primary"
+                                            onClick={() => setIsEditing(true)}
+                                        >
+                                            Edit Pin
+                                        </button>
+                                    </>
                                 ) : null}
                             </>
                         )}

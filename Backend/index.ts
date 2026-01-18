@@ -86,7 +86,7 @@ app.get("/api/pins/user", auth.check, pins.getUserPins);
 app.get("/api/pins/:id", auth.check, pins.getPin);
 app.put("/api/pins/:id", auth.check, pins.updatePin);
 app.post("/api/pins", auth.check, pins.createPin);
-app.put("/api/pins", auth.check, pins.deletePin);
+app.delete("/api/pins/:id", auth.check, pins.deletePin);
 
 // Posts routes
 app.get("/api/posts", auth.check, posts.getAllPosts);

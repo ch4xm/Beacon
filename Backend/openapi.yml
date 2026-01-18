@@ -233,6 +233,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+    delete:
+      summary: Delete a specific pin by ID
+      description: Delete a single pin by its ID (owner only)
+      operationId: deletePin
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the pin to delete
+      responses:
+        200:
+          description: Successfully deleted pin
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Pin deleted successfully"
+        401:
+          description: Unauthorized - invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Unauthorized - not the owner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Pin not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /api/pins/{pinId}/comments:
     get:
       summary: Get all comments for a pin
@@ -500,23 +547,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
-    delete:
-      summary: Delete a specific pin by ID
-      description: Delete a single pin by its ID
-      operationId: deletePin
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: The ID of the pin to delete
-      responses:
-        200:
-          description: Successfully deleted pin
-        404:
-          description: Pin not found
 
   /api/check:
     get:

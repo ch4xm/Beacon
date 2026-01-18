@@ -91,7 +91,7 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 				>
 					{titleText}
 				</div>
-				{selectedPoint.image && (
+				{selectedPoint.image ? (
 					<img
 						src={selectedPoint.image}
 						alt="Pin image"
@@ -103,6 +103,15 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 							marginBottom: "10px",
 						}}
 					/>
+				) : (
+					<div
+						className="location-pin-image-placeholder"
+						style={{
+							background: `linear-gradient(135deg, ${selectedPoint.color || PIN_COLOR}88 0%, ${selectedPoint.color || PIN_COLOR} 100%)`,
+						}}
+					>
+						{titleText.charAt(0).toUpperCase()}
+					</div>
 				)}
 				{showMessage && (
 					<p
@@ -146,8 +155,8 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 							opacity: likesLoading ? 0.5 : 1,
 						}}
 					>
-						<p>{likesLoading ? '...' : likes}</p>
 						<HeartIcon filled={isLiked} />
+						<p>{likesLoading ? '...' : likes}</p>
 					</button>
 				</div>
 			</div>
