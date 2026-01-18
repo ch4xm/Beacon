@@ -116,17 +116,17 @@ export default function NewPinModal({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (title.length > MAX_TITLE_LENGTH) {
             setTitleError(`Title cannot exceed ${MAX_TITLE_LENGTH} characters`);
             return;
         }
-        
+
         if (message.length > MAX_MESSAGE_LENGTH) {
             setMessageError(`Message cannot exceed ${MAX_MESSAGE_LENGTH} characters`);
             return;
         }
-        
+
         setIsUploading(true);
         setUploadError(null);
 
@@ -148,6 +148,7 @@ export default function NewPinModal({
                     latitude: latitude,
                     longitude: longitude,
                     title: title,
+                    location: locationName,
                     message: message,
                     image: imageUrl,
                 }),
@@ -179,8 +180,8 @@ export default function NewPinModal({
                 ? "N"
                 : "S"
             : coord >= 0
-              ? "E"
-              : "W";
+                ? "E"
+                : "W";
         return `${Math.abs(coord).toFixed(4)}° ${direction}`;
     };
 

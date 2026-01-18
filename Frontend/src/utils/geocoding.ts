@@ -55,6 +55,15 @@ export interface ReverseGeocodeResult {
 }
 
 /**
+ * Formats the display name by removing the comma between house number and street.
+ * Converts "2455, Deer Valley Lane, ..." to "2455 Deer Valley Lane, ..."
+ */
+function formatDisplayName(displayName: string): string {
+    // Match pattern: number followed by comma and space at the start
+    return displayName.replace(/^(\d+),\s+/, "$1 ");
+}
+
+/**
  * Extracts the best available name from LocationIQ address data.
  * Prioritizes POI names (amenity, shop, tourism, etc.) over generic address.
  */
@@ -148,7 +157,7 @@ export async function reverseGeocode(
     console.log("Reverse geocoding response status:", response.status);
 
     const data: LocationIQResponse = await response.json();
-        console.log("Reverse geocoding data:", data);
+    console.log("Reverse geocoding data:", data);
     if (!data || !data.address) {
         return {
             name: "Unknown Location",
@@ -171,7 +180,7 @@ export async function reverseGeocode(
 
     return {
         name,
-        fullAddress: data.display_name,
+        fullAddress: formatDisplayName(data.display_name),
         featureType,
         details: {
             street: address.road,

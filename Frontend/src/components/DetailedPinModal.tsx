@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import "./styles/DetailedPinModal.css";
-import { BASE_API_URL,PIN_COLOR } from '../../constants';
-import {ReverseGeocodeResult} from "@/utils/geocoding";
+import { BASE_API_URL, PIN_COLOR } from '../../constants';
+import { ReverseGeocodeResult } from "@/utils/geocoding";
 
 interface DetailedPinModalProps {
     selectedPoint: {
@@ -259,14 +259,14 @@ export default function DetailedPinModal({
                                 <div className="detailed-info-section">
                                     <h3>Uploaded by</h3>
                                     <p className="detailed-message">
-                                        {selectedPoint.email}
+                                        {selectedPoint.email.split("@")[0]}
                                     </p>
                                 </div>
                             )}
 
                             <div className="detailed-info-section">
                                 <h3>Location</h3>
-                                <div className="location-details"  style={{display: 'flex', justifyContent: 'center'}}>
+                                <div className="location-details" style={{ display: 'flex', justifyContent: 'center' }}>
                                     <div className="detail-item">
                                         <span className="detail-label">
                                             Address

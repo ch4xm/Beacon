@@ -8,63 +8,21 @@ import Map, {
     NavigationControl,
     Popup,
 } from "react-map-gl/mapbox";
-import { Source, Layer, CircleLayerSpecification } from "react-map-gl/mapbox";
+import { Source, Layer, CircleLayerSpecification, HeatmapLayerSpecification } from "react-map-gl/mapbox";
 import Pin from "@/components/Pin";
 import { reverseGeocode, ReverseGeocodeResult } from "@/utils/geocoding";
 import LocationPin from "@/components/LocationPin";
 import DetailedPinModal from "@/components/DetailedPinModal";
 import { NavLink, useNavigate } from "react-router";
 import AuthHook from "./AuthHook";
-import { BASE_API_URL, PIN_COLOR, USER_PIN_COLOR } from '../../constants';
-
-const layerStyle: CircleLayerSpecification = {
-    id: "point",
-    type: "circle",
-    source: "my-data",
-    paint: {
-        "circle-radius": 10,
-        "circle-color": ["get", "color"],
-    },
-    maxzoom: 22,
-    minzoom: 5,
-};
-
-const heatmapLayerStyle = {
-    id: "pins-heat",
-    type: "heatmap",
-    source: "my-data",
-    maxzoom: 9,
-    minzoom: 0,
-    paint: {
-        "heatmap-weight": ["interpolate", ["linear"], ["zoom"], 0, 0, 9, 1],
-        "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 1, 9, 3],
-        "heatmap-color": [
-            "interpolate",
-            ["linear"],
-            ["heatmap-density"],
-            0,
-            "rgba(33,102,172,0)",
-            0.2,
-            "rgb(103,169,207)",
-            0.4,
-            "rgb(209,229,240)",
-            0.6,
-            "rgb(253,219,199)",
-            0.8,
-            "rgb(239,138,98)",
-            1,
-            "rgb(178,24,43)",
-        ],
-        "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 2, 9, 20],
-        "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], 7, 1, 9, 0],
-    },
-};
+import { BASE_API_URL, PIN_COLOR, USER_PIN_COLOR, PIN_LAYER_STYLE, HEATMAP_LAYER_STYLE } from '../../constants';
 
 interface PinData {
     lat: number;
     lng: number;
     isLoading: boolean;
     address: ReverseGeocodeResult | string | undefined;
+    email: string;
 }
 
 interface SelectedPoint {
@@ -238,25 +196,10 @@ function HomePage() {
         setPinData({
             lat,
             lng,
-            address: "Loading...",
-            isLoading: true,
+            address: result || "Unknown Location",
+            isLoading: false,
+            email: userEmail || "",
         });
-
-        try {
-            setPinData({
-                lat,
-                lng,
-                address: result,
-                isLoading: false,
-            });
-        } catch (error) {
-            setPinData({
-                lat,
-                lng,
-                address: undefined,
-                isLoading: false,
-            });
-        }
     };
 
 
@@ -278,6 +221,7 @@ function HomePage() {
                             lng: place.lng,
                             address: place.address,
                             isLoading: false,
+                            email: userEmail || "",
                         })
                     }
                 />
@@ -389,7 +333,7 @@ function HomePage() {
                                             location: pinData.name,
                                             message: data.message,
                                             image: data.image || "",
-                                            color: data.color || PIN_COLOR,
+                                            color: localStorage.getItem("email") == pinData.email ? USER_PIN_COLOR : PIN_COLOR,
                                             email: userEmail,
                                         },
                                     },
@@ -449,8 +393,8 @@ function HomePage() {
                 )}
 
                 <Source id="my-data" type="geojson" data={allPins}>
-                    <Layer {...layerStyle} />
-                    <Layer {...heatmapLayerStyle} />
+                    <Layer {...PIN_LAYER_STYLE} />
+                    <Layer {...(HEATMAP_LAYER_STYLE as HeatmapLayerSpecification)} />
                 </Source>
             </Map>
         </div>

@@ -87,6 +87,11 @@ paths:
                   maxLength: 2000
                   description: URL of the image
                   nullable: true
+                location:
+                  type: string
+                  maxLength: 200
+                  description: Address of the pin location
+                  nullable: true
 
       responses:
         200:
@@ -192,6 +197,10 @@ paths:
                 image:
                   type: string
                   maxLength: 2000
+                  nullable: true
+                location:
+                  type: string
+                  maxLength: 200
                   nullable: true
 
       responses:
@@ -627,6 +636,12 @@ components:
           maxLength: 2000
           description: URL of the image
           example: "https://images.unsplash.com/photo-1516192518150-0d8fee5425e3"
+          nullable: true
+        location:
+          type: string
+          maxLength: 200
+          description: Address of the pin location
+          example: "123 Main St, San Francisco, CA"
           nullable: true
     
     Error:
