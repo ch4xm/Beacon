@@ -10,7 +10,7 @@ interface DetailedPinModalProps {
     latitude: number;
     longitude: number;
     title?: string;
-    message: string;
+    description: string;
     image: string;
     email?: string;
     address?: ReverseGeocodeResult;
@@ -20,7 +20,7 @@ interface DetailedPinModalProps {
   onClose: () => void;
   onUpdate?: (data: {
     id: number;
-    message: string;
+    description: string;
     image: string;
     color?: string;
   }) => void;
@@ -46,7 +46,7 @@ export default function DetailedPinModal({
   onUpdate,
 }: DetailedPinModalProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [message, setMessage] = useState(selectedPoint.message);
+  const [description, setDescription] = useState(selectedPoint.description);
   const [image, setImage] = useState(selectedPoint.image);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -163,19 +163,14 @@ export default function DetailedPinModal({
     }
   };
 
-  // const isOwner =
-  //     currentUserId != null &&
-  //     selectedPoint.creatorID != null &&
-  //     Number(currentUserId) === Number(selectedPoint.creatorID);
-
   const isOwner =
     currentUserEmail != null && selectedPoint.email == currentUserEmail;
 
   const titleText =
     selectedPoint.title?.trim() ||
-    selectedPoint.message?.trim() ||
+    selectedPoint.description?.trim() ||
     "Untitled Pin";
-  const messageText = selectedPoint.message?.trim() || "";
+  const messageText = selectedPoint.description?.trim() || "";
   const showMessage = messageText && messageText !== titleText;
 
   // console.log( isOwner )
@@ -234,7 +229,7 @@ export default function DetailedPinModal({
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
           body: JSON.stringify({
-            message,
+            description,
             image: finalImageUrl,
           }),
         },
@@ -244,7 +239,7 @@ export default function DetailedPinModal({
         const updatedPin = await response.json();
         onUpdate?.({
           id: selectedPoint.id,
-          message: updatedPin.message || message,
+          description: updatedPin.description || description,
           image: updatedPin.image || finalImageUrl,
           color: PIN_COLOR,
         });
@@ -266,7 +261,10 @@ export default function DetailedPinModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="detailed-modal-header">
-          <h2>{isEditing ? "Edit Pin" : "Pin Details"}</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <h2>{isEditing ? "Edit Pin" : selectedPoint.title}</h2>
+            <p>{selectedPoint.address?.fullAddress}</p>
+          </div>
           <button
             className="detailed-modal-close"
             onClick={onClose}
@@ -329,8 +327,8 @@ export default function DetailedPinModal({
               <div className="form-group">
                 <label>Description</label>
                 <textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   className="edit-textarea"
                 />
               </div>
@@ -344,14 +342,7 @@ export default function DetailedPinModal({
                   className="detailed-modal-image"
                 />
               )}
-
-              <div className="detailed-info-section">
-                <h3>Title</h3>
-                <p className="detailed-message">
-                  {titleText}
-                </p>
-              </div>
-
+              
               {showMessage && (
                 <div className="detailed-info-section">
                   <h3>Description</h3>
@@ -372,17 +363,6 @@ export default function DetailedPinModal({
 
               <div className="detailed-info-section">
                 <h3>Location</h3>
-                <div className="location-details" style={{ display: 'flex', justifyContent: 'center' }}>
-                  <div className="detail-item">
-                    <span className="detail-label">
-                      Address
-                    </span>
-                    <span className="detail-value">
-                      {selectedPoint.address?.fullAddress ||
-                        "Unknown Location"}
-                    </span>
-                  </div>
-                </div>
                 <div className="location-details">
                   <div className="detail-item">
                     <span className="detail-label">
