@@ -99,10 +99,10 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     min-width: 160px;
     overflow: hidden;
-    animation: slideDown 0.2s ease;
+    animation: dropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes slideDown {
+@keyframes dropdownFadeIn {
     from {
         opacity: 0;
         transform: translateY(-8px);
@@ -112,22 +112,6 @@
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    to {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-}
-
-.user-dropdown.is-closing {
-    animation: slideUp 0.2s ease forwards;
 }
 
 .dropdown-item {

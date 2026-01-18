@@ -77,7 +77,6 @@ function HomePage() {
     const [cursor, setCursor] = useState<string>("auto");
     const [userEmail, userId, isLoggedIn, logout, authSuccess] = AuthHook();
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-    const [isDropdownClosing, setIsDropdownClosing] = useState<boolean>(false);
     const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
 
     const onMouseEnter = useCallback(() => setCursor("pointer"), []);
@@ -186,17 +185,9 @@ function HomePage() {
         if (isLoggedIn) fetchSavedPlaces();
     }, [isLoggedIn]);
 
-    const closeDropdown = () => {
-        setIsDropdownClosing(true);
-        setTimeout(() => {
-            setIsDropdownOpen(false);
-            setIsDropdownClosing(false);
-        }, 200);
-    };
-
     const handleLogout = () => {
         logout();
-        closeDropdown();
+        setIsDropdownOpen(false);
     };
 
     const handleMapClick = async (e: mapboxgl.MapMouseEvent) => {
@@ -290,7 +281,7 @@ function HomePage() {
                     <div className="user-menu">
                         <button
                             className="user-menu-toggle"
-                            onClick={() => isDropdownOpen ? closeDropdown() : setIsDropdownOpen(true)}
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         >
                             <span className="user-email">
                                 <Avatar letter={userEmail[0]} />
@@ -310,7 +301,7 @@ function HomePage() {
                             </svg>
                         </button>
                         {isDropdownOpen && (
-                            <div className={`user-dropdown ${isDropdownClosing ? 'is-closing' : ''}`}>
+                            <div className="user-dropdown">
                                 <button
                                     onClick={handleLogout}
                                     className="dropdown-item logout"
