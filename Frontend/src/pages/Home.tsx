@@ -25,7 +25,7 @@ interface PinData {
     email: string;
 }
 
-interface SelectedPoint {
+export interface SelectedPoint {
     id?: number;
     creatorID?: number;
     longitude: number;
@@ -181,10 +181,8 @@ function HomePage() {
         });
 
         const { lat, lng } = e.lngLat;
-        console.log("Map clicked at lat:", lat, "lng:", lng);
 
         const result = await reverseGeocode(lat, lng);
-        console.log("Reverse geocode result:", result);
 
         // console.log("Features at click:", features);
         if (features && features.length > 0) {
@@ -357,8 +355,7 @@ function HomePage() {
 
                     {pinData && (
                         <Pin
-                            name={typeof pinData.address === "object" ? pinData.address?.name : (pinData.address || "Unknown Location")}
-                            latitude={pinData.lat}
+                            address={pinData.address}
                             longitude={pinData.lng}
                             isLoading={pinData.isLoading}
                             onClose={() => setPinData(null)}

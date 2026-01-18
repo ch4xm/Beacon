@@ -1,17 +1,10 @@
 import { Popup } from "react-map-gl/mapbox";
 import "./styles/LocationPin.css";
 import { PIN_COLOR } from "../../constants";
+import {SelectedPoint} from "@/pages/Home";
 
 interface LocationPinProps {
-    selectedPoint: {
-        latitude: number;
-        longitude: number;
-        title?: string;
-        image: string;
-        message: string;
-        color?: string;
-        email?: string;
-    };
+    selectedPoint: SelectedPoint;
     setSelectedPoint: (a: any) => void;
     onShowDetails: () => void;
 }
@@ -23,9 +16,9 @@ export default function LocationPin({
 }: LocationPinProps) {
     const titleText =
         selectedPoint.title?.trim() ||
-        selectedPoint.message?.trim() ||
+        selectedPoint.description?.trim() ||
         "Untitled Pin";
-    const messageText = selectedPoint.message?.trim() || "";
+    const messageText = selectedPoint.description?.trim() || "";
     const showMessage = messageText && messageText !== titleText;
     const descriptionPreview =
         messageText.length > 50

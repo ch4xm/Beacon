@@ -1,17 +1,21 @@
 import { useState, useRef } from "react";
 import "./styles/NewPinModal.css";
 import { BASE_API_URL } from '../../constants';
+import {reverseGeocode, ReverseGeocodeResult} from "@/utils/geocoding";
+import {CategoryBadge} from "./Post";
+import console from "console";
 
 interface NewPinModalProps {
     onClose: () => void;
     onSubmit: (data: {
         title: string;
         message: string;
+        tags: string[];
         image?: string;
     }) => void;
     latitude: number;
     longitude: number;
-    locationName: string;
+    address?: ReverseGeocodeResult;
 }
 
 const MAX_FILE_SIZE = 4.5 * 1024 * 1024; // 4.5MB limit for Vercel Blob
@@ -24,9 +28,9 @@ export default function NewPinModal({
     onSubmit,
     latitude,
     longitude,
-    locationName,
+    address,
 }: NewPinModalProps) {
-    const [title, setTitle] = useState(locationName && locationName.toLowerCase() !== "unknown location" ? locationName : "");
+    const [title, setTitle] = useState(address?.name && address?.name.toLowerCase() !== "unknown location" ? address?.name : "");
     const [message, setMessage] = useState("");
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -35,6 +39,9 @@ export default function NewPinModal({
     const [titleError, setTitleError] = useState<string | null>(null);
     const [messageError, setMessageError] = useState<string | null>(null);
     const [isDragging, setIsDragging] = useState(false);
+
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileSelect = (file: File) => {
@@ -77,6 +84,14 @@ export default function NewPinModal({
     const handleDragLeave = (e: React.DragEvent) => {
         e.preventDefault();
         setIsDragging(false);
+    };
+
+    const handleTagClick = (tag: string) => {
+        if (selectedTags.includes(tag)) {
+            setSelectedTags(selectedTags.filter(t => t !== tag));
+        } else {
+            setSelectedTags([...selectedTags, tag]);
+        }
     };
 
     const handleDrop = (e: React.DragEvent) => {
@@ -138,6 +153,8 @@ export default function NewPinModal({
                 imageUrl = await uploadImage(imageFile);
             }
 
+            console.log("Submitting pin with tags:", selectedTags);
+
             const response = await fetch(`${BASE_API_URL}/api/pins`, {
                 method: "POST",
                 headers: {
@@ -148,16 +165,20 @@ export default function NewPinModal({
                     latitude: latitude,
                     longitude: longitude,
                     title: title,
-                    location: locationName,
+                    // tags: selectedTags,
+                    // location: locationName,
                     message: message,
                     image: imageUrl,
+                    address: address
                 }),
             });
+
 
             if (response.ok) {
                 onSubmit({
                     title,
                     message,
+                    tags: selectedTags,
                     image: imageUrl || undefined,
                 });
                 setTitle("");
@@ -245,7 +266,7 @@ export default function NewPinModal({
                             />
                         </svg>
                         <span>
-                            {locationName}, {formatCoordinate(latitude, true)}{" "}
+                            {address?.name}, {formatCoordinate(latitude, true)}{" "}
                             {formatCoordinate(longitude, false)}
                         </span>
                     </div>
@@ -287,122 +308,142 @@ export default function NewPinModal({
                     </div>
 
                     <div className="pin-modal__field">
-                        <label htmlFor="message" className="pin-modal__label">
-                            What's here?
-                            <span className="pin-modal__label-hint">
-                                *required
-                            </span>
-                        </label>
-                        <textarea
-                            id="message"
-                            className={`pin-modal__textarea ${messageError ? "pin-modal__textarea--error" : ""}`}
-                            value={message}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                setMessage(value);
-                                if (value.length > MAX_MESSAGE_LENGTH) {
-                                    setMessageError(`Message cannot exceed ${MAX_MESSAGE_LENGTH} characters`);
-                                } else {
-                                    setMessageError(null);
-                                }
-                            }}
-                            placeholder="Describe this spot... A hidden cafe, scenic viewpoint, local market?"
-                            required
-                            rows={4}
-                        />
-                        <div className="pin-modal__textarea-footer">
-                            {messageError && (
-                                <span className="pin-modal__error">{messageError}</span>
-                            )}
-                            <span className={`pin-modal__char-count ${message.length > MAX_MESSAGE_LENGTH ? "pin-modal__char-count--error" : ""}`}>
-                                {message.length}/{MAX_MESSAGE_LENGTH}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="pin-modal__field">
                         <label className="pin-modal__label">
-                            Photo
+                            Tags
                             <span className="pin-modal__label-hint">
                                 optional
                             </span>
                         </label>
 
-                        {imagePreview ? (
-                            <div className="pin-modal__image-preview">
-                                <img src={imagePreview} alt="Preview" />
-                                <button
-                                    type="button"
-                                    className="pin-modal__image-remove"
-                                    onClick={removeImage}
-                                    aria-label="Remove image"
+                        <div className="pin-modal__horizontal" style={{ flexWrap: "wrap", gap: "4px", justifyContent: 'space-evenly' }}>
+                            <CategoryBadge category="New" onClick={() => handleTagClick('New')}/>
+                            <CategoryBadge category="Local" onClick={() => handleTagClick('Local')}/>
+                            <CategoryBadge category="Trendy" onClick={() => handleTagClick('Trendy')}/>
+                            <CategoryBadge category="Eatery" onClick={() => handleTagClick('Eatery')}/>
+                            <CategoryBadge category="Hot" onClick={() => handleTagClick('Hot')}/>
+                            <CategoryBadge category="Scenic" onClick={() => handleTagClick('Scenic')}/>
+                        </div>
+                    </div>
+
+                    <div className="pin-modal__horizontal">
+                        <div className="pin-modal__field">
+                            <label htmlFor="message" className="pin-modal__label">
+                                What's here?
+                                <span className="pin-modal__label-hint">
+                                    *required
+                                </span>
+                            </label>
+                            <textarea
+                                id="message"
+                                className={`pin-modal__textarea ${messageError ? "pin-modal__textarea--error" : ""}`}
+                                value={message}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    setMessage(value);
+                                    if (value.length > MAX_MESSAGE_LENGTH) {
+                                        setMessageError(`Message cannot exceed ${MAX_MESSAGE_LENGTH} characters`);
+                                    } else {
+                                        setMessageError(null);
+                                    }
+                                }}
+                                placeholder="Describe this spot... A hidden cafe, scenic viewpoint, local market?"
+                                required
+                                rows={4}
+                            />
+                            <div className="pin-modal__textarea-footer">
+                                {messageError && (
+                                    <span className="pin-modal__error">{messageError}</span>
+                                )}
+                                <span className={`pin-modal__char-count ${message.length > MAX_MESSAGE_LENGTH ? "pin-modal__char-count--error" : ""}`}>
+                                    {message.length}/{MAX_MESSAGE_LENGTH}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="pin-modal__field">
+                            <label className="pin-modal__label">
+                                Photo
+                                <span className="pin-modal__label-hint">
+                                    optional
+                                </span>
+                            </label>
+
+                            {imagePreview ? (
+                                <div className="pin-modal__image-preview">
+                                    <img src={imagePreview} alt="Preview" />
+                                    <button
+                                        type="button"
+                                        className="pin-modal__image-remove"
+                                        onClick={removeImage}
+                                        aria-label="Remove image"
+                                    >
+                                        <svg
+                                            width="14"
+                                            height="14"
+                                            viewBox="0 0 14 14"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M1 1L13 13M1 13L13 1"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
+                            ) : (
+                                <div
+                                    className={`pin-modal__upload-area ${isDragging ? "pin-modal__upload-area--dragging" : ""}`}
+                                    onDragOver={handleDragOver}
+                                    onDragLeave={handleDragLeave}
+                                    onDrop={handleDrop}
+                                    onClick={() => fileInputRef.current?.click()}
                                 >
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/gif,image/webp"
+                                        onChange={handleFileChange}
+                                        className="pin-modal__file-input"
+                                    />
                                     <svg
-                                        width="14"
-                                        height="14"
-                                        viewBox="0 0 14 14"
+                                        className="pin-modal__upload-icon"
+                                        viewBox="0 0 24 24"
                                         fill="none"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <path
-                                            d="M1 1L13 13M1 13L13 1"
+                                            d="M4 16L4 17C4 18.6569 5.34315 20 7 20L17 20C18.6569 20 20 18.6569 20 17L20 16"
                                             stroke="currentColor"
                                             strokeWidth="2"
                                             strokeLinecap="round"
                                         />
+                                        <path
+                                            d="M12 4L12 14M12 4L8 8M12 4L16 8"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
                                     </svg>
-                                </button>
-                            </div>
-                        ) : (
-                            <div
-                                className={`pin-modal__upload-area ${isDragging ? "pin-modal__upload-area--dragging" : ""}`}
-                                onDragOver={handleDragOver}
-                                onDragLeave={handleDragLeave}
-                                onDrop={handleDrop}
-                                onClick={() => fileInputRef.current?.click()}
-                            >
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    accept="image/jpeg,image/png,image/gif,image/webp"
-                                    onChange={handleFileChange}
-                                    className="pin-modal__file-input"
-                                />
-                                <svg
-                                    className="pin-modal__upload-icon"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M4 16L4 17C4 18.6569 5.34315 20 7 20L17 20C18.6569 20 20 18.6569 20 17L20 16"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                    />
-                                    <path
-                                        d="M12 4L12 14M12 4L8 8M12 4L16 8"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                                <span className="pin-modal__upload-text">
-                                    <strong>Click to upload</strong> or drag and
-                                    drop
-                                </span>
-                                <span className="pin-modal__upload-hint">
-                                    JPEG, PNG, GIF or WebP
-                                </span>
-                            </div>
-                        )}
+                                    <span className="pin-modal__upload-text">
+                                        <strong>Click to upload</strong> or drag and
+                                        drop
+                                    </span>
+                                    <span className="pin-modal__upload-hint">
+                                        JPEG, PNG, GIF or WebP
+                                    </span>
+                                </div>
+                            )}
 
-                        {uploadError && (
-                            <span className="pin-modal__error">
-                                {uploadError}
-                            </span>
-                        )}
+                            {uploadError && (
+                                <span className="pin-modal__error">
+                                    {uploadError}
+                                </span>
+                            )}
+                        </div>
                     </div>
 
                     <div className="pin-modal__actions">

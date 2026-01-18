@@ -1,3 +1,4 @@
+import React from "react";
 import {Avatar} from "./Avatar";
 
 export interface Post {
@@ -23,43 +24,83 @@ interface PostProps {
     content: Post;
 }
 
-export function CategoryBadge({ category }: { category: string }) {
+export function CategoryBadge({ category, onClick }: { category: string, onClick?: (tag: string) => void }) {
+    const [isHovered, setIsHovered] = React.useState(false);
+    const [clicked, setClicked] = React.useState(false);
+    
     const styles = {
         Hot: {
             background: "linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%)",
             color: "#ffffff",
             boxShadow: "0 2px 8px rgba(255, 107, 53, 0.3)",
+            borderColor: "#ff6b35",
         },
         Trendy: {
             background: "linear-gradient(135deg, #e91e63 0%, #ec407a 100%)",
             color: "#ffffff",
             boxShadow: "0 2px 8px rgba(233, 30, 99, 0.3)",
+            borderColor: "#e91e63",
         },
         Local: {
             background: "linear-gradient(135deg, #10b981 0%, #34d399 100%)",
             color: "#ffffff",
             boxShadow: "0 2px 8px rgba(16, 185, 129, 0.3)",
+            borderColor: "#10b981",
+        },
+        New: {
+            background: "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)",
+            color: "#ffffff",
+            boxShadow: "0 2px 8px rgba(59, 130, 246, 0.3)",
+            borderColor: "#3b82f6",
+        },
+        Eatery: {
+            background: "linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)",
+            color: "#ffffff",
+            boxShadow: "0 2px 8px rgba(245, 158, 11, 0.3)",
+            borderColor: "#f59e0b",
+        },
+        Scenic: {
+            background: "linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)",
+            color: "#ffffff",
+            boxShadow: "0 2px 8px rgba(139, 92, 246, 0.3)",
+            borderColor: "#8b5cf6",
+        },
+        Default: {
+            background: "linear-gradient(135deg, #6b7280 0%, #9ca3af 100%)",
+            color: "#ffffff",
+            boxShadow: "0 2px 8px rgba(107, 114, 128, 0.3)",
+            borderColor: "#6b7280",
         },
     };
 
-    const style = styles[category as keyof typeof styles];
-    if (!style) return null;
+    let style = styles[category as keyof typeof styles];
+    if (!style) {
+        style = styles["Default"];
+    }
 
     return (
         <div
+            onClick={() => {
+                setClicked(!clicked);
+                if (onClick) onClick(category);
+            }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             style={{
                 fontSize: 16,
                 fontWeight: 600,
-                // width: '10%',
-                background: style.background,
-                color: style.color,
+                color: clicked ? style.color : isHovered ? style.color : 'rgb(69, 69, 69)',
+                border: `1.5px solid ${style.borderColor}`,
                 boxShadow: style.boxShadow,
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 100,
-                padding: "6px 30px",
+                padding: "6px 18px",
                 letterSpacing: "0.3px",
+                background: clicked ? style.background : isHovered ? style.background : 'transparent',
+                cursor: 'pointer',
+                // transition: 'all 0.3s ease',
             }}
         >
             {category}
