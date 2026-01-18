@@ -153,11 +153,7 @@ function HomePage() {
                             title: p.title,
                             description: p.description,
                             image: p.image,
-                            color: lerpColor(
-                                localStorage.getItem("userEmail") == p.email ? USER_PIN_COLOR : PIN_COLOR,
-                                "#FFA500",
-                                Math.min((p.likes || 0) / 20, 1)
-                            ),
+                            color: localStorage.getItem("userEmail") == p.email ? USER_PIN_COLOR : PIN_COLOR,
                             address: p.address,
                             likes: p.likes || 0,
                         },
