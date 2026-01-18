@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Popup } from "react-map-gl/mapbox";
 import NewPinModal from "./NewPinModal";
 import "./styles/Pin.css";
-import {ReverseGeocodeResult} from "@/utils/geocoding";
-import {data} from "react-router";
+import { ReverseGeocodeResult } from "@/utils/geocoding";
+import { data } from "react-router";
 
 interface PinProps {
-	address?: string;
-	latitude: number;
+    address?: string;
+    latitude: number;
     longitude: number;
     isLoading?: boolean;
     onClose: () => void;
@@ -82,16 +82,15 @@ export default function Pin({
                     </div>
                 </div>
             </Popup>
-			{JSON.stringify(address)}
             {modalIsOpen && (
                 <NewPinModal
                     latitude={latitude}
                     longitude={longitude}
-					address={address}
+                    address={address}
                     // locationName={name}
                     onClose={() => setModalOpen(false)}
                     onSubmit={(data) => {
-						console.log("Pin onSubmit called", data);
+                        console.log("Pin onSubmit called", data);
                         onPinCreated?.(data);
                         setModalOpen(false);
                     }}

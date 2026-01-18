@@ -10,7 +10,7 @@ interface SearchBarProps {
         name?: string;
         lng: number;
         lat: number;
-        address?: any;
+        address?: string;
     }) => void;
     onFocusChange?: (isFocused: boolean) => void;
     isFocused?: boolean;
@@ -107,7 +107,7 @@ export default function SearchBar({
                     name: suggestion.name || suggestion.full_address,
                     lng,
                     lat,
-                    address: address,
+                    address: address.fullAddress,
                 });
             }
             setSearchResults([]);
