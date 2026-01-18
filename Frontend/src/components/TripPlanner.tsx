@@ -53,6 +53,9 @@ interface LocalPin {
     description: string;
     latitude: number;
     longitude: number;
+    tags?: string;
+    image?: string;
+    isUserPin?: boolean;
 }
 
 interface ItineraryResult {
@@ -230,9 +233,10 @@ export default function TripPlanner({ isOpen, onClose, onPlanComplete, onWideMod
 
     // Selection phase state
     const [optionsData, setOptionsData] = useState<TripOptionsData | null>(null);
-    const [selectionStep, setSelectionStep] = useState<'transit' | 'hotel'>('transit');
+    const [selectionStep, setSelectionStep] = useState<'transit' | 'hotel' | 'pins'>('transit');
     const [selectedTransitIndex, setSelectedTransitIndex] = useState<number | null>(null);
     const [selectedHotelIndex, setSelectedHotelIndex] = useState<number | null>(null);
+    const [selectedPinIds, setSelectedPinIds] = useState<Set<number>>(new Set());
     const [isGeneratingItinerary, setIsGeneratingItinerary] = useState(false);
 
     useEffect(() => {
@@ -436,7 +440,8 @@ export default function TripPlanner({ isOpen, onClose, onPlanComplete, onWideMod
                     durationDays: optionsData.durationDays,
                     selectedTransit: selectedTransitOption,
                     selectedHotel: selectedHotelOption,
-                    localPins: optionsData.localPins,
+                    // Filter pins to only include user-selected ones
+                    localPins: optionsData.localPins.filter(pin => selectedPinIds.has(pin.id)),
                 }),
             });
 
@@ -652,6 +657,19 @@ export default function TripPlanner({ isOpen, onClose, onPlanComplete, onWideMod
         }
     };
 
+    // Toggle pin selection
+    const handlePinToggle = (pinId: number) => {
+        setSelectedPinIds(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(pinId)) {
+                newSet.delete(pinId);
+            } else {
+                newSet.add(pinId);
+            }
+            return newSet;
+        });
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -735,7 +753,11 @@ export default function TripPlanner({ isOpen, onClose, onPlanComplete, onWideMod
                     // Selection Phase UI
                     <div className="trip-selection-container">
                         <div className="trip-selection-header">
-                            <h2>{selectionStep === 'transit' ? '✨ Select Your Travel' : '🏨 Select Your Stay'}</h2>
+                            <h2>
+                                {selectionStep === 'transit' ? '✨ Select Your Travel' :
+                                    selectionStep === 'hotel' ? '🏨 Select Your Stay' :
+                                        '📍 Places to Visit'}
+                            </h2>
                             <p>{optionsData.origin} → {optionsData.destination}</p>
                         </div>
 
@@ -820,7 +842,7 @@ export default function TripPlanner({ isOpen, onClose, onPlanComplete, onWideMod
                                     </button>
                                 </div>
                             </>
-                        ) : (
+                        ) : selectionStep === 'hotel' ? (
                             <>
                                 <div className="selection-section">
                                     <p className="selection-hint">Choose an eco-friendly accommodation</p>
@@ -862,8 +884,70 @@ export default function TripPlanner({ isOpen, onClose, onPlanComplete, onWideMod
                                 <div className="selection-actions">
                                     <button
                                         className="trip-submit-btn"
+                                        onClick={() => {
+                                            // Go to pins step if there are nearby pins
+                                            if (optionsData.localPins && optionsData.localPins.length > 0) {
+                                                setSelectionStep('pins');
+                                            } else {
+                                                handleConfirmSelections();
+                                            }
+                                        }}
+                                        disabled={selectedHotelIndex === null}
+                                    >
+                                        {optionsData.localPins && optionsData.localPins.length > 0
+                                            ? 'Next: Select Places →'
+                                            : '📅 Generate My Itinerary'}
+                                    </button>
+                                    <button
+                                        className="trip-back-btn"
+                                        onClick={() => setSelectionStep('transit')}
+                                    >
+                                        ← Back to Transit
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            // Pins selection step
+                            <>
+                                <div className="selection-section">
+                                    <p className="selection-hint">
+                                        Select nearby places to include in your itinerary (optional)
+                                    </p>
+                                    <div className="pin-selection-grid">
+                                        {optionsData.localPins.slice(0, 12).map((pin) => (
+                                            <div
+                                                key={pin.id}
+                                                className={`pin-selection-card ${selectedPinIds.has(pin.id) ? 'selected' : ''} ${pin.isUserPin ? 'user-pin' : ''}`}
+                                                onClick={() => handlePinToggle(pin.id)}
+                                            >
+                                                <div className="pin-selection-check">
+                                                    {selectedPinIds.has(pin.id) && <span>✓</span>}
+                                                </div>
+                                                {pin.isUserPin && (
+                                                    <span className="pin-user-badge">Your Pin</span>
+                                                )}
+                                                <div className="pin-selection-info">
+                                                    <span className="pin-title">{pin.title}</span>
+                                                    {pin.description && (
+                                                        <p className="pin-desc">
+                                                            {pin.description.substring(0, 80)}
+                                                            {pin.description.length > 80 ? '...' : ''}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {optionsData.localPins.length === 0 && (
+                                        <p className="no-pins-message">No nearby places found in this area.</p>
+                                    )}
+                                </div>
+                                {error && <div className="trip-error">{error}</div>}
+                                <div className="selection-actions">
+                                    <button
+                                        className="trip-submit-btn"
                                         onClick={handleConfirmSelections}
-                                        disabled={isGeneratingItinerary || selectedHotelIndex === null}
+                                        disabled={isGeneratingItinerary}
                                     >
                                         {isGeneratingItinerary ? (
                                             <>
@@ -871,15 +955,25 @@ export default function TripPlanner({ isOpen, onClose, onPlanComplete, onWideMod
                                                 Generating Itinerary...
                                             </>
                                         ) : (
-                                            '📅 Generate My Itinerary'
+                                            '📅 Generate Itinerary'
                                         )}
                                     </button>
                                     <button
-                                        className="trip-back-btn"
-                                        onClick={() => setSelectionStep('transit')}
+                                        className="trip-skip-btn"
+                                        onClick={() => {
+                                            setSelectedPinIds(new Set());
+                                            handleConfirmSelections();
+                                        }}
                                         disabled={isGeneratingItinerary}
                                     >
-                                        ← Back to Transit
+                                        Skip Places →
+                                    </button>
+                                    <button
+                                        className="trip-back-btn"
+                                        onClick={() => setSelectionStep('hotel')}
+                                        disabled={isGeneratingItinerary}
+                                    >
+                                        ← Back to Hotel
                                     </button>
                                 </div>
                             </>

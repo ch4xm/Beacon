@@ -1686,3 +1686,137 @@
 .itinerary-hotel-ref strong {
     color: #1b4332;
 }
+
+/* Pin Selection Grid */
+.pin-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+@media (max-width: 600px) {
+    .pin-selection-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pin-selection-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+    background: #faf9f7;
+    border: 2px solid #e5e3df;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.pin-selection-card:hover {
+    background: #f0ede8;
+    border-color: #d1cfc9;
+}
+
+.pin-selection-card.selected {
+    background: rgba(45, 106, 79, 0.08);
+    border-color: #2d6a4f;
+}
+
+.pin-selection-card.user-pin {
+    background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+    border-color: #ffca28;
+}
+
+.pin-selection-card.user-pin.selected {
+    background: linear-gradient(135deg, rgba(255, 202, 40, 0.2) 0%, rgba(255, 193, 7, 0.15) 100%);
+    border-color: #2d6a4f;
+}
+
+.pin-selection-check {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #d1cfc9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    transition: all 0.2s ease;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.pin-selection-card.selected .pin-selection-check {
+    background: #2d6a4f;
+    border-color: #2d6a4f;
+}
+
+.pin-user-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #f57c00;
+    background: #fff3e0;
+    padding: 3px 8px;
+    border-radius: 4px;
+    width: fit-content;
+}
+
+.pin-selection-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-right: 30px;
+}
+
+.pin-selection-info .pin-title {
+    color: #1a1a1a;
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+.pin-selection-info .pin-desc {
+    color: #6b6b6b;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.no-pins-message {
+    color: #8a8a8a;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 24px;
+    font-style: italic;
+}
+
+/* Skip Button */
+.trip-skip-btn {
+    background: transparent;
+    border: 1.5px dashed #d1cfc9;
+    color: #8a8a8a;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.trip-skip-btn:hover:not(:disabled) {
+    background: #f8f7f5;
+    border-color: #b8b6b1;
+    color: #5c5c5c;
+}
+
+.trip-skip-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

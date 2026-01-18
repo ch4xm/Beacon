@@ -62,19 +62,44 @@ export interface TripPlanResponse {
 }
 
 /**
- * Get pins near a destination
+ * Extended pin interface with additional fields for selection
  */
-function getNearbyPins(lat: number, lng: number, radiusKm: number = 50): LocalPin[] {
+interface SelectablePin extends LocalPin {
+    isUserPin: boolean;
+    tags?: string;
+    image?: string;
+}
+
+/**
+ * Get pins near a destination, prioritizing user's saved pins
+ * @param lat - Latitude of the destination
+ * @param lng - Longitude of the destination
+ * @param radiusKm - Search radius in kilometers (default 50)
+ * @param userId - Optional user ID to prioritize their pins
+ */
+function getNearbyPins(lat: number, lng: number, radiusKm: number = 50, userId?: number): SelectablePin[] {
     // Haversine formula approximation: 1 degree ≈ 111km
     const radiusDeg = radiusKm / 111;
 
+    // Query nearby pins, marking whether they belong to the current user
     const results = db.query(`
-        SELECT id, title, description, latitude, longitude
+        SELECT 
+            id, 
+            title, 
+            description, 
+            latitude, 
+            longitude, 
+            tags, 
+            image,
+            creatorID,
+            CASE WHEN creatorID = ? THEN 1 ELSE 0 END as isUserPin
         FROM pin
         WHERE latitude BETWEEN ? AND ?
           AND longitude BETWEEN ? AND ?
-        LIMIT 20
+        ORDER BY isUserPin DESC, id ASC
+        LIMIT 30
     `, [
+        userId ?? -1,  // Use -1 if no userId to ensure no matches
         lat - radiusDeg,
         lat + radiusDeg,
         lng - radiusDeg,
@@ -87,6 +112,9 @@ function getNearbyPins(lat: number, lng: number, radiusKm: number = 50): LocalPi
         description: row.description,
         latitude: row.latitude,
         longitude: row.longitude,
+        tags: row.tags,
+        image: row.image,
+        isUserPin: row.isUserPin === 1,
     }));
 }
 
@@ -234,10 +262,20 @@ export async function planTripStream(req: Request, res: Response) {
             geocodeCity(endLocation),
         ]);
 
+        if (!originCoords) {
+            sendSSE(res, {
+                stage: 'error',
+                message: `Could not recognize origin location: "${startLocation}". Please check the spelling or try a different location.`,
+                progress: 10,
+            });
+            res.end();
+            return;
+        }
+
         if (!destCoords) {
             sendSSE(res, {
                 stage: 'error',
-                message: 'Could not find destination on map',
+                message: `Could not recognize destination: "${endLocation}". Please check the spelling or try a different location.`,
                 progress: 10,
             });
             res.end();
@@ -374,7 +412,8 @@ export async function planTripStream(req: Request, res: Response) {
             progress: 62,
         });
 
-        const localPins = getNearbyPins(destCoords.lat, destCoords.lng);
+        const userId = (req as any).user?.id;
+        const localPins = getNearbyPins(destCoords.lat, destCoords.lng, 50, userId);
 
         sendSSE(res, {
             stage: 'pins',
@@ -594,8 +633,12 @@ export async function planTrip(req: Request, res: Response) {
             geocodeCity(endLocation),
         ]);
 
+        if (!originCoords) {
+            return res.status(400).json({ error: `Could not recognize origin location: "${startLocation}". Please check the spelling or try a different location.` });
+        }
+
         if (!destCoords) {
-            return res.status(400).json({ error: "Could not geocode destination" });
+            return res.status(400).json({ error: `Could not recognize destination: "${endLocation}". Please check the spelling or try a different location.` });
         }
 
         const distanceKm = originCoords
@@ -646,7 +689,8 @@ export async function planTrip(req: Request, res: Response) {
         );
 
         // Get nearby pins (synchronous, wrap in Promise for Promise.all)
-        transitPromises.push(Promise.resolve(getNearbyPins(destCoords.lat, destCoords.lng)));
+        const userId = (req as any).user?.id;
+        transitPromises.push(Promise.resolve(getNearbyPins(destCoords.lat, destCoords.lng, 50, userId)));
 
         // Eco-friendly hotel search
         transitPromises.push(
@@ -1015,6 +1059,28 @@ export async function getLocalRoute(req: Request, res: Response) {
         return res.status(404).json({ error: "No route found" });
     } catch (error) {
         console.error("Local route error:", error);
+        res.status(500).json({ error: getErrorMessage(error) });
+    }
+}
+
+/**
+ * Get nearby pins for selection step
+ * Used after hotel selection to let user choose pins to include in itinerary
+ */
+export async function getNearbyPinsForSelection(req: Request, res: Response) {
+    try {
+        const { lat, lng, radiusKm = 50 } = req.body;
+
+        if (!lat || !lng) {
+            return res.status(400).json({ error: "Missing required fields: lat, lng" });
+        }
+
+        const userId = (req as any).user?.id;
+        const pins = getNearbyPins(lat, lng, radiusKm, userId);
+
+        res.json({ pins });
+    } catch (error) {
+        console.error("Nearby pins error:", error);
         res.status(500).json({ error: getErrorMessage(error) });
     }
 }

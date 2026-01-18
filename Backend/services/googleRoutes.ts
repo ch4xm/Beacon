@@ -132,7 +132,8 @@ export async function searchTransit(
         destination: destinationWaypoint,
         travelMode: "TRANSIT",
         computeAlternativeRoutes: true,
-        ...(departureTime && { departureTime }),
+        // Note: Omitting departureTime to get routes regardless of schedule
+        // The API may not return results for future departure times
     };
 
     if (transitRoutingPreference) {

@@ -264,6 +264,7 @@ function HomePage() {
                 isLoggedIn={isLoggedIn}
                 isSearchFocused={isSearchFocused}
                 showTripPlanner={showTripPlanner}
+                onOpenTripPlanner={() => setShowTripPlanner(true)}
                 onCloseTripPlanner={() => {
                     setShowTripPlanner(false);
                     setFlightLine(null);
@@ -489,17 +490,6 @@ function HomePage() {
                             </div>
                         )}
                     </div>
-                )}
-
-                {/* Trip Planner Button */}
-                {isLoggedIn && (
-                    <button
-                        className="trip-planner-fab"
-                        onClick={() => setShowTripPlanner(true)}
-                        title="Plan a Trip"
-                    >
-                        🌍
-                    </button>
                 )}
 
                 <Map

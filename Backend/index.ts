@@ -116,6 +116,7 @@ app.post("/api/trip/plan", auth.check, trip.planTrip);
 app.post("/api/trip/ask", auth.check, trip.askQuestion);
 app.post("/api/trip/generate-itinerary", auth.check, trip.generateItineraryWithSelections);
 app.post("/api/trip/local-route", auth.check, trip.getLocalRoute);
+app.post("/api/trip/nearby-pins", auth.check, trip.getNearbyPinsForSelection);
 
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Backend listening on http://0.0.0.0:${PORT}`);

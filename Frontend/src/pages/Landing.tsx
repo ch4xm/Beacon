@@ -156,9 +156,9 @@ function Landing() {
                             </NavLink>
                         </div>
                         <div className="hero__meta">
-                            <span>Map-first trips</span>
+                            <span>Map-first excursions</span>
                             <span>Carbon-neutral planning</span>
-                            <span>AI-guided walking tours</span>
+                            <span>AI-guided tours</span>
                         </div>
                     </div>
                     <div className="hero__visual">

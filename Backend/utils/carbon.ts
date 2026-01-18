@@ -9,9 +9,9 @@
  */
 export const CARBON_FACTORS = {
     // Air travel
-    FLIGHT_SHORT: 0.255,      // < 500km
-    FLIGHT_MEDIUM: 0.195,     // 500-3700km
-    FLIGHT_LONG: 0.178,       // > 3700km
+    FLIGHT_SHORT: 0.115,      // < 500km
+    FLIGHT_MEDIUM: 0.1,     // 500-3700km
+    FLIGHT_LONG: 0.09,       // > 3700km
 
     // Ground transport
     TRAIN_ELECTRIC: 0.041,

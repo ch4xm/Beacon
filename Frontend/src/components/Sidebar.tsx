@@ -51,6 +51,7 @@ interface SidebarProps {
     isLoggedIn: boolean;
     isSearchFocused: boolean;
     showTripPlanner: boolean;
+    onOpenTripPlanner: () => void;
     onCloseTripPlanner: () => void;
     onTripPlanComplete: (result: TripPlanResult) => void;
     onWideModeChange?: (isWide: boolean) => void;
@@ -59,7 +60,7 @@ interface SidebarProps {
 }
 
 
-export default function Sidebar({ mapRef, allPins, savedPlaces, isLoggedIn, isSearchFocused, showTripPlanner, onCloseTripPlanner, onTripPlanComplete, onWideModeChange, onFlightSelected, onHotelSelected }: SidebarProps) {
+export default function Sidebar({ mapRef, allPins, savedPlaces, isLoggedIn, isSearchFocused, showTripPlanner, onOpenTripPlanner, onCloseTripPlanner, onTripPlanComplete, onWideModeChange, onFlightSelected, onHotelSelected }: SidebarProps) {
     const [activeTab, setActiveTab] = useState<"discovery" | "saved">("discovery");
     const [mapCenter, setMapCenter] = useState<{ lng: number; lat: number }>({ lng: -122.4, lat: 37.8 });
     const [maxDistance, setMaxDistance] = useState(100);
@@ -243,6 +244,13 @@ export default function Sidebar({ mapRef, allPins, savedPlaces, isLoggedIn, isSe
                         >
                             <span className="tab-icon">🔖</span>
                             <span className="tab-label">Saved</span>
+                        </button>
+                        <button
+                            className="tab-button"
+                            onClick={onOpenTripPlanner}
+                        >
+                            <span className="tab-icon">✈️</span>
+                            <span className="tab-label">Trip</span>
                         </button>
                     </nav>
                 </>

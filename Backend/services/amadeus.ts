@@ -114,13 +114,13 @@ function estimateFlightCarbon(durationMinutes: number): number {
     let factor: number;
     if (distanceKm < 1500) {
         // Short-haul: higher emissions due to takeoff/landing proportion
-        factor = 0.255;
+        factor = 0.07;
     } else if (distanceKm < 4000) {
         // Medium-haul
-        factor = 0.156;
+        factor = 0.07;
     } else {
         // Long-haul: more efficient per km
-        factor = 0.109;
+        factor = 0.07;
     }
 
     return Math.round(distanceKm * factor);
