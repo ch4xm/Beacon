@@ -29,6 +29,14 @@ interface DetailedPinModalProps {
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 const MAX_FILE_SIZE = 4.5 * 1024 * 1024; // 4.5MB limit
 
+interface Comment {
+    id: number;
+    userId: number;
+    userEmail: string;
+    text: string;
+    createdAt: string;
+}
+
 export default function DetailedPinModal({
     selectedPoint,
     currentUserId,
@@ -43,6 +51,11 @@ export default function DetailedPinModal({
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    
+    // Comments state (GUI only, no functionality)
+    const [comments] = useState<Comment[]>([]);
+    const [newComment, setNewComment] = useState("");
+    const [showAllComments, setShowAllComments] = useState(false);
 
     // const isOwner =
     //     currentUserId != null &&
@@ -282,6 +295,100 @@ export default function DetailedPinModal({
                                         </span>
                                     </div>
                                 </div>
+                            </div>
+
+                            {/* Comments Section */}
+                            <div className="detailed-info-section comments-section">
+                                <h3>
+                                    Comments
+                                    <span className="comments-count">({comments.length})</span>
+                                </h3>
+                                
+                                {/* Add Comment Input */}
+                                <div className="add-comment-container">
+                                    <div className="comment-avatar">
+                                        {currentUserEmail?.charAt(0).toUpperCase() || "?"}
+                                    </div>
+                                    <div className="comment-input-wrapper">
+                                        <textarea
+                                            className="comment-input"
+                                            placeholder="Add a comment..."
+                                            value={newComment}
+                                            onChange={(e) => setNewComment(e.target.value)}
+                                            rows={1}
+                                        />
+                                        <button 
+                                            className="comment-submit-btn"
+                                            disabled={!newComment.trim()}
+                                        >
+                                            <svg
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Comments List */}
+                                <div className="comments-list">
+                                    {(showAllComments ? comments : comments.slice(0, 2)).map((comment) => (
+                                        <div key={comment.id} className="comment-item">
+                                            <div className="comment-avatar">
+                                                {comment.userEmail.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div className="comment-content">
+                                                <div className="comment-header">
+                                                    <span className="comment-author">
+                                                        {comment.userEmail}
+                                                    </span>
+                                                    <span className="comment-time">
+                                                        {new Date(comment.createdAt).toLocaleDateString('en-US', {
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                        })}
+                                                    </span>
+                                                </div>
+                                                <p className="comment-text">{comment.text}</p>
+                                                <div className="comment-actions">
+                                                    <button className="comment-action-btn">
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                                                        </svg>
+                                                        Like
+                                                    </button>
+                                                    <button className="comment-action-btn">
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                                                        </svg>
+                                                        Reply
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Show More/Less Button */}
+                                {comments.length > 2 && (
+                                    <button
+                                        className="show-more-comments-btn"
+                                        onClick={() => setShowAllComments(!showAllComments)}
+                                    >
+                                        {showAllComments 
+                                            ? "Show less" 
+                                            : `View all ${comments.length} comments`
+                                        }
+                                    </button>
+                                )}
                             </div>
                         </>
                     )}
