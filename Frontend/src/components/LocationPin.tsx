@@ -18,6 +18,14 @@ function HeartIcon({ filled }: { filled: boolean }) {
 	)
 }
 
+function BookmarkIcon({ filled }: { filled: boolean }) {
+	return (
+		<img
+			src={filled ? '/bookmark.svg' : '/bookmarkoutline.svg'}
+		/>
+	)
+}
+
 export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDetails }: LocationPinProps) {
 	const titleText = selectedPoint.title?.trim() || selectedPoint.description?.trim() || "Untitled Pin";
 	const messageText = selectedPoint.description?.trim() || "";
@@ -26,9 +34,17 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 
 	const [likes, setLikes] = useState<number>(0);
 	const [isLiked, setIsLiked] = useState<boolean>(false);
+	const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 	const [likesLoading, setLikesLoading] = useState<boolean>(true);
 
 	useEffect(() => {
+		// Check if pin is bookmarked
+		const saved = JSON.parse(localStorage.getItem("savedPins") ?? '{}');
+		const email = localStorage.getItem("userEmail")!;
+		const userSavedPins = saved[email] || [];
+		setIsBookmarked(userSavedPins.includes(selectedPoint.id));
+
+		// Fetch likes
 		setLikesLoading(true);
 		fetch(`${BASE_API_URL}/api/likes/${selectedPoint.id}`, {
 			headers: {
@@ -68,6 +84,28 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 			});
 		}
 	};
+
+	const toggleBookmark = () => {
+		const saved = JSON.parse(localStorage.getItem("savedPins") ?? '{}');
+		const email = localStorage.getItem("userEmail")!;
+		const newSavedState = !isBookmarked;
+		setIsBookmarked(newSavedState);
+
+		if (!saved[email]) {
+			saved[email] = [];
+		}
+
+		if (newSavedState) {
+			if (!saved[email].includes(selectedPoint.id)) {
+				saved[email].push(selectedPoint.id);
+			}
+		} else {
+			saved[email] = saved[email].filter((id: number) => id !== selectedPoint.id);
+		}
+
+		localStorage.setItem("savedPins", JSON.stringify(saved));
+	};
+
 
 	return (
 		<Popup
@@ -130,7 +168,7 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 					<button
 						className="location-popup-button"
 						onClick={onShowDetails}
-						style={{ background: 'none', padding: '4px 8px', transform: 'translateY(3px)' }}
+						style={{ background: 'none', padding: '4px 8px', }}
 						onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
 						onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
 					>
@@ -157,6 +195,25 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 					>
 						<HeartIcon filled={isLiked} />
 						<p>{likesLoading ? '...' : likes}</p>
+					</button>
+
+					<button
+						className="location-popup-button"
+						onClick={toggleBookmark}
+						disabled={likesLoading}
+						onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+						onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+							background: 'none',
+							color: '#1a1a1a',
+							padding: '4px 8px',
+							opacity: likesLoading ? 0.5 : 1,
+						}}
+					>
+						<BookmarkIcon filled={isBookmarked} />
 					</button>
 				</div>
 			</div>
