@@ -99,22 +99,21 @@ export default function Sidebar({ mapRef, allPins, savedPlaces, isLoggedIn, isSe
         }
 
         return (
-            <ul className="pin-list">
+            <ul className="sidebar-pin-list">
                 {pins.map((pin, idx) => (
-                    <li key={pin.id || idx} className="pin-card" onClick={() => handlePinClick(pin)}>
-                        <div className="pin-card-header">
+                    <li key={pin.id || idx} className="sidebar-pin-card" onClick={() => handlePinClick(pin)}>
+                        <div className="sidebar-pin-card-header">
                             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                                 <div
-                                    className="pin-color-dot"
+                                    className="sidebar-pin-color-dot"
                                     style={{ backgroundColor: pin.color || PIN_COLOR }}
                                 />
-                                <span className="pin-card-title">{pin.title || "Untitled Point"}</span>
+                                <span className="sidebar-pin-card-title">{pin.title || "Untitled Point"}</span>
                             </div>
                             {pin.distance !== undefined && (pin.distance * KM_TO_MILES) < 100 && (() => {
-
                                 const distanceInMiles = pin.distance * KM_TO_MILES;
                                 return (
-                                    <span className="pin-card-distance">
+                                    <span className="sidebar-pin-card-distance">
                                         {distanceInMiles < 0.1
                                             ? `${(distanceInMiles * 5280).toFixed(0)}ft`
                                             : `${distanceInMiles.toFixed(1)}mi`}
@@ -122,8 +121,8 @@ export default function Sidebar({ mapRef, allPins, savedPlaces, isLoggedIn, isSe
                                 );
                             })()}
                         </div>
-                        {pin.message && <p className="pin-card-message">{pin.message}</p>}
-                        {pin.image && <img src={pin.image} alt={pin.title} className="pin-card-image" />}
+                        {pin.message && <p className="sidebar-pin-card-message">{pin.message}</p>}
+                        {pin.image && <img src={pin.image} alt={pin.title} className="sidebar-pin-card-image" />}
                     </li>
                 ))}
             </ul>

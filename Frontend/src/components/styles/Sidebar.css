@@ -100,7 +100,7 @@
 }
 
 /* List Items */
-.pin-list {
+.sidebar-pin-list {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -109,7 +109,7 @@
     gap: 12px;
 }
 
-.pin-card {
+.sidebar-pin-card {
     background: white;
     border-radius: 16px;
     padding: 16px;
@@ -120,29 +120,31 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.pin-card:hover {
+.sidebar-pin-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border-color: rgba(0, 0, 0, 0.08);
 }
 
-.pin-card-header {
+.sidebar-pin-card-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 8px;
 }
 
-.pin-card-title {
+.sidebar-pin-card-title {
     font-weight: 600;
     font-size: 0.95rem;
     color: #1a1a1a;
     line-height: 1.4;
 }
 
-.pin-color-dot {
+.sidebar-pin-color-dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -150,7 +152,7 @@
     margin-top: 4px;
 }
 
-.pin-card-distance {
+.sidebar-pin-card-distance {
     font-size: 0.75rem;
     color: #666;
     background: rgba(0, 0, 0, 0.04);
@@ -158,7 +160,7 @@
     border-radius: 100px;
 }
 
-.pin-card-message {
+.sidebar-pin-card-message {
     font-size: 0.85rem;
     color: #444;
     display: -webkit-box;
@@ -169,7 +171,7 @@
     line-height: 1.5;
 }
 
-.pin-card-image {
+.sidebar-pin-card-image {
     width: 100%;
     height: 120px;
     object-fit: cover;
