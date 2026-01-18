@@ -1008,6 +1008,76 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /api/trip/generate-itinerary:
+    post:
+      summary: Generate itinerary with user selections
+      description: Generate a detailed itinerary based on user-selected transit and hotel options
+      operationId: generateItinerary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - destination
+                - itineraryType
+                - selectedTransit
+              properties:
+                destination:
+                  type: string
+                  description: Destination city
+                  example: "Los Angeles"
+                itineraryType:
+                  type: string
+                  description: Type of itinerary theme
+                  example: "nature"
+                durationDays:
+                  type: integer
+                  description: Trip duration in days
+                  example: 3
+                selectedTransit:
+                  $ref: '#/components/schemas/TransitOption'
+                selectedHotel:
+                  $ref: '#/components/schemas/EcoHotel'
+                localPins:
+                  type: array
+                  description: Community-recommended local pins to include
+                  items:
+                    $ref: '#/components/schemas/LocalPin'
+      responses:
+        200:
+          description: Itinerary generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  itinerary:
+                    $ref: '#/components/schemas/ItineraryResult'
+                  selectedTransit:
+                    $ref: '#/components/schemas/TransitOption'
+                  selectedHotel:
+                    $ref: '#/components/schemas/EcoHotel'
+        400:
+          description: Bad request - missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
   schemas:
     Pin:
@@ -1158,3 +1228,194 @@ components:
           type: string
           description: Timestamp when the post was created
           example: "2026-01-17 12:00:00"
+
+    TransitOption:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum: ["flight", "train", "bus", "driving"]
+          description: Mode of transportation
+          example: "train"
+        provider:
+          type: string
+          description: Transit provider name
+          example: "Amtrak"
+          nullable: true
+        price:
+          type: string
+          description: Price for the transit option
+          example: "$45"
+          nullable: true
+        duration:
+          type: string
+          description: Travel duration
+          example: "5h 30m"
+        carbonKg:
+          type: number
+          description: Carbon emissions in kilograms
+          example: 12.5
+        carbonRating:
+          type: object
+          properties:
+            rating:
+              type: string
+              description: Rating label
+              example: "Good"
+            color:
+              type: string
+              description: Color code for the rating
+              example: "#22c55e"
+            score:
+              type: number
+              description: Numeric score
+              example: 85
+        segments:
+          type: array
+          description: Route segments
+          items:
+            type: object
+          nullable: true
+        polyline:
+          type: string
+          description: Encoded polyline for the route
+          nullable: true
+        flightNumber:
+          type: string
+          description: Flight number (for flights)
+          example: "UA123"
+          nullable: true
+        bookingUrl:
+          type: string
+          description: URL to book this option
+          nullable: true
+
+    EcoHotel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the hotel
+          example: "ChIJN1t_tDeuEmsRUsoyG83frY4"
+        name:
+          type: string
+          description: Hotel name
+          example: "Green Valley Eco Resort"
+        address:
+          type: string
+          description: Hotel address
+          example: "123 Sustainable Way, Los Angeles, CA"
+        rating:
+          type: number
+          description: Hotel rating (1-5)
+          example: 4.5
+          nullable: true
+        userRatingCount:
+          type: integer
+          description: Number of user ratings
+          example: 250
+          nullable: true
+        priceLevel:
+          type: string
+          description: Price level indicator
+          example: "$$"
+          nullable: true
+        websiteUri:
+          type: string
+          description: Hotel website URL
+          nullable: true
+        googleMapsUri:
+          type: string
+          description: Google Maps URL
+          nullable: true
+        editorialSummary:
+          type: string
+          description: Brief description of the hotel
+          nullable: true
+
+    LocalPin:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Pin identifier
+          example: 1
+        title:
+          type: string
+          description: Pin title
+          example: "Hidden Waterfall Trail"
+        description:
+          type: string
+          description: Pin description
+          example: "A beautiful secluded waterfall, 20 min hike from parking"
+        latitude:
+          type: number
+          description: Latitude coordinate
+          example: 34.0522
+        longitude:
+          type: number
+          description: Longitude coordinate
+          example: -118.2437
+
+    ItineraryResult:
+      type: object
+      properties:
+        summary:
+          type: string
+          description: Brief summary of the itinerary
+          example: "A 3-day nature escape exploring Los Angeles' hidden gems"
+        days:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItineraryDay'
+        sustainabilityTips:
+          type: array
+          items:
+            type: string
+          description: Tips for sustainable travel
+          example: ["Bring a reusable water bottle", "Use public transit"]
+        carbonOffsetSuggestions:
+          type: array
+          items:
+            type: string
+          description: Suggestions for carbon offset
+          example: ["Consider donating to local reforestation projects"]
+
+    ItineraryDay:
+      type: object
+      properties:
+        day:
+          type: integer
+          description: Day number
+          example: 1
+        title:
+          type: string
+          description: Title for the day
+          example: "Exploring Downtown & Nature"
+        activities:
+          type: array
+          items:
+            type: object
+            properties:
+              time:
+                type: string
+                description: Activity time
+                example: "9:00 AM"
+              name:
+                type: string
+                description: Activity name
+                example: "Visit Griffith Observatory"
+              description:
+                type: string
+                description: Activity description
+                example: "Enjoy panoramic views of LA and learn about space science"
+              location:
+                type: string
+                description: Activity location
+                example: "2800 E Observatory Rd, Los Angeles"
+                nullable: true
+              transportNote:
+                type: string
+                description: Transportation note
+                example: "Take the DASH bus from Hollywood & Highland"
+                nullable: true

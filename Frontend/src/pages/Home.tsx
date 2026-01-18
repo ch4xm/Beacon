@@ -3,7 +3,6 @@ import "./Home.css";
 import AuthModal from "@/components/AuthModal";
 import SearchBar from "@/components/SearchBar";
 import Sidebar from "@/components/Sidebar";
-import TripPlanner from "@/components/TripPlanner";
 import Map, {
     GeolocateControl,
     NavigationControl,
@@ -261,6 +260,28 @@ function HomePage() {
                 }))}
                 isLoggedIn={isLoggedIn}
                 isSearchFocused={isSearchFocused}
+                showTripPlanner={showTripPlanner}
+                onCloseTripPlanner={() => setShowTripPlanner(false)}
+                onTripPlanComplete={(result) => {
+                    // Decode polylines and create route GeoJSON
+                    if (result.routePolylines.length > 0) {
+                        const features = result.routePolylines.map((route, idx) => {
+                            const decoded = polyline.decode(route.polyline);
+                            return {
+                                type: "Feature" as const,
+                                properties: { mode: route.mode },
+                                geometry: {
+                                    type: "LineString" as const,
+                                    coordinates: decoded.map(([lat, lng]: [number, number]) => [lng, lat]),
+                                },
+                            };
+                        });
+                        setTripRoute({
+                            type: "FeatureCollection",
+                            features,
+                        } as any);
+                    }
+                }}
             />
             <div className="main-content">
                 <div className="search-container">
@@ -331,32 +352,6 @@ function HomePage() {
                         🌍
                     </button>
                 )}
-
-                {/* Trip Planner Modal */}
-                <TripPlanner
-                    isOpen={showTripPlanner}
-                    onClose={() => setShowTripPlanner(false)}
-                    onPlanComplete={(result) => {
-                        // Decode polylines and create route GeoJSON
-                        if (result.routePolylines.length > 0) {
-                            const features = result.routePolylines.map((route, idx) => {
-                                const decoded = polyline.decode(route.polyline);
-                                return {
-                                    type: "Feature" as const,
-                                    properties: { mode: route.mode },
-                                    geometry: {
-                                        type: "LineString" as const,
-                                        coordinates: decoded.map(([lat, lng]: [number, number]) => [lng, lat]),
-                                    },
-                                };
-                            });
-                            setTripRoute({
-                                type: "FeatureCollection",
-                                features,
-                            } as any);
-                        }
-                    }}
-                />
 
                 <Map
                     ref={(map) => {

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import mapboxgl from "mapbox-gl";
 import "./styles/Sidebar.css";
 import { PIN_COLOR } from "../../constants";
+import TripPlanner from "./TripPlanner";
 
 const KM_TO_MILES = 0.621371;
 
@@ -16,19 +17,42 @@ interface Pin {
     email?: string;
 }
 
+interface TripPlanResult {
+    origin: string;
+    destination: string;
+    itineraryType: string;
+    transitOptions: any[];
+    itinerary: any;
+    localPins: any[];
+    ecoHotels?: any[];
+    carbonStats: any;
+    routePolylines: { mode: string; polyline: string }[];
+}
+
 interface SidebarProps {
     mapRef: React.MutableRefObject<mapboxgl.Map | null>;
     allPins: Pin[];
     savedPlaces: Pin[];
     isLoggedIn: boolean;
     isSearchFocused: boolean;
+    showTripPlanner: boolean;
+    onCloseTripPlanner: () => void;
+    onTripPlanComplete: (result: TripPlanResult) => void;
+    onWideModeChange?: (isWide: boolean) => void;
 }
 
 
-export default function Sidebar({ mapRef, allPins, savedPlaces, isLoggedIn, isSearchFocused }: SidebarProps) {
+export default function Sidebar({ mapRef, allPins, savedPlaces, isLoggedIn, isSearchFocused, showTripPlanner, onCloseTripPlanner, onTripPlanComplete, onWideModeChange }: SidebarProps) {
     const [activeTab, setActiveTab] = useState<"discovery" | "saved">("discovery");
     const [mapCenter, setMapCenter] = useState<{ lng: number; lat: number }>({ lng: -122.4, lat: 37.8 });
     const [maxDistance, setMaxDistance] = useState(100);
+    const [isWide, setIsWide] = useState(false);
+
+    useEffect(() => {
+        if (onWideModeChange) {
+            onWideModeChange(isWide);
+        }
+    }, [isWide, onWideModeChange]);
 
     // Distance calculation (Haversine formula)
     const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
@@ -137,65 +161,72 @@ export default function Sidebar({ mapRef, allPins, savedPlaces, isLoggedIn, isSe
     };
 
     return (
-        <aside className={`sidebar-container ${isSearchFocused ? "collapsed" : ""}`}>
-            {/* <header className="sidebar-header">
-                <h2>Beacon</h2>
-            </header> */}
-
-            {activeTab === "discovery" && (
-                <div className="sidebar-slider-container">
-                    <div className="sidebar-slider-header">
-                        <span className="slider-label">Distance</span>
-                        <span className="slider-value">{maxDistance} mi</span>
-                    </div>
-                    <input
-                        type="range"
-                        min="0"
-                        max="200"
-                        value={maxDistance}
-                        onChange={(e) => setMaxDistance(Number(e.target.value))}
-                        className="sidebar-range-input"
-                        style={{
-                            background: `linear-gradient(to right, #4db688 0%, #4db688 ${maxDistance * 100 / 200}%, #e0e0e0 ${maxDistance * 100 / 200}%, #e0e0e0 100%)`
-                        }}
-                    />
-                </div>
-            )}
-
-            <div className="sidebar-content">
-                <div
-                    className="sidebar-slider"
-                    style={{ transform: `translateX(${activeTab === "discovery" ? "0%" : "-50%"})` }}
-                >
-                    <div className="sidebar-panel">
-                        {renderPinList(nearbyPins)}
-                    </div>
-                    <div className="sidebar-panel">
-                        {!isLoggedIn ? (
-                            <div className="empty-state">
-                                <p>Log in to see your saved places</p>
+        <aside className={`sidebar-container ${isSearchFocused ? "collapsed" : ""} ${isWide ? "wide" : ""}`}>
+            {showTripPlanner ? (
+                <TripPlanner
+                    isOpen={showTripPlanner}
+                    onClose={onCloseTripPlanner}
+                    onPlanComplete={onTripPlanComplete}
+                    onWideModeChange={setIsWide}
+                />
+            ) : (
+                <>
+                    {activeTab === "discovery" && (
+                        <div className="sidebar-slider-container">
+                            <div className="sidebar-slider-header">
+                                <span className="slider-label">Distance</span>
+                                <span className="slider-value">{maxDistance} mi</span>
                             </div>
-                        ) : renderPinList(savedPlaces)}
-                    </div>
-                </div>
-            </div>
+                            <input
+                                type="range"
+                                min="0"
+                                max="200"
+                                value={maxDistance}
+                                onChange={(e) => setMaxDistance(Number(e.target.value))}
+                                className="sidebar-range-input"
+                                style={{
+                                    background: `linear-gradient(to right, #4db688 0%, #4db688 ${maxDistance * 100 / 200}%, #e0e0e0 ${maxDistance * 100 / 200}%, #e0e0e0 100%)`
+                                }}
+                            />
+                        </div>
+                    )}
 
-            <nav className="sidebar-tabs">
-                <button
-                    className={`tab-button ${activeTab === "discovery" ? "active" : ""}`}
-                    onClick={() => setActiveTab("discovery")}
-                >
-                    <span className="tab-icon">🌍</span>
-                    <span className="tab-label">Discovery</span>
-                </button>
-                <button
-                    className={`tab-button ${activeTab === "saved" ? "active" : ""}`}
-                    onClick={() => setActiveTab("saved")}
-                >
-                    <span className="tab-icon">🔖</span>
-                    <span className="tab-label">Saved</span>
-                </button>
-            </nav>
+                    <div className="sidebar-content">
+                        <div
+                            className="sidebar-slider"
+                            style={{ transform: `translateX(${activeTab === "discovery" ? "0%" : "-50%"})` }}
+                        >
+                            <div className="sidebar-panel">
+                                {renderPinList(nearbyPins)}
+                            </div>
+                            <div className="sidebar-panel">
+                                {!isLoggedIn ? (
+                                    <div className="empty-state">
+                                        <p>Log in to see your saved places</p>
+                                    </div>
+                                ) : renderPinList(savedPlaces)}
+                            </div>
+                        </div>
+                    </div>
+
+                    <nav className="sidebar-tabs">
+                        <button
+                            className={`tab-button ${activeTab === "discovery" ? "active" : ""}`}
+                            onClick={() => setActiveTab("discovery")}
+                        >
+                            <span className="tab-icon">🌍</span>
+                            <span className="tab-label">Discovery</span>
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === "saved" ? "active" : ""}`}
+                            onClick={() => setActiveTab("saved")}
+                        >
+                            <span className="tab-icon">🔖</span>
+                            <span className="tab-label">Saved</span>
+                        </button>
+                    </nav>
+                </>
+            )}
         </aside>
     );
 }

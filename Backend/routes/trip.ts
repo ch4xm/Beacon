@@ -35,6 +35,9 @@ export interface TransitOption {
     carbonRating: { rating: string; color: string; score: number };
     segments?: any[];
     polyline?: string;
+    flightNumber?: string; // For flights: e.g., "UA123"
+    bookingUrl?: string; // Link to book/view the option
+    stops?: number; // Number of stops (0 = nonstop, for flights)
 }
 
 export interface TripPlanResponse {
@@ -120,6 +123,23 @@ function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: numbe
     return R * c;
 }
 
+/**
+ * Generate a Google Flights search URL for a flight
+ */
+function generateFlightBookingUrl(
+    originCode: string,
+    destCode: string,
+    departureDate: string,
+    returnDate?: string
+): string {
+    // Google Flights URL format
+    let url = `https://www.google.com/travel/flights?q=flights%20from%20${originCode}%20to%20${destCode}%20on%20${departureDate}`;
+    if (returnDate) {
+        url += `%20returning%20on%20${returnDate}`;
+    }
+    return url;
+}
+
 function getErrorMessage(error: any): string {
     if (error instanceof Error) {
         try {
@@ -134,6 +154,414 @@ function getErrorMessage(error: any): string {
         return error.message;
     }
     return String(error);
+}
+
+// Progress stages for SSE streaming
+type ProgressStage =
+    | 'geocoding'
+    | 'flights'
+    | 'transit'
+    | 'driving'
+    | 'transitOptions'  // New: sends available transit for user selection
+    | 'hotels'
+    | 'hotelOptions'    // New: sends available hotels for user selection
+    | 'pins'
+    | 'ready'           // New: all options ready, waiting for user selection
+    | 'itinerary'
+    | 'complete'
+    | 'error';
+
+interface ProgressUpdate {
+    stage: ProgressStage;
+    message: string;
+    progress: number; // 0-100
+    data?: any;
+}
+
+function sendSSE(res: Response, update: ProgressUpdate) {
+    res.write(`data: ${JSON.stringify(update)}\n\n`);
+}
+
+/**
+ * Wait for a minimum display time (2s ± 150ms) to create smooth UX
+ */
+function stageDelay(): Promise<void> {
+    const baseMs = 2000;
+    const variance = 150;
+    const delay = baseMs + Math.floor(Math.random() * variance * 2) - variance;
+    return new Promise(resolve => setTimeout(resolve, delay));
+}
+
+/**
+ * Plan a trip with streaming progress - SSE endpoint
+ */
+export async function planTripStream(req: Request, res: Response) {
+    // Set up SSE headers
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
+    res.flushHeaders();
+
+    try {
+        const {
+            startLocation,
+            endLocation,
+            itineraryType,
+            departureDate = new Date().toISOString().split("T")[0],
+            durationDays = 3,
+        }: TripPlanRequest = req.body;
+
+        if (!startLocation || !endLocation || !itineraryType) {
+            sendSSE(res, {
+                stage: 'error',
+                message: 'Missing required fields: startLocation, endLocation, itineraryType',
+                progress: 0,
+            });
+            res.end();
+            return;
+        }
+
+        // Stage 1: Geocoding (10%)
+        sendSSE(res, {
+            stage: 'geocoding',
+            message: 'Finding locations on the map...',
+            progress: 5,
+        });
+
+        const [originCoords, destCoords] = await Promise.all([
+            geocodeCity(startLocation),
+            geocodeCity(endLocation),
+        ]);
+
+        if (!destCoords) {
+            sendSSE(res, {
+                stage: 'error',
+                message: 'Could not find destination on map',
+                progress: 10,
+            });
+            res.end();
+            return;
+        }
+
+        sendSSE(res, {
+            stage: 'geocoding',
+            message: 'Locations found!',
+            progress: 10,
+        });
+
+        const distanceKm = originCoords
+            ? calculateDistance(originCoords.lat, originCoords.lng, destCoords.lat, destCoords.lng)
+            : 500;
+
+        // Stage 2: Search for flights (25%)
+        // Start flight search in background immediately
+        const originAirport = getCityAirportCode(startLocation);
+        const destAirport = getCityAirportCode(endLocation);
+
+        const flightSearchPromise = (async () => {
+            if (originAirport && destAirport) {
+                try {
+                    // Calculate return date
+                    const start = new Date(departureDate);
+                    start.setDate(start.getDate() + durationDays);
+                    const returnDate = start.toISOString().split("T")[0];
+
+                    return await searchFlights(originAirport, destAirport, departureDate, returnDate);
+                } catch (err) {
+                    console.error("Flight search error:", err);
+                }
+            }
+            return [] as FlightResult[];
+        })();
+
+        // Show geocoding for minimum time, then transition to flights
+        await stageDelay();
+        sendSSE(res, {
+            stage: 'flights',
+            message: 'Searching for flights...',
+            progress: 15,
+        });
+
+        // Wait for flight search to complete (may already be done)
+        const flights = await flightSearchPromise;
+
+        sendSSE(res, {
+            stage: 'flights',
+            message: flights.length > 0 ? `Found ${flights.length} flight options` : 'No direct flights found',
+            progress: 25,
+            data: { flightsFound: flights.length },
+        });
+
+        // Stage 3: Search for transit (40%)
+        // Start transit search in background immediately
+        const transitDepartureTime = `${departureDate}T08:00:00Z`;
+        const transitSearchPromise = searchTransit(startLocation, endLocation, transitDepartureTime)
+            .catch(err => {
+                console.error("Transit search error:", err);
+                return [] as TransitResult[];
+            });
+
+        await stageDelay();
+        sendSSE(res, {
+            stage: 'transit',
+            message: 'Checking train and bus routes...',
+            progress: 30,
+        });
+
+        const transitResults = await transitSearchPromise;
+
+        sendSSE(res, {
+            stage: 'transit',
+            message: transitResults.length > 0 ? `Found ${transitResults.length} transit options` : 'No transit routes found',
+            progress: 40,
+            data: { transitFound: transitResults.length },
+        });
+
+        // Stage 4: Search for driving (50%)
+        // Start driving search in background immediately
+        const drivingSearchPromise = searchDriving(startLocation, endLocation)
+            .catch(err => {
+                console.error("Driving search error:", err);
+                return null;
+            });
+
+        await stageDelay();
+        sendSSE(res, {
+            stage: 'driving',
+            message: 'Calculating driving route...',
+            progress: 45,
+        });
+
+        const drivingResult = await drivingSearchPromise;
+
+        sendSSE(res, {
+            stage: 'driving',
+            message: drivingResult ? 'Driving route calculated' : 'Could not calculate driving route',
+            progress: 50,
+            data: { drivingAvailable: !!drivingResult },
+        });
+
+        // Stage 5: Search for eco hotels (60%)
+        // Start hotel search in background immediately
+        const hotelSearchPromise = searchEcoHotels(endLocation)
+            .catch(err => {
+                console.error("Eco hotel search error:", err);
+                return [] as EcoHotel[];
+            });
+
+        await stageDelay();
+        sendSSE(res, {
+            stage: 'hotels',
+            message: 'Finding eco-friendly accommodations...',
+            progress: 55,
+        });
+
+        const ecoHotels = await hotelSearchPromise;
+
+        sendSSE(res, {
+            stage: 'hotels',
+            message: ecoHotels.length > 0 ? `Found ${ecoHotels.length} eco-friendly stays` : 'No eco hotels found',
+            progress: 60,
+            data: { hotelsFound: ecoHotels.length },
+        });
+
+        // Stage 6: Get nearby pins (65%)
+        await stageDelay();
+        sendSSE(res, {
+            stage: 'pins',
+            message: 'Discovering local recommendations...',
+            progress: 62,
+        });
+
+        const localPins = getNearbyPins(destCoords.lat, destCoords.lng);
+
+        sendSSE(res, {
+            stage: 'pins',
+            message: localPins.length > 0 ? `Found ${localPins.length} local spots` : 'No community pins nearby',
+            progress: 65,
+            data: { pinsFound: localPins.length },
+        });
+
+        await stageDelay();
+
+        // Build transit options (before itinerary generation)
+        const transitOptions: TransitOption[] = [];
+        const routePolylines: { mode: string; polyline: string }[] = [];
+
+        // Check if we have ground transit options
+        const hasGroundTransit = transitResults.length > 0 || drivingResult;
+
+        // Add flight options - show multiple if flights are the main option
+        if (flights.length > 0) {
+            // If no ground transit, show all available flights (up to 5)
+            // Otherwise, just show the best flight
+            const flightsToShow = hasGroundTransit ? [flights[0]] : flights.slice(0, 3);
+
+            for (const flight of flightsToShow) {
+                const carbonPerKm = flight.carbonEstimateKg / distanceKm;
+                // Build flight number string from segments, separating outbound and return
+                const outboundSegments = flight.segments.filter(s => s.direction === 'outbound');
+                const returnSegments = flight.segments.filter(s => s.direction === 'return');
+
+                const outboundFlights = outboundSegments.map(s => s.flightNumber).join(' → ');
+                const returnFlights = returnSegments.map(s => s.flightNumber).join(' → ');
+
+                // Format: "outbound | return" or just outbound if no return
+                const flightNumbers = returnFlights
+                    ? `${outboundFlights} | ${returnFlights}`
+                    : outboundFlights;
+
+                transitOptions.push({
+                    mode: "flight",
+                    provider: flight.segments[0]?.carrier,
+                    price: `$${flight.price}`,
+                    duration: flight.duration,
+                    carbonKg: flight.carbonEstimateKg,
+                    carbonRating: getSustainabilityRating(carbonPerKm),
+                    segments: flight.segments,
+                    flightNumber: flightNumbers,
+                    stops: flight.stops, // 0 = nonstop
+                    bookingUrl: (() => {
+                        if (!originAirport || !destAirport) return undefined;
+                        const start = new Date(departureDate);
+                        start.setDate(start.getDate() + durationDays);
+                        const returnDate = start.toISOString().split("T")[0];
+                        return generateFlightBookingUrl(originAirport, destAirport, departureDate, returnDate);
+                    })(),
+                });
+            }
+        }
+
+        // Add transit options
+        if (transitResults.length > 0) {
+            const trainResult = transitResults.find(r =>
+                r.segments.some(s => s.mode === "RAIL" || s.mode === "SUBWAY" || s.mode === "COMMUTER_TRAIN" || s.mode === "HIGH_SPEED_TRAIN")
+            );
+            const busResult = transitResults.find(r =>
+                r.segments.every(s => s.mode === "BUS") ||
+                (r.segments.some(s => s.mode === "BUS") && !r.segments.some(s => s.mode === "RAIL" || s.mode === "SUBWAY"))
+            );
+
+            if (trainResult) {
+                const carbonPerKm = trainResult.carbonEstimateKg / trainResult.distanceKm;
+                transitOptions.push({
+                    mode: "train",
+                    duration: trainResult.duration,
+                    carbonKg: trainResult.carbonEstimateKg,
+                    carbonRating: getSustainabilityRating(carbonPerKm),
+                    segments: trainResult.segments,
+                    polyline: trainResult.polyline,
+                });
+                if (trainResult.polyline) {
+                    routePolylines.push({ mode: "train", polyline: trainResult.polyline });
+                }
+            }
+
+            if (busResult) {
+                const carbonPerKm = busResult.carbonEstimateKg / busResult.distanceKm;
+                transitOptions.push({
+                    mode: "bus",
+                    duration: busResult.duration,
+                    carbonKg: busResult.carbonEstimateKg,
+                    carbonRating: getSustainabilityRating(carbonPerKm),
+                    segments: busResult.segments,
+                    polyline: busResult.polyline,
+                });
+                if (busResult.polyline) {
+                    routePolylines.push({ mode: "bus", polyline: busResult.polyline });
+                }
+            }
+        }
+
+        // Add driving option
+        if (drivingResult) {
+            const carbonPerKm = drivingResult.carbonEstimateKg / drivingResult.distanceKm;
+            transitOptions.push({
+                mode: "driving",
+                duration: drivingResult.duration,
+                carbonKg: drivingResult.carbonEstimateKg,
+                carbonRating: getSustainabilityRating(carbonPerKm),
+                polyline: drivingResult.polyline,
+            });
+            if (drivingResult.polyline) {
+                routePolylines.push({ mode: "driving", polyline: drivingResult.polyline });
+            }
+        }
+
+        // Sort by carbon
+        transitOptions.sort((a, b) => a.carbonKg - b.carbonKg);
+
+        // Add fallback options if needed
+        if (transitOptions.length === 0 && distanceKm > 0) {
+            const flightCarbonKg = Math.round(distanceKm * 0.2);
+            const flightDurationHours = Math.round(distanceKm / 800);
+            transitOptions.push({
+                mode: "flight",
+                provider: "Estimated",
+                duration: `PT${flightDurationHours}H`,
+                carbonKg: flightCarbonKg,
+                carbonRating: getSustainabilityRating(0.2),
+            });
+
+            if (distanceKm < 2000) {
+                const drivingCarbonKg = Math.round(distanceKm * 0.21);
+                const drivingDurationHours = Math.round(distanceKm / 80);
+                transitOptions.push({
+                    mode: "driving",
+                    duration: `${drivingDurationHours}h`,
+                    carbonKg: drivingCarbonKg,
+                    carbonRating: getSustainabilityRating(0.21),
+                });
+            }
+            transitOptions.sort((a, b) => a.carbonKg - b.carbonKg);
+        }
+
+        // Calculate carbon stats
+        const bestOption = transitOptions[0] || { mode: "n/a", carbonKg: 0 };
+        const worstOption = transitOptions[transitOptions.length - 1] || bestOption;
+        const typicalTouristKg = calculateTypicalTouristCarbon(distanceKm, durationDays);
+        const savingsVsTypical = typicalTouristKg > 0
+            ? Math.round((1 - bestOption.carbonKg / typicalTouristKg) * 100)
+            : 0;
+
+        // Send all options to frontend for user selection (no itinerary yet)
+        const optionsResponse = {
+            origin: startLocation,
+            destination: endLocation,
+            itineraryType,
+            durationDays,
+            transitOptions,
+            localPins,
+            ecoHotels,
+            carbonStats: {
+                bestOption: { mode: bestOption.mode, carbonKg: bestOption.carbonKg },
+                worstOption: { mode: worstOption.mode, carbonKg: worstOption.carbonKg },
+                typicalTouristKg,
+                savingsVsTypical,
+                offsetCostUsd: calculateOffsetCost(bestOption.carbonKg),
+            },
+            routePolylines,
+        };
+
+        // Send ready stage with all options for user selection
+        sendSSE(res, {
+            stage: 'ready',
+            message: 'Options ready! Please select your travel and hotel preferences.',
+            progress: 70,
+            data: optionsResponse,
+        });
+
+        res.end();
+    } catch (error) {
+        console.error("Trip planning error:", error);
+        sendSSE(res, {
+            stage: 'error',
+            message: getErrorMessage(error),
+            progress: 0,
+        });
+        res.end();
+    }
 }
 
 /**
@@ -177,8 +605,13 @@ export async function planTrip(req: Request, res: Response) {
         const destAirport = getCityAirportCode(endLocation);
 
         if (originAirport && destAirport) {
+            // Calculate return date
+            const start = new Date(departureDate);
+            start.setDate(start.getDate() + durationDays);
+            const returnDate = start.toISOString().split("T")[0];
+
             transitPromises.push(
-                searchFlights(originAirport, destAirport, departureDate)
+                searchFlights(originAirport, destAirport, departureDate, returnDate)
                     .catch((err) => {
                         console.error("Flight search error:", err);
                         return [];
@@ -189,8 +622,9 @@ export async function planTrip(req: Request, res: Response) {
         }
 
         // Transit search (train/bus)
+        const transitDepartureTime = `${departureDate}T08:00:00Z`;
         transitPromises.push(
-            searchTransit(startLocation, endLocation)
+            searchTransit(startLocation, endLocation, transitDepartureTime)
                 .catch((err) => {
                     console.error("Transit search error:", err);
                     return [];
@@ -230,19 +664,41 @@ export async function planTrip(req: Request, res: Response) {
         const transitOptions: TransitOption[] = [];
         const routePolylines: { mode: string; polyline: string }[] = [];
 
-        // Add flight options
+        // Check if we have ground transit options
+        const hasGroundTransit = transitResults.length > 0 || drivingResult;
+
+        // Add flight options - show multiple if flights are the main option
         if (flights.length > 0) {
-            const bestFlight = flights[0];
-            const carbonPerKm = bestFlight.carbonEstimateKg / distanceKm;
-            transitOptions.push({
-                mode: "flight",
-                provider: bestFlight.segments[0]?.carrier,
-                price: `$${bestFlight.price}`,
-                duration: bestFlight.duration,
-                carbonKg: bestFlight.carbonEstimateKg,
-                carbonRating: getSustainabilityRating(carbonPerKm),
-                segments: bestFlight.segments,
-            });
+            // If no ground transit, show all available flights (up to 5)
+            // Otherwise, just show the best flight
+            const flightsToShow = hasGroundTransit ? [flights[0]] : flights.slice(0, 5);
+
+            for (const flight of flightsToShow) {
+                const carbonPerKm = flight.carbonEstimateKg / distanceKm;
+                // Build flight number string from segments
+                const flightNumbers = flight.segments
+                    .map(seg => seg.flightNumber)
+                    .join(' → ');
+
+                transitOptions.push({
+                    mode: "flight",
+                    provider: flight.segments[0]?.carrier,
+                    price: `$${flight.price}`,
+                    duration: flight.duration,
+                    carbonKg: flight.carbonEstimateKg,
+                    carbonRating: getSustainabilityRating(carbonPerKm),
+                    segments: flight.segments,
+                    flightNumber: flightNumbers,
+                    stops: flight.stops, // 0 = nonstop
+                    bookingUrl: (() => {
+                        if (!originAirport || !destAirport) return undefined;
+                        const start = new Date(departureDate);
+                        start.setDate(start.getDate() + durationDays);
+                        const returnDate = start.toISOString().split("T")[0];
+                        return generateFlightBookingUrl(originAirport, destAirport, departureDate, returnDate);
+                    })(),
+                });
+            }
         }
 
         // Add transit options (separate train and bus options)
@@ -414,6 +870,64 @@ export async function askQuestion(req: Request, res: Response) {
         res.json({ answer });
     } catch (error) {
         console.error("Question answering error:", error);
+        res.status(500).json({ error: getErrorMessage(error) });
+    }
+}
+
+/**
+ * Generate itinerary with user-selected transit and hotel
+ */
+export interface GenerateItineraryRequest {
+    destination: string;
+    itineraryType: string;
+    durationDays: number;
+    selectedTransit: TransitOption;
+    selectedHotel?: EcoHotel;
+    localPins: LocalPin[];
+}
+
+export async function generateItineraryWithSelections(req: Request, res: Response) {
+    try {
+        const {
+            destination,
+            itineraryType,
+            durationDays,
+            selectedTransit,
+            selectedHotel,
+            localPins,
+        }: GenerateItineraryRequest = req.body;
+
+        if (!destination || !itineraryType || !selectedTransit) {
+            return res.status(400).json({
+                error: "Missing required fields: destination, itineraryType, selectedTransit",
+            });
+        }
+
+        // Build transit summary for AI context
+        const transitSummary = `Traveling by ${selectedTransit.mode} (${selectedTransit.duration})${selectedTransit.price ? `, ${selectedTransit.price}` : ''
+            }`;
+
+        // Build hotel context for AI
+        const hotelContext = selectedHotel
+            ? `Staying at ${selectedHotel.name}${selectedHotel.address ? ` (${selectedHotel.address})` : ''}`
+            : '';
+
+        // Generate itinerary with user selections
+        const itinerary = await generateItinerary(
+            destination,
+            itineraryType,
+            durationDays,
+            localPins || [],
+            `${transitSummary}. ${hotelContext}`.trim()
+        );
+
+        res.json({
+            itinerary,
+            selectedTransit,
+            selectedHotel,
+        });
+    } catch (error) {
+        console.error("Itinerary generation error:", error);
         res.status(500).json({ error: getErrorMessage(error) });
     }
 }

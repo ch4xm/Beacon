@@ -1,0 +1,138 @@
+/* DatePicker Styles */
+
+/* Trigger Button */
+.date-picker-trigger {
+    background: #ffffff;
+    border: 1px solid #e5e3df;
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: #1a1a1a;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.2s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    height: 43px;
+    /* Match input height */
+    cursor: pointer;
+}
+
+.date-picker-trigger:hover {
+    background-color: #fcfcfc;
+    border-color: #d1cfc9;
+}
+
+.date-picker-trigger:focus-visible,
+.date-picker-trigger[data-state="open"] {
+    outline: none;
+    border-color: #2d6a4f;
+    box-shadow: 0 0 0 2px rgba(45, 106, 79, 0.1);
+}
+
+.date-picker-placeholder {
+    color: #a0a0a0;
+}
+
+/* Popover Content */
+.date-picker-content {
+    background: #ffffff;
+    border: 1px solid #e5e3df;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    z-index: 2000;
+    margin-top: 8px;
+    animation: slideUpFade 0.2s ease-out;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom DayPicker Styles to match theme */
+.rdp-root {
+    --rdp-cell-size: 40px;
+    --rdp-accent-color: #2d6a4f !important;
+    --rdp-accent-background-color: #e9f5e9 !important;
+    --rdp-background-color: #e9f5e9;
+    --rdp-outline: 2px solid var(--rdp-accent-color);
+    --rdp-outline-selected: 2px solid rgba(0, 0, 0, 0);
+    margin: 0;
+}
+
+.rdp-caption_label {
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+/* Navigation buttons */
+.rdp-nav_button,
+.rdp-button_reset,
+.rdp-button {
+    color: #2d6a4f !important;
+}
+
+.rdp-chevron {
+    fill: #2d6a4f !important;
+}
+
+.rdp-nav_button:hover,
+.rdp-button:hover:not([disabled]):not(.rdp-selected) {
+    background-color: #f0ede8 !important;
+    color: #1b4332 !important;
+}
+
+/* Days */
+.rdp-day {
+    color: #1a1a1a;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.rdp-day:hover:not(.rdp-selected):not(.rdp-day_selected) {
+    background-color: #f0ede8 !important;
+}
+
+/* Selected Day - targeting multiple possible classes */
+.rdp-selected,
+.rdp-day_selected {
+    background-color: #2d6a4f !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border: none !important;
+}
+
+/* Ensure the circle/outline isn't blue */
+.rdp-selected::after,
+.rdp-day_selected::after {
+    border-color: #2d6a4f !important;
+}
+
+/* Today's highlighting */
+.rdp-today,
+.rdp-day_today {
+    color: #2d6a4f !important;
+    font-weight: 700;
+}
+
+.rdp-today:not(.rdp-selected):not(.rdp-day_selected),
+.rdp-day_today:not(.rdp-selected):not(.rdp-day_selected) {
+    background-color: rgba(45, 106, 79, 0.08) !important;
+}
+
+.rdp-weekday {
+    color: #8a8a8a;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}

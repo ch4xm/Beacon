@@ -19,6 +19,10 @@
     overflow: hidden;
 }
 
+.sidebar-container.wide {
+    width: 500px;
+}
+
 .sidebar-container.collapsed {
     transform: translateX(calc(-100% - 40px));
     opacity: 0;

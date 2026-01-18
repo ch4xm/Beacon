@@ -46,8 +46,10 @@ export interface FlightResult {
         arrivalTime: string;
         carrier: string;
         flightNumber: string;
+        direction: 'outbound' | 'return';
     }[];
     carbonEstimateKg: number;
+    stops: number; // Number of stops (0 = nonstop)
 }
 
 let cachedToken: AmadeusToken | null = null;
@@ -122,52 +124,128 @@ export async function searchFlights(
     originCode: string,
     destinationCode: string,
     departureDate: string,
+    returnDate?: string,
     adults: number = 1
 ): Promise<FlightResult[]> {
     const token = await getAccessToken();
 
-    const params = new URLSearchParams({
+    // Search for both nonstop and connecting flights in parallel
+    const baseParams = {
         originLocationCode: originCode,
         destinationLocationCode: destinationCode,
         departureDate,
         adults: adults.toString(),
-        max: "5",
         currencyCode: "USD",
+        ...(returnDate && { returnDate }),
+    };
+
+    // Fetch nonstop flights (prioritized)
+    const nonstopParams = new URLSearchParams({
+        ...baseParams,
+        nonStop: "true",
+        max: "5",
     });
 
-    const response = await fetch(`${AMADEUS_FLIGHTS_URL}?${params}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
+    // Fetch all flights (may include connections)
+    const allFlightsParams = new URLSearchParams({
+        ...baseParams,
+        max: "10",
     });
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Amadeus API error:", errorText);
-        throw new Error(`Amadeus flight search failed: ${response.status}`);
+    const [nonstopResponse, allResponse] = await Promise.all([
+        fetch(`${AMADEUS_FLIGHTS_URL}?${nonstopParams}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch(`${AMADEUS_FLIGHTS_URL}?${allFlightsParams}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        }),
+    ]);
+
+    // Parse both responses
+    let nonstopOffers: FlightOffer[] = [];
+    let allOffers: FlightOffer[] = [];
+
+    if (nonstopResponse.ok) {
+        const nonstopData = await nonstopResponse.json();
+        nonstopOffers = nonstopData.data || [];
     }
 
-    const data = await response.json();
-    const offers: FlightOffer[] = data.data || [];
+    if (allResponse.ok) {
+        const allData = await allResponse.json();
+        allOffers = allData.data || [];
+    }
+
+    // If both failed, throw an error
+    if (!nonstopResponse.ok && !allResponse.ok) {
+        const errorText = await allResponse.text();
+        console.error("Amadeus API error:", errorText);
+        throw new Error(`Amadeus flight search failed: ${allResponse.status}`);
+    }
+
+    // Combine and deduplicate: prioritize nonstop flights
+    const seenIds = new Set<string>();
+    const combinedOffers: FlightOffer[] = [];
+
+    // Add nonstop flights first
+    for (const offer of nonstopOffers) {
+        if (!seenIds.has(offer.id)) {
+            seenIds.add(offer.id);
+            combinedOffers.push(offer);
+        }
+    }
+
+    // Add remaining flights (connections) that weren't already included
+    for (const offer of allOffers) {
+        if (!seenIds.has(offer.id)) {
+            seenIds.add(offer.id);
+            combinedOffers.push(offer);
+        }
+    }
+
+    // Limit to top 10 results
+    const offers = combinedOffers.slice(0, 10);
 
     return offers.map((offer) => {
-        const itinerary = offer.itineraries[0];
-        const durationMinutes = parseDurationToMinutes(itinerary.duration);
+        // offer.itineraries[0] is outbound, [1] is return (if round trip)
+        const outboundItinerary = offer.itineraries[0];
+        const returnItinerary = offer.itineraries[1]; // undefined if one-way
 
-        return {
-            id: offer.id,
-            price: offer.price.total,
-            currency: offer.price.currency,
-            duration: itinerary.duration,
-            segments: itinerary.segments.map((seg) => ({
+        const outboundDuration = parseDurationToMinutes(outboundItinerary.duration);
+        const returnDuration = returnItinerary ? parseDurationToMinutes(returnItinerary.duration) : 0;
+
+        // Combine segments
+        const allSegments = [
+            ...outboundItinerary.segments.map((seg) => ({
                 from: seg.departure.iataCode,
                 to: seg.arrival.iataCode,
                 departureTime: seg.departure.at,
                 arrivalTime: seg.arrival.at,
                 carrier: seg.carrierCode,
                 flightNumber: `${seg.carrierCode}${seg.number}`,
+                direction: 'outbound' as const
             })),
-            carbonEstimateKg: estimateFlightCarbon(durationMinutes),
+            ...(returnItinerary ? returnItinerary.segments.map((seg) => ({
+                from: seg.departure.iataCode,
+                to: seg.arrival.iataCode,
+                departureTime: seg.departure.at,
+                arrivalTime: seg.arrival.at,
+                carrier: seg.carrierCode,
+                flightNumber: `${seg.carrierCode}${seg.number}`,
+                direction: 'return' as const
+            })) : [])
+        ];
+
+        // Calculate number of stops (segments - 1 for outbound)
+        const outboundStops = outboundItinerary.segments.length - 1;
+
+        return {
+            id: offer.id,
+            price: offer.price.total,
+            currency: offer.price.currency,
+            duration: outboundItinerary.duration, // We store the outbound duration as primary, or could combine
+            segments: allSegments,
+            carbonEstimateKg: estimateFlightCarbon(outboundDuration + returnDuration),
+            stops: outboundStops,
         };
     });
 }

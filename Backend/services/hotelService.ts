@@ -15,6 +15,10 @@ export interface EcoHotel {
     websiteUri?: string;
     googleMapsUri?: string;
     editorialSummary?: string;
+    location?: {
+        lat: number;
+        lng: number;
+    };
 }
 
 interface PlacesTextSearchResponse {
@@ -28,6 +32,10 @@ interface PlacesTextSearchResponse {
         websiteUri?: string;
         googleMapsUri?: string;
         editorialSummary?: { text: string };
+        location?: {
+            latitude: number;
+            longitude: number;
+        };
     }[];
 }
 
@@ -72,7 +80,7 @@ export async function searchEcoHotels(
         headers: {
             "Content-Type": "application/json",
             "X-Goog-Api-Key": apiKey,
-            "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.priceLevel,places.websiteUri,places.googleMapsUri,places.editorialSummary",
+            "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.priceLevel,places.websiteUri,places.googleMapsUri,places.editorialSummary,places.location",
         },
         body: JSON.stringify(requestBody),
     });
@@ -95,6 +103,10 @@ export async function searchEcoHotels(
         priceLevel: mapPriceLevel(place.priceLevel),
         websiteUri: place.websiteUri,
         googleMapsUri: place.googleMapsUri,
+        location: place.location ? {
+            lat: place.location.latitude,
+            lng: place.location.longitude,
+        } : undefined,
         editorialSummary: place.editorialSummary?.text,
     }));
 }
