@@ -122,19 +122,19 @@ export default function Sidebar({ mapRef, allPins, savedPlaces, isLoggedIn }: Si
 
     return (
         <aside className="sidebar-container">
-            <header className="sidebar-header">
+            {/* <header className="sidebar-header">
                 <h2>Beacon</h2>
-            </header>
+            </header> */}
 
             <div className="sidebar-content">
                 {activeTab === "discovery" ? (
                     <>
-                        <h3 style={{ fontSize: "1rem", marginBottom: "16px", color: "#666" }}>Nearby Discovery</h3>
+                        {/* <h3 style={{ fontSize: "1rem", marginBottom: "16px", color: "#666" }}>Nearby Discovery</h3> */}
                         {renderPinList(nearbyPins)}
                     </>
                 ) : (
                     <>
-                        <h3 style={{ fontSize: "1rem", marginBottom: "16px", color: "#666" }}>Saved Places</h3>
+                        {/* <h3 style={{ fontSize: "1rem", marginBottom: "16px", color: "#666" }}>Saved Places</h3> */}
                         {!isLoggedIn ? (
                             <div className="empty-state">
                                 <p>Log in to see your saved places</p>
