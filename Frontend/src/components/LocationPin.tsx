@@ -40,26 +40,28 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 			});
 	}, [selectedPoint]);
 
+	const toggleLike = () => {
+		const newLikedState = !isLiked;
+		setIsLiked(newLikedState);
 
-	const makeFetchRequest = (method: string) => {
-		fetch(`${BASE_API_URL}/api/likes/${selectedPoint.id}`, {
-			method: method,
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-			}
-		});
-	}
-
-	useEffect(() => {
-		if (isLiked) {
+		if (newLikedState) {
 			setLikes(prev => prev + 1);
-			makeFetchRequest('POST');
+			fetch(`${BASE_API_URL}/api/likes/${selectedPoint.id}`, {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+				}
+			});
 		} else {
 			setLikes(prev => prev - 1);
-			makeFetchRequest('DELETE');
-
+			fetch(`${BASE_API_URL}/api/likes/${selectedPoint.id}`, {
+				method: 'DELETE',
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+				}
+			});
 		}
-	}, [isLiked]);
+	};
 
 	return (
 		<Popup
@@ -123,7 +125,7 @@ export default function LocationPin({ selectedPoint, setSelectedPoint, onShowDet
 
 					<button
 						className="location-popup-button"
-						onClick={() => setIsLiked(prev => !prev)}
+						onClick={toggleLike}
 						onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
 						onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
 						style={{
