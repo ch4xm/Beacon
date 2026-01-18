@@ -181,8 +181,7 @@ export default function NewPinModal({
                     latitude: latitude,
                     longitude: longitude,
                     title: title,
-                    // tags: selectedTags,
-                    // location: locationName,
+                    tags: JSON.stringify(selectedTags),
                     message: message,
                     image: imageUrl,
                     address: address
@@ -322,12 +321,12 @@ export default function NewPinModal({
                         </label>
 
                         <div className="pin-modal__horizontal" style={{ flexWrap: "wrap", gap: "4px", justifyContent: 'space-evenly' }}>
-                            <CategoryBadge category="New" onClick={() => handleTagClick('New')} />
-                            <CategoryBadge category="Local" onClick={() => handleTagClick('Local')} />
-                            <CategoryBadge category="Trendy" onClick={() => handleTagClick('Trendy')} />
-                            <CategoryBadge category="Eatery" onClick={() => handleTagClick('Eatery')} />
-                            <CategoryBadge category="Hot" onClick={() => handleTagClick('Hot')} />
-                            <CategoryBadge category="Scenic" onClick={() => handleTagClick('Scenic')} />
+                            <CategoryBadge category="New" onClick={() => handleTagClick('New')} button={true} />
+                            <CategoryBadge category="Local" onClick={() => handleTagClick('Local')} button={true} />
+                            <CategoryBadge category="Trendy" onClick={() => handleTagClick('Trendy')} button={true} />
+                            <CategoryBadge category="Eatery" onClick={() => handleTagClick('Eatery')} button={true} />
+                            <CategoryBadge category="Hot" onClick={() => handleTagClick('Hot')} button={true} />
+                            <CategoryBadge category="Scenic" onClick={() => handleTagClick('Scenic')} button={true} />
                         </div>
                     </div>
 

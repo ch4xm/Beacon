@@ -15,6 +15,7 @@ CREATE TABLE pin (
 	title VARCHAR(200),
 	address VARCHAR(200),
 	description VARCHAR(500),
+	tags VARCHAR(200),
 	image VARCHAR(2000),
 
 	likes INTEGER,

@@ -4,10 +4,10 @@ import {Avatar} from "./Avatar";
 export interface Post {
     id: number;
     title: string;
-    location: string;
+    address: string;
     category?: string;
     tags: string[];
-    message: string;
+    description: string;
     image?: string;
     upvotes: number;
     comments: Comment[];
@@ -24,7 +24,7 @@ interface PostProps {
     content: Post;
 }
 
-export function CategoryBadge({ category, onClick }: { category: string, onClick?: (tag: string) => void }) {
+export function CategoryBadge({ category, onClick, button = false }: { category: string, onClick?: (tag: string) => void, button?: boolean }) {
     const [isHovered, setIsHovered] = React.useState(false);
     const [clicked, setClicked] = React.useState(false);
     
@@ -81,15 +81,17 @@ export function CategoryBadge({ category, onClick }: { category: string, onClick
     return (
         <div
             onClick={() => {
-                setClicked(!clicked);
-                if (onClick) onClick(category);
+                if (button) {
+                    if (onClick) onClick(category);
+                    setClicked(!clicked);
+                }
             }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             style={{
                 fontSize: 16,
                 fontWeight: 600,
-                color: clicked ? style.color : isHovered ? style.color : 'rgb(69, 69, 69)',
+                color: button ? (clicked ? style.color : isHovered ? style.color : 'rgb(69, 69, 69)') : style.color,
                 border: `1.5px solid ${style.borderColor}`,
                 boxShadow: style.boxShadow,
                 display: "inline-flex",
@@ -98,7 +100,7 @@ export function CategoryBadge({ category, onClick }: { category: string, onClick
                 borderRadius: 100,
                 padding: "6px 18px",
                 letterSpacing: "0.3px",
-                background: clicked ? style.background : isHovered ? style.background : 'transparent',
+                background: button ? (clicked ? style.background : isHovered ? style.background : 'transparent') : style.background,
                 cursor: 'pointer',
                 // transition: 'all 0.3s ease',
             }}
@@ -122,7 +124,6 @@ export function PostCard({ content }: PostProps) {
                 fontFamily: "system-ui, -apple-system, BlinkMacSystemFont",
             }}
         >
-            {/* Header */}
             <div style={{ marginBottom: 20 }}>
                 <h2 style={{ margin: 0, fontSize: 20, color: "#1a1a1a" }}>
                     {content.title}
@@ -155,8 +156,8 @@ export function PostCard({ content }: PostProps) {
                         }}
                     >
                         <svg
-                            width="14"
-                            height="14"
+                            width="28"
+                            height="28"
                             viewBox="0 0 24 24"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +168,7 @@ export function PostCard({ content }: PostProps) {
                             />
                             <circle cx="12" cy="10" r="2" fill="#ffffff" />
                         </svg>
-                        {content.location}
+                        {content.address}
                     </div>
                 </div>
             </div>
@@ -198,7 +199,7 @@ export function PostCard({ content }: PostProps) {
 
             {/* Message */}
             <p style={{ lineHeight: 1.6, marginBottom: 12, color: "#374151" }}>
-                {content.message}
+                {content.description}
             </p>
 
             {/* Image */}

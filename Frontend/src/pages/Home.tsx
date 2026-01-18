@@ -145,74 +145,135 @@ function HomePage() {
       }
     };
 
-    fetchPins();
-    if (isLoggedIn) fetchSavedPlaces();
-  }, [isLoggedIn]);
+        fetchPins();
+        if (isLoggedIn) fetchSavedPlaces();
+    }, [isLoggedIn]);
 
-  const handleLogout = () => {
-    logout();
-    setIsDropdownOpen(false);
-  };
+    const handleLogout = () => {
+        logout();
+        setIsDropdownOpen(false);
+    };
 
-  const handleMapClick = async (e: mapboxgl.MapMouseEvent) => {
-    // Check if we clicked on a point feature
-    // console.log("Map clicked at:", e.lngLat);
-    const features = e.target.queryRenderedFeatures(e.point, {
-      layers: ["point"],
-    });
+    const handleMapClick = async (e: mapboxgl.MapMouseEvent) => {
+        // Check if we clicked on a point feature
+        // console.log("Map clicked at:", e.lngLat);
+        const features = e.target.queryRenderedFeatures(e.point, {
+        layers: ["point"],
+        });
 
-    const { lat, lng } = e.lngLat;
-    console.log("Map clicked at:", lat, lng);
+        const { lat, lng } = e.lngLat;
+        console.log("Map clicked at:", lat, lng);
 
-    const result = await reverseGeocode(lat, lng);
+        const result = await reverseGeocode(lat, lng);
 
-    console.log("Reverse geocode result:", result);
-    // console.log("Features at click:", features);
-    if (features && features.length > 0) {
-      const feature = features[0];
-      console.log("Clicked on feature:", result);
-      const coords = (feature.geometry as any).coordinates;
-      setSelectedPoint({
-        id: feature.properties?.id,
-        creatorID: feature.properties?.creatorID,
-        longitude: coords[0],
-        latitude: coords[1],
-        title: feature.properties?.title || "",
-        // location: feature.properties?.location || "",
-        description: feature.properties?.description || "No description provided.",
-        image: feature.properties?.image || "",
-        color: feature.properties?.color || PIN_COLOR,
-        email: feature.properties?.email || "",
-        address: result.fullAddress,
-      });
+        console.log("Reverse geocode result:", result);
+        // console.log("Features at click:", features);
+        if (features && features.length > 0) {
+        const feature = features[0];
+        console.log("Clicked on feature:", result);
+        const coords = (feature.geometry as any).coordinates;
+        setSelectedPoint({
+            id: feature.properties?.id,
+            creatorID: feature.properties?.creatorID,
+            longitude: coords[0],
+            latitude: coords[1],
+            title: feature.properties?.title || "",
+            // location: feature.properties?.location || "",
+            description: feature.properties?.description || "No description provided.",
+            image: feature.properties?.image || "",
+            color: feature.properties?.color || PIN_COLOR,
+            email: feature.properties?.email || "",
+            address: result.fullAddress,
+        });
 
-      setPinData(null); // Close any existing pin
-      return;
-    }
+        setPinData(null); // Close any existing pin
+        return;
+        }
 
-    // Otherwise, handle as a new pin creation
+        // Otherwise, handle as a new pin creation
 
-    console.log("Creating new pin at:", lat, lng);
-    setSelectedPoint(null);
-    setPinData({
-      lat,
-      lng,
-      isLoading: false,
-      address: result.fullAddress || "Unknown Location",
-      email: userEmail || "",
-    });
-    console.log("Set pin data to:", {
-      lat,
-      lng,
-    });
-  };
+        console.log("Creating new pin at:", lat, lng);
+        setSelectedPoint(null);
+        setPinData({
+        lat,
+        lng,
+        isLoading: false,
+        address: result.fullAddress || "Unknown Location",
+        email: userEmail || "",
+        });
+        console.log("Set pin data to:", {
+        lat,
+        lng,
+        });
+    };
+
+    
+    const handleDiscoverClick = () => {
+        // console.log('Discover button clicked');
+        navigate("/explore");
+    };
+
+
+    // return (
+    //     <div className="home-container">
+    //         <Sidebar
+    //             mapRef={mapRef}
+    //             allPins={allPins.features.map(f => ({
+    //                 id: f.properties.id,
+    //                 latitude: f.geometry.coordinates[1],
+    //                 longitude: f.geometry.coordinates[0],
+    //                 title: f.properties.title,
+    //                 description: f.properties.description,
+    //                 image: f.properties.image,
+    //                 color: f.properties.color,
+    //                 email: f.properties.email
+    //             }))}
+    //             savedPlaces={savedPlaces.map((p: any) => ({
+    //                 id: p.id,
+    //                 latitude: p.latitude,
+    //                 longitude: p.longitude,
+    //                 title: p.title || p.message, // Use message as fallback title
+    //                 description: p.description,
+    //                 image: p.image,
+    //                 color: p.color || PIN_COLOR
+    //             }))}
+    //             isLoggedIn={isLoggedIn}
+    //             isSearchFocused={isSearchFocused}
+    //         />
+    //         <div className="main-content">
+    //             <div className="search-container">
+    //                 <SearchBar
+    //                     mapRef={mapRef}
+    //                     searchMarkerRef={searchMarkerRef}
+    //                     onSelectPlace={(place) =>
+    //                         setPinData({
+    //                             lat: place.lat,
+    //                             lng: place.lng,
+    //                             address: place.address,
+    //                             isLoading: false,
+    //                             email: userEmail || "",
+    //                         })
+    //                     }
+    //                     onFocusChange={(focused) => setIsSearchFocused(focused)}
+    //                     isFocused={isSearchFocused}
+    //                 />
+    //                 <button 
+    //                     className="explore-button"
+    //                     style={{backgroundColor: '#4db688', fontWeight: 'bold', fontSize: 18}}
+    //                     onClick={handleDiscoverClick}
+    //                 >
+    //                     Explore
+    //                 </button>
+    //             </div>
+    //         </div>
+    //     </div>
+    // );
 
 
 
-  const handleDiscoverClick = () => {
-    // console.log('Discover button clicked');
-    navigate("/explore");
-  };
+  
+
+
 
 
   return (
@@ -258,6 +319,13 @@ function HomePage() {
             onFocusChange={(focused) => setIsSearchFocused(focused)}
             isFocused={isSearchFocused}
           />
+            <button
+                className="explore-button"
+                style={{ backgroundColor: "#4db688", fontWeight: "bold", fontSize: 18 }}
+                onClick={handleDiscoverClick}
+            >
+                Explore
+            </button>
         </div>
 
         <AuthModal isOpen={!isLoggedIn} onAuthSuccess={authSuccess} />

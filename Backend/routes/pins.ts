@@ -11,39 +11,54 @@ export function getAllPins(req: Request, res: Response) {
 			p.title,
 			p.address,
 			p.description,
-			p.image
+			p.image,
+            p.tags
 		FROM pin p
 		JOIN account a ON a.id = p.creatorID;
 	`);
-    res.json(results);
+    const pins = results.map((pin: any) => ({
+        ...pin,
+        tags: pin.tags ?? JSON.stringify([]),
+    }));
+
+    res.json(pins);
 }
 
 export function getUserPins(req: Request, res: Response) {
     const userID = req.user.id;
     const results = db.query(`
         SELECT 
-            id, creatorID, latitude, longitude, title, address, description, image, likes
+            id, creatorID, latitude, longitude, title, address, description, image, likes, tags
         FROM pin 
         WHERE creatorID = ?;`, [
         userID,
     ]);
-    res.json(results);
+    const pins = results.map((pin: any) => ({
+        ...pin,
+        tags: pin.tags ?? JSON.stringify([]),
+    }));
+    res.json(pins);
 }
 
 export function getPin(req: Request, res: Response) {
     const pinID = req.params.id;
     const results = db.query(`
         SELECT 
-            id, creatorID, latitude, longitude, title, address, description, image, likes
+            id, creatorID, latitude, longitude, title, address, description, image, likes, tags
         FROM pin 
         WHERE id = ?`, [pinID]);
-    res.json(results);
+    const pins = results.map((pin: any) => ({
+        ...pin,
+        tags: pin.tags ?? JSON.stringify([]),
+    }));
+    res.json(pins);
 }
 
 export function createPin(req: Request, res: Response) {
+    console.log("Creating pin with data:", req.body, req.body.tags, JSON.stringify(req.body.tags));
     const results = db.query(`
-		INSERT INTO pin(creatorID, latitude, longitude, title, address, description, image)
-		VALUES(?, ?, ?, ?, ?, ?, ?)
+		INSERT INTO pin(creatorID, latitude, longitude, title, address, description, image, tags)
+		VALUES(?, ?, ?, ?, ?, ?, ?, ?)
 		RETURNING id;
 	`,
         [
@@ -54,6 +69,7 @@ export function createPin(req: Request, res: Response) {
             req.body.address ?? null,
             req.body.message ?? null,
             req.body.image ?? null,
+            JSON.stringify(req.body.tags) ?? '',
         ],
     );
 
@@ -104,7 +120,7 @@ export function updatePin(req: Request, res: Response) {
     // Return the updated pin
     const updatedPin = db.query(`
         SELECT 
-            id, creatorID, latitude, longitude, title, address, description, image, likes
+            id, creatorID, latitude, longitude, title, address, description, image, likes, tags
         FROM pin 
         WHERE id = ?`, [pinID])[0];
     res.json(updatedPin);

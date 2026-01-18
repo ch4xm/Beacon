@@ -137,7 +137,7 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-Backend/database/database.db
+*/database.db
 
 .vscode
 *.db

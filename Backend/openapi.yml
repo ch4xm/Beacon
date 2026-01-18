@@ -92,6 +92,11 @@ paths:
                   maxLength: 200
                   description: Address of the pin location
                   nullable: true
+                tags:
+                  type: string
+                  maxLength: 500
+                  description: Tags for the pin
+                  nullable: true
 
       responses:
         200:
@@ -201,6 +206,11 @@ paths:
                 location:
                   type: string
                   maxLength: 200
+                  nullable: true
+                tags:
+                  type: string
+                  maxLength: 500
+                  description: Tags for the pin
                   nullable: true
 
       responses:
@@ -865,6 +875,12 @@ components:
           maxLength: 200
           description: Address of the pin location
           example: "123 Main St, San Francisco, CA"
+          nullable: true
+        tags:
+          type: string
+          maxLength: 500
+          description: Tags for the pin
+          example: "scenic, viewpoint, nature"
           nullable: true
     
     Comment:
