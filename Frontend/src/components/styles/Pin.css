@@ -21,8 +21,7 @@
     background: var(--color-card, #ffffff);
     border-radius: var(--radius-md, 20px);
     overflow: hidden;
-    min-width: 280px;
-    max-width: 320px;
+    max-width: 220px;
     box-shadow: var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.1));
     border: 1px solid var(--color-border, #e5e3df);
     display: flex;
@@ -34,13 +33,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 24px 20px 12px;
+    padding: 16px 12px 0px;
     position: relative;
 }
 
 .pin-name {
     font-family: var(--font-display, "Playfair Display", serif);
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text, #1a1a1a);
     text-align: center;
@@ -59,10 +58,12 @@
 }
 
 @keyframes pulse {
+
     0%,
     100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.5;
     }
@@ -93,19 +94,19 @@
 .pin-divider {
     height: 1px;
     background: var(--color-border, #e5e3df);
-    margin: 0 20px;
+    margin: 12px 12px 0;
 }
 
 .pin-actions {
     display: flex;
     justify-content: center;
-    gap: 12px;
-    padding: 16px 20px 20px;
+    gap: 8px;
+    padding: 12px 12px 16px;
 }
 
 .pin-btn {
     flex: 1;
-    height: 44px;
+    height: 36px;
     border-radius: 12px;
     border: none;
     background: var(--color-bg-alt, #f4f2ef);
@@ -153,6 +154,7 @@
         opacity: 0;
         transform: scale(0.9) translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: scale(1) translateY(0);

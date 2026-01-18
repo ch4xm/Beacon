@@ -403,7 +403,7 @@
 .search-container {
     position: absolute;
     top: 16px;
-    left: 16px;
+    left: 20px;
     z-index: 10;
     display: flex;
     align-items: flex-start;
@@ -411,7 +411,7 @@
 }
 
 .search-bar {
-    width: 340px;
+    width: 380px;
 }
 
 .search-form {

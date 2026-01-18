@@ -96,6 +96,7 @@ function HomePage() {
     const [cursor, setCursor] = useState<string>("auto");
     const [userEmail, userId, isLoggedIn, logout, authSuccess] = AuthHook();
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+    const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
 
     const onMouseEnter = useCallback(() => setCursor("pointer"), []);
     const onMouseLeave = useCallback(() => setCursor("auto"), []);
@@ -252,6 +253,7 @@ function HomePage() {
                     color: p.color || PIN_COLOR
                 }))}
                 isLoggedIn={isLoggedIn}
+                isSearchFocused={isSearchFocused}
             />
             <div className="main-content">
                 <div className="search-container">
@@ -267,6 +269,7 @@ function HomePage() {
                                 email: userEmail || "",
                             })
                         }
+                        onFocusChange={(focused) => setIsSearchFocused(focused)}
                     />
                 </div>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import mapboxgl from "mapbox-gl";
-import {reverseGeocode} from "@/utils/geocoding";
+import { reverseGeocode } from "@/utils/geocoding";
 
 interface SearchBarProps {
     mapRef: React.MutableRefObject<mapboxgl.Map | null>;
@@ -12,12 +12,14 @@ interface SearchBarProps {
         lat: number;
         address?: any;
     }) => void;
+    onFocusChange?: (isFocused: boolean) => void;
 }
 
 export default function SearchBar({
     mapRef,
     searchMarkerRef,
     onSelectPlace,
+    onFocusChange,
 }: SearchBarProps) {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [isSearching, setIsSearching] = useState<boolean>(false);
@@ -134,6 +136,8 @@ export default function SearchBar({
                     placeholder="Search places..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => onFocusChange?.(true)}
+                    onBlur={() => onFocusChange?.(false)}
                 />
                 <button
                     type="submit"
