@@ -604,3 +604,33 @@
     transform: translateY(0);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
+
+/* Trip Planner FAB Button */
+.trip-planner-fab {
+    position: absolute;
+    bottom: 100px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+    z-index: 10;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.trip-planner-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 28px rgba(34, 197, 94, 0.5);
+}
+
+.trip-planner-fab:active {
+    transform: scale(0.95);
+}

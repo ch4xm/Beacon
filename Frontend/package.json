@@ -13,11 +13,13 @@
   },
   "dependencies": {
     "@mapbox/mapbox-gl-draw": "^1.5.1",
+    "@mapbox/polyline": "^1.2.1",
     "@vercel/blob": "^2.0.0",
     "mapbox-gl": "^3.18.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-map-gl": "^8.1.0",
+    "react-markdown": "^10.1.0",
     "react-router": "^7.12.0"
   },
   "devDependencies": {

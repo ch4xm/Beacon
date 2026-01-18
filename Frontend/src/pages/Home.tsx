@@ -3,12 +3,13 @@ import "./Home.css";
 import AuthModal from "@/components/AuthModal";
 import SearchBar from "@/components/SearchBar";
 import Sidebar from "@/components/Sidebar";
+import TripPlanner from "@/components/TripPlanner";
 import Map, {
     GeolocateControl,
     NavigationControl,
     Popup,
 } from "react-map-gl/mapbox";
-import { Source, Layer, CircleLayerSpecification, HeatmapLayerSpecification } from "react-map-gl/mapbox";
+import { Source, Layer, CircleLayerSpecification, HeatmapLayerSpecification, LineLayerSpecification } from "react-map-gl/mapbox";
 import Pin from "@/components/Pin";
 import { reverseGeocode, ReverseGeocodeResult } from "@/utils/geocoding";
 import { lerpColor } from "@/utils/colorUtils";
@@ -19,6 +20,7 @@ import AuthHook from "./AuthHook";
 import { BASE_API_URL, PIN_COLOR, USER_PIN_COLOR, PIN_LAYER_STYLE, HEATMAP_LAYER_STYLE } from '../../constants';
 import { GeoJSON } from '../types/express/index';
 import { Avatar } from "@/components/Avatar";
+import polyline from '@mapbox/polyline';
 
 interface PinData {
     lat: number;
@@ -78,6 +80,8 @@ function HomePage() {
     const [userEmail, userId, isLoggedIn, logout, authSuccess] = AuthHook();
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
+    const [showTripPlanner, setShowTripPlanner] = useState<boolean>(false);
+    const [tripRoute, setTripRoute] = useState<GeoJSON.FeatureCollection | null>(null);
 
     const onMouseEnter = useCallback(() => setCursor("pointer"), []);
     const onMouseLeave = useCallback(() => setCursor("auto"), []);
@@ -167,27 +171,27 @@ function HomePage() {
 
         const fetchSavedPlaces = () => {
             const savedPins = JSON.parse(localStorage.getItem("savedPins") || '{}');
-			const email = localStorage.getItem("userEmail")!;
-			const savedPinIDs = savedPins[email] || [];
+            const email = localStorage.getItem("userEmail")!;
+            const savedPinIDs = savedPins[email] || [];
 
-			const saved = allPins.features
-				.filter(f => savedPinIDs.includes(f.properties.id))
-				.map(f => ({
-					id: f.properties.id,
-					latitude: f.geometry.coordinates[1],
-					longitude: f.geometry.coordinates[0],
-					title: f.properties.title,
-					description: f.properties.description,
-					image: f.properties.image,
-					color: f.properties.color,
-					email: f.properties.email
-				}));
-			setSavedPlaces(saved as any);
+            const saved = allPins.features
+                .filter(f => savedPinIDs.includes(f.properties.id))
+                .map(f => ({
+                    id: f.properties.id,
+                    latitude: f.geometry.coordinates[1],
+                    longitude: f.geometry.coordinates[0],
+                    title: f.properties.title,
+                    description: f.properties.description,
+                    image: f.properties.image,
+                    color: f.properties.color,
+                    email: f.properties.email
+                }));
+            setSavedPlaces(saved as any);
         };
 
         fetchPins();
         if (isLoggedIn) fetchSavedPlaces();
-    }, [isLoggedIn, allPins.features]);
+    }, [isLoggedIn]);
 
     const handleLogout = () => {
         logout();
@@ -317,6 +321,43 @@ function HomePage() {
                     </div>
                 )}
 
+                {/* Trip Planner Button */}
+                {isLoggedIn && (
+                    <button
+                        className="trip-planner-fab"
+                        onClick={() => setShowTripPlanner(true)}
+                        title="Plan a Trip"
+                    >
+                        🌍
+                    </button>
+                )}
+
+                {/* Trip Planner Modal */}
+                <TripPlanner
+                    isOpen={showTripPlanner}
+                    onClose={() => setShowTripPlanner(false)}
+                    onPlanComplete={(result) => {
+                        // Decode polylines and create route GeoJSON
+                        if (result.routePolylines.length > 0) {
+                            const features = result.routePolylines.map((route, idx) => {
+                                const decoded = polyline.decode(route.polyline);
+                                return {
+                                    type: "Feature" as const,
+                                    properties: { mode: route.mode },
+                                    geometry: {
+                                        type: "LineString" as const,
+                                        coordinates: decoded.map(([lat, lng]: [number, number]) => [lng, lat]),
+                                    },
+                                };
+                            });
+                            setTripRoute({
+                                type: "FeatureCollection",
+                                features,
+                            } as any);
+                        }
+                    }}
+                />
+
                 <Map
                     ref={(map) => {
                         if (map) mapRef.current = map.getMap();
@@ -407,7 +448,7 @@ function HomePage() {
                                 const savedPins = JSON.parse(localStorage.getItem("savedPins") || '{}');
                                 const email = localStorage.getItem("userEmail")!;
                                 const savedPinIDs = savedPins[email] || [];
-                                
+
                                 const saved = allPins.features
                                     .filter(f => savedPinIDs.includes(f.properties.id))
                                     .map(f => ({
@@ -482,6 +523,21 @@ function HomePage() {
                         <Layer {...PIN_LAYER_STYLE} />
                         <Layer {...(HEATMAP_LAYER_STYLE as HeatmapLayerSpecification)} />
                     </Source>
+
+                    {/* Trip Route Line */}
+                    {tripRoute && (
+                        <Source id="trip-route" type="geojson" data={tripRoute as any}>
+                            <Layer
+                                id="trip-route-line"
+                                type="line"
+                                paint={{
+                                    "line-color": "#22c55e",
+                                    "line-width": 4,
+                                    "line-opacity": 0.8,
+                                }}
+                            />
+                        </Source>
+                    )}
                 </Map>
             </div>
         </div>

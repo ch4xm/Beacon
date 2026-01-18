@@ -11,6 +11,7 @@ import * as pins from "./routes/pins";
 import * as posts from "./routes/posts";
 import * as comments from "./routes/comments";
 import * as likes from "./routes/likes";
+import * as trip from "./routes/trip";
 
 const app = express();
 const PORT = 3000;
@@ -106,6 +107,10 @@ app.delete("/api/comments/:commentId", auth.check, comments.deleteComment);
 app.get("/api/likes/:id", auth.check, likes.getLikes);
 app.post("/api/likes/:id", auth.check, likes.addLike);
 app.delete("/api/likes/:id", auth.check, likes.removeLike);
+
+// Trip planning routes
+app.post("/api/trip/plan", auth.check, trip.planTrip);
+app.post("/api/trip/ask", auth.check, trip.askQuestion);
 
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Backend listening on http://0.0.0.0:${PORT}`);
