@@ -21,7 +21,7 @@
     background: var(--color-card, #ffffff);
     border-radius: var(--radius-md, 20px);
     overflow: hidden;
-    max-width: 220px;
+    max-width: 320px;
     box-shadow: var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.1));
     border: 1px solid var(--color-border, #e5e3df);
     display: flex;
@@ -31,10 +31,11 @@
 
 .pin-header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    padding: 16px 40px 0px;
-    position: relative;
+    justify-content: space-between;
+    padding: 16px;
+    gap: 12px;
 }
 
 .pin-name {
@@ -42,10 +43,10 @@
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text, #1a1a1a);
-    text-align: center;
     line-height: 1.2;
-    width: 100%;
     overflow-wrap: break-word;
+    flex: 1;
+    text-align: left;
 }
 
 .pin-name-loading {
@@ -69,84 +70,37 @@
     }
 }
 
-.pin-close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: transparent;
-    border: none;
-    color: var(--color-text-light, #8a8a8a);
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-fast, 0.15s ease);
-    z-index: 1;
-}
-
-.pin-close:hover {
-    background: var(--color-bg-alt, #f4f2ef);
-    color: var(--color-text, #1a1a1a);
-}
-
-.pin-divider {
-    height: 1px;
-    background: var(--color-border, #e5e3df);
-    margin: 12px 12px 0;
-}
-
-.pin-actions {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 12px 16px;
-}
-
-.pin-btn {
-    flex: 1;
+.pin-add-btn {
+    width: 36px;
     height: 36px;
     border-radius: 12px;
+    /* Squircle-ish */
     border: none;
-    background: var(--color-bg-alt, #f4f2ef);
-    color: var(--color-text, #1a1a1a);
-    font-family: var(--font-body, sans-serif);
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
+    background: var(--color-green, #2d6a4f);
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    cursor: pointer;
     transition: all var(--transition-base, 0.25s ease);
+    flex-shrink: 0;
 }
 
-.pin-btn svg {
-    width: 18px;
-    height: 18px;
+.pin-add-btn svg {
+    width: 20px;
+    height: 20px;
     stroke: currentColor;
     stroke-width: 2.5;
 }
 
-.pin-btn:hover {
-    background: var(--color-green, #2d6a4f);
-    color: #ffffff;
+.pin-add-btn:hover {
+    background: #255a41;
     transform: translateY(-2px);
     box-shadow: var(--shadow-md, 0 8px 30px rgba(0, 0, 0, 0.08));
 }
 
-.pin-btn:active {
+.pin-add-btn:active {
     transform: translateY(0);
-}
-
-.pin-btn--primary {
-    background: var(--color-green, #2d6a4f);
-    color: #ffffff;
-}
-
-.pin-btn--primary:hover {
-    background: #255a41;
 }
 
 @keyframes scaleIn {

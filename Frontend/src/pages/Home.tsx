@@ -333,6 +333,13 @@ function HomePage() {
                     dragRotate={true}
                     touchZoomRotate={true}
                     attributionControl={false}
+                    onZoom={(e) => {
+                        const zoom = e.viewState.zoom;
+                        if (zoom < 8) {
+                            setPinData(null);
+                            setSelectedPoint(null);
+                        }
+                    }}
                 >
                     <GeolocateControl
                         position="bottom-right"
