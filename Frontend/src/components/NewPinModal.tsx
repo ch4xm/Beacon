@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
 import "./styles/NewPinModal.css";
 import { BASE_API_URL } from '../../constants';
-import {reverseGeocode, ReverseGeocodeResult} from "@/utils/geocoding";
-import {CategoryBadge} from "./Post";
+import { reverseGeocode, ReverseGeocodeResult } from "@/utils/geocoding";
+import { CategoryBadge } from "./Post";
 import console from "console";
 
 interface NewPinModalProps {
@@ -41,7 +41,7 @@ export default function NewPinModal({
     const [isDragging, setIsDragging] = useState(false);
 
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    
+
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileSelect = (file: File) => {
@@ -195,16 +195,7 @@ export default function NewPinModal({
         }
     };
 
-    const formatCoordinate = (coord: number, isLat: boolean) => {
-        const direction = isLat
-            ? coord >= 0
-                ? "N"
-                : "S"
-            : coord >= 0
-                ? "E"
-                : "W";
-        return `${Math.abs(coord).toFixed(4)}° ${direction}`;
-    };
+
 
     return (
         <div className="pin-modal-overlay" onClick={onClose}>
@@ -266,8 +257,7 @@ export default function NewPinModal({
                             />
                         </svg>
                         <span>
-                            {address}, {formatCoordinate(latitude, true)}{" "}
-                            {formatCoordinate(longitude, false)}
+                            {address || "Unknown Location"}
                         </span>
                     </div>
                 </header>
@@ -316,12 +306,12 @@ export default function NewPinModal({
                         </label>
 
                         <div className="pin-modal__horizontal" style={{ flexWrap: "wrap", gap: "4px", justifyContent: 'space-evenly' }}>
-                            <CategoryBadge category="New" onClick={() => handleTagClick('New')}/>
-                            <CategoryBadge category="Local" onClick={() => handleTagClick('Local')}/>
-                            <CategoryBadge category="Trendy" onClick={() => handleTagClick('Trendy')}/>
-                            <CategoryBadge category="Eatery" onClick={() => handleTagClick('Eatery')}/>
-                            <CategoryBadge category="Hot" onClick={() => handleTagClick('Hot')}/>
-                            <CategoryBadge category="Scenic" onClick={() => handleTagClick('Scenic')}/>
+                            <CategoryBadge category="New" onClick={() => handleTagClick('New')} />
+                            <CategoryBadge category="Local" onClick={() => handleTagClick('Local')} />
+                            <CategoryBadge category="Trendy" onClick={() => handleTagClick('Trendy')} />
+                            <CategoryBadge category="Eatery" onClick={() => handleTagClick('Eatery')} />
+                            <CategoryBadge category="Hot" onClick={() => handleTagClick('Hot')} />
+                            <CategoryBadge category="Scenic" onClick={() => handleTagClick('Scenic')} />
                         </div>
                     </div>
 
