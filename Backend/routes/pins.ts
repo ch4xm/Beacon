@@ -22,7 +22,7 @@ export function getUserPins(req: Request, res: Response) {
     const userID = req.user.id;
     const results = db.query(`
         SELECT 
-            id, creatorID, latitude, longitude, title, location, description as message, image, likes
+            id, creatorID, latitude, longitude, title, address, description as message, image, likes
         FROM pin 
         WHERE creatorID = ?;`, [
         userID,
@@ -34,7 +34,7 @@ export function getPin(req: Request, res: Response) {
     const pinID = req.params.id;
     const results = db.query(`
         SELECT 
-            id, creatorID, latitude, longitude, title, location, description as message, image, likes
+            id, creatorID, latitude, longitude, title, address, description as message, image, likes
         FROM pin 
         WHERE id = ?`, [pinID]);
     res.json(results);
@@ -104,7 +104,7 @@ export function updatePin(req: Request, res: Response) {
     // Return the updated pin
     const updatedPin = db.query(`
         SELECT 
-            id, creatorID, latitude, longitude, title, location, description as message, image, likes
+            id, creatorID, latitude, longitude, title, address, description as message, image, likes
         FROM pin 
         WHERE id = ?`, [pinID])[0];
     res.json(updatedPin);

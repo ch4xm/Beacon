@@ -60,6 +60,8 @@ export default function DetailedPinModal({
   const [isLoadingComments, setIsLoadingComments] = useState(false);
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
+  console.log(selectedPoint.description)
+
   // Fetch comments when modal opens
   useEffect(() => {
     if (selectedPoint.id) {
@@ -342,12 +344,12 @@ export default function DetailedPinModal({
                   className="detailed-modal-image"
                 />
               )}
-              
+
               {showMessage && (
                 <div className="detailed-info-section">
                   <h3>Description</h3>
                   <p className="detailed-message">
-                    {messageText}
+                    {selectedPoint.description}
                   </p>
                 </div>
               )}

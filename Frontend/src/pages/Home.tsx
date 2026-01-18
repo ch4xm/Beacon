@@ -31,8 +31,8 @@ interface SelectedPoint {
     longitude: number;
     latitude: number;
     title?: string;
-    location?: string;
-    message: string;
+    address?: string;
+    description: string;
     image: string;
     color: string;
     email?: string;
@@ -80,7 +80,7 @@ function HomePage() {
                 creatorID?: number;
                 title?: string;
                 location?: string;
-                message: string;
+                description: string;
                 image: string;
                 color: string;
                 email?: string;
@@ -135,8 +135,7 @@ function HomePage() {
                             id: p.id,
                             email: p.email,
                             title: p.title,
-                            location: p.location,
-                            message: p.message,
+                            description: p.description,
                             image: p.image,
                             color: localStorage.getItem("userEmail") == p.email ? USER_PIN_COLOR : PIN_COLOR,
                             address: p.address,
@@ -198,12 +197,12 @@ function HomePage() {
                 longitude: coords[0],
                 latitude: coords[1],
                 title: feature.properties?.title || "",
-                location: feature.properties?.location || "",
-                message: feature.properties?.message || "No message",
+                // location: feature.properties?.location || "",
+                description: feature.properties?.description || "No description provided.",
                 image: feature.properties?.image || "",
                 color: feature.properties?.color || PIN_COLOR,
                 email: feature.properties?.email || "",
-                address: result,
+                address: result.fullAddress,
             });
 
             setPinData(null); // Close any existing pin

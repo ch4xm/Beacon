@@ -54,6 +54,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 20px 24px;
+	padding-bottom: 0px;
     border-bottom: 1px solid #e5e3df;
 }
 
