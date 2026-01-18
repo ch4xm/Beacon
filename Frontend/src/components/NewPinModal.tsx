@@ -30,7 +30,7 @@ export default function NewPinModal({
     longitude,
     address,
 }: NewPinModalProps) {
-    const [title, setTitle] = useState(address && address?.toLowerCase() !== "unknown location" ? address : "");
+    const [title, setTitle] = useState("");
     const [message, setMessage] = useState("");
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
