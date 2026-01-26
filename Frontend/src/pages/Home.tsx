@@ -11,7 +11,6 @@ import Map, {
 import { Source, Layer, CircleLayerSpecification, HeatmapLayerSpecification, LineLayerSpecification } from "react-map-gl/mapbox";
 import Pin from "@/components/Pin";
 import { reverseGeocode, ReverseGeocodeResult } from "@/utils/geocoding";
-import { lerpColor } from "@/utils/colorUtils";
 import LocationPin from "@/components/LocationPin";
 import DetailedPinModal from "@/components/DetailedPinModal";
 import { NavLink, useNavigate, useSearchParams } from "react-router";

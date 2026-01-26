@@ -61,6 +61,12 @@ function Landing() {
             zoom: 9,
             interactive: false,
             attributionControl: false,
+            transformRequest: (url, resourceType) => {
+                if (url.includes("events.mapbox.com")) {
+                    return { url: "" };
+                }
+                return { url };
+            },
         });
 
         // Preload tiles at zoom levels the user might use on Home page
